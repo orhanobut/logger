@@ -16,7 +16,7 @@ Logger provides :
 compile 'com.orhanobut:logger:1.0'
 ```
 
-### Current Log
+### Current Log system
 ```java
 Log.d(TAG,"something");
 ```
@@ -28,7 +28,14 @@ Log.d(TAG,"something");
 ```java
 Logger.d("something");
 ```
+<img src='https://github.com/orhanobut/logger/blob/master/images/description.png'/>
 
+### More logs
+```java
+Logger.d("something");
+Logger.e(exception);
+Logger.json(JSON_CONTENT);
+```
 <img src='https://github.com/orhanobut/logger/blob/master/images/logger-log.png'/>
 
 ### Method info
@@ -44,9 +51,6 @@ void methodA(){
 In logger, both method information will be shown, thus you will know which method actually called this method.
 
 <img src='https://github.com/orhanobut/logger/blob/master/images/two-method-with-thread-desc.png'/>
-
-### Log details
-<img src='https://github.com/orhanobut/logger/blob/master/images/description.png'/>
 
 ### Change method count (Default: 2)
 ```java
