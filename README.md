@@ -43,6 +43,8 @@ void methodA(){
 ```
 In logger, both method information will be shown, thus you will know which method actually called this method.
 
+<img src='https://github.com/orhanobut/logger/blob/master/images/two-method-with-thread-desc.png'/>
+
 ### Log details
 <img src='https://github.com/orhanobut/logger/blob/master/images/description.png'/>
 
@@ -55,7 +57,7 @@ or set it for specific logs
 Logger.d("message", 1);
 ```
 
-<img src='https://github.com/orhanobut/logger/blob/master/images/logger-log.png'/>
+<img src='https://github.com/orhanobut/logger/blob/master/images/one-method-with-thread.png'/>
 
 
 ### Hide thread information
