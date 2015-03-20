@@ -30,6 +30,24 @@ Logger.d("hello");
 ```
 <img src='https://github.com/orhanobut/logger/blob/master/images/description.png'/>
 
+### Usage
+```java
+Logger.d("hello");
+Logger.e("hello");
+Logger.w("hello");
+Logger.v("hello");
+Logger.wtf("hello");
+Logger.json(JSON_CONTENT);
+```
+
+### Settings (optional)
+Change the settings with initialize. This should be called in application class
+```java
+Logger
+   .init(YOUR_TAG)     // default tag : PRETTYLOGGER
+   .setMethodCount(3)  // default 2
+   .hideThreadInfo();  // default it is shown
+```
 ### More logs
 ```java
 Logger.d("hello");
