@@ -41,14 +41,14 @@ Logger.json(JSON_CONTENT);
 ```
 
 ### Settings (optional)
-Change the settings with initialize. This should be called in application class
+Change the settings with init. This should be called only once. Best place would be in application class
 ```java
 Logger
    .init(YOUR_TAG)     // default tag : PRETTYLOGGER
    .setMethodCount(3)  // default 2
    .hideThreadInfo();  // default it is shown
 ```
-### More logs
+### More log samples
 ```java
 Logger.d("hello");
 Logger.e(exception);
@@ -57,7 +57,7 @@ Logger.json(JSON_CONTENT);
 <img src='https://github.com/orhanobut/logger/blob/master/images/logger-log.png'/>
 
 ### Method info
-With logger, you can see methods in order and thread information. For example
+With logger, you can see caller methods in order and thread information. For example
 ```java
 void methodA(){
    methodB();
