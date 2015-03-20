@@ -18,7 +18,7 @@ compile 'com.orhanobut:logger:1.0'
 
 ### Current Log system
 ```java
-Log.d(TAG,"something");
+Log.d(TAG,"hello");
 ```
 
 <img src='https://github.com/orhanobut/logger/blob/master/images/current-log.png'/>
@@ -26,13 +26,13 @@ Log.d(TAG,"something");
 
 ### Logger
 ```java
-Logger.d("something");
+Logger.d("hello");
 ```
 <img src='https://github.com/orhanobut/logger/blob/master/images/description.png'/>
 
 ### More logs
 ```java
-Logger.d("something");
+Logger.d("hello");
 Logger.e(exception);
 Logger.json(JSON_CONTENT);
 ```
@@ -45,7 +45,7 @@ void methodA(){
    methodB();
 }
 void methodA(){
-   Logger.d("something");
+   Logger.d("hello");
 }
 ```
 In logger, both method information will be shown, thus you will know which method actually called this method.
@@ -58,7 +58,7 @@ Logger.init().setMethodCount(1);
 ```
 or set it for specific logs
 ```java
-Logger.d("message", 1);
+Logger.d("hello", 1);
 ```
 
 <img src='https://github.com/orhanobut/logger/blob/master/images/one-method-with-thread.png'/>
@@ -98,7 +98,8 @@ Logger.init(YOUR_TAG);
 ```
 
 ### Notes
-For the consistency, use filter
+For the better result, use filter
+
 <img src='https://github.com/orhanobut/logger/blob/master/images/filter.png'/>
 
 
