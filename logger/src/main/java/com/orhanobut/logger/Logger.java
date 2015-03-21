@@ -19,13 +19,16 @@ public final class Logger {
      */
     private static final int CHUNK_SIZE = 4000;
     private static final int JSON_INDENT = 4;
+    private static final Settings settings = new Settings();
+
+    private static LogLevel logLevel = LogLevel.FULL;
 
     /**
      * TAG is used for the Log, the name is a little different
      * in order to differentiate the logs easily with the filter
      */
     private static String TAG = "PRETTYLOGGER";
-    private static Settings settings = new Settings();
+
 
     //no instance
     private Logger() {
@@ -40,12 +43,20 @@ public final class Logger {
         return settings;
     }
 
+    public static Settings init(LogLevel logLevel) {
+        return init(logLevel, TAG);
+    }
+
+    public static Settings init(String tag) {
+        return init(LogLevel.FULL, tag);
+    }
+
     /**
      * It is used to change the tag
      *
      * @param tag is the given string which will be used in Logger
      */
-    public static Settings init(String tag) {
+    public static Settings init(LogLevel logLevel, String tag) {
         if (tag == null) {
             throw new NullPointerException("tag may not be null");
         }
@@ -53,6 +64,7 @@ public final class Logger {
             throw new IllegalStateException("tag may not be empty");
         }
         Logger.TAG = tag;
+        Logger.logLevel = logLevel;
         return settings;
     }
 
@@ -171,6 +183,9 @@ public final class Logger {
     }
 
     private static void log(int logType, String message, int methodCount) {
+        if (logLevel == LogLevel.NONE) {
+            return;
+        }
         logHeader(logType);
         logHeaderContent(logType, methodCount);
 
@@ -236,7 +251,7 @@ public final class Logger {
 
     private static void logContent(int logType, String chunk) {
         String[] lines = chunk.split(System.getProperty("line.separator"));
-        for (String line : lines){
+        for (String line : lines) {
             logChunk(logType, "║ " + line);
         }
     }

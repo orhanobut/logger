@@ -9,11 +9,11 @@ Logger provides :
 - Method information
 - Pretty-print for json content
 - Clean log
-- Jump to source feature : Easily go to source which made the log info
+- Jump to source feature
 
 ### Gradle
 ```groovy
-compile 'com.orhanobut:logger:1.0'
+compile 'com.orhanobut:logger:1.1'
 ```
 
 ### Current Log system
@@ -44,10 +44,12 @@ Logger.json(JSON_CONTENT);
 Change the settings with init. This should be called only once. Best place would be in application class
 ```java
 Logger
-   .init(YOUR_TAG)     // default tag : PRETTYLOGGER
+   .init(LogLevel, YOUR_TAG)     // default tag : PRETTYLOGGER, LogLevel = FULL
    .setMethodCount(3)  // default 2
    .hideThreadInfo();  // default it is shown
 ```
+- If you init Logger with LogLevel.NONE, no log will be printed, use it for release versions.
+
 ### More log samples
 ```java
 Logger.d("hello");
