@@ -1,5 +1,5 @@
 #Logger
-Simple,pretty and powerful log for android
+Simple,pretty and powerful logger for android
 
 <img src='https://github.com/orhanobut/logger/blob/master/images/logger-logo.png' width='128' height='128'/>
 
