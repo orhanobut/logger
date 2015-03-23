@@ -22,11 +22,11 @@ public class MainActivity extends ActionBarActivity {
         printPretty();
     }
 
-    void printNormalLog(){
+    void printNormalLog() {
         Log.v(TAG, "hey i am a log which you don't see easily");
         Log.v(TAG, "i = 0 + 1");
         Log.v(TAG, Dummy.JSON_WITH_NO_LINE_BREAK);
-        Log.v(TAG, Dummy.JSON_WITH_LINE_BREAK);
+        Log.v("test", Dummy.JSON_WITH_LINE_BREAK);
     }
 
     void printPretty() {
@@ -48,8 +48,11 @@ public class MainActivity extends ActionBarActivity {
     void test2() {
         Logger.v("test2", 3);
         Logger.v("test3", 0);
-        Logger.v("test3", 2);
+        Logger.v("MYTAG", "test3", 2);
         Logger.wtf("test3", 1);
+        Logger.d("", "logger with tag");
+        Logger.d("tag3", "logger with tag");
+        Logger.d("ta", "logger with tag");
     }
 
 }

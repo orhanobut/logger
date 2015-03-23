@@ -8,6 +8,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 /**
+ * Logger is a wrapper of {@link android.util.Log}
+ * But more pretty, simple and powerful
+ *
  * @author Orhan Obut
  */
 public final class Logger {
@@ -18,9 +21,38 @@ public final class Logger {
      * is UTF-8
      */
     private static final int CHUNK_SIZE = 4000;
+
+    /**
+     * It is used for json pretty print
+     */
     private static final int JSON_INDENT = 4;
+
+    /**
+     * In order to prevent readability, max method count is restricted with 5
+     */
+    private static final int MAX_METHOD_COUNT = 5;
+
+    /**
+     * It is used to determine log settings such as method count, thread info visibility
+     */
     private static final Settings settings = new Settings();
 
+    /**
+     * Drawing toolbox
+     */
+    private static final char TOP_LEFT_CORNER = '╔';
+    private static final char BOTTOM_LEFT_CORNER = '╚';
+    private static final char MIDDLE_CORNER = '╟';
+    private static final char HORIZONTAL_DOUBLE_LINE = '║';
+    private static final String DOUBLE_DIVIDER = "════════════════════════════════════════════";
+    private static final String SINGLE_DIVIDER = "────────────────────────────────────────────";
+    private static final String TOP_BORDER = TOP_LEFT_CORNER + DOUBLE_DIVIDER + DOUBLE_DIVIDER;
+    private static final String BOTTOM_BORDER = BOTTOM_LEFT_CORNER + DOUBLE_DIVIDER + DOUBLE_DIVIDER;
+    private static final String MIDDLE_BORDER = MIDDLE_CORNER + SINGLE_DIVIDER + SINGLE_DIVIDER;
+
+    /**
+     * Determines how logs will printed
+     */
     private static LogLevel logLevel = LogLevel.FULL;
 
     /**
@@ -28,7 +60,6 @@ public final class Logger {
      * in order to differentiate the logs easily with the filter
      */
     private static String TAG = "PRETTYLOGGER";
-
 
     //no instance
     private Logger() {
@@ -69,20 +100,36 @@ public final class Logger {
     }
 
     public static void d(String message) {
-        d(message, settings.methodCount);
+        d(TAG, message);
+    }
+
+    public static void d(String tag, String message) {
+        d(tag, message, settings.methodCount);
     }
 
     public static void d(String message, int methodCount) {
+        d(TAG, message, methodCount);
+    }
+
+    public static void d(String tag, String message, int methodCount) {
         validateMethodCount(methodCount);
-        log(Log.DEBUG, message, methodCount);
+        log(Log.DEBUG, tag, message, methodCount);
     }
 
     public static void e(String message) {
-        e(message, null, settings.methodCount);
+        e(TAG, message);
+    }
+
+    public static void e(String tag, String message) {
+        e(tag, message, null, settings.methodCount);
     }
 
     public static void e(Exception e) {
-        e(null, e, settings.methodCount);
+        e(TAG, null, e, settings.methodCount);
+    }
+
+    public static void e(String tag, Exception e) {
+        e(tag, null, e, settings.methodCount);
     }
 
     public static void e(String message, int methodCount) {
@@ -90,11 +137,16 @@ public final class Logger {
         e(message, null, methodCount);
     }
 
-    public static void e(String message, Exception e) {
-        e(message, e, settings.methodCount);
+    public static void e(String tag, String message, int methodCount) {
+        validateMethodCount(methodCount);
+        e(tag, message, null, methodCount);
     }
 
-    public static void e(String message, Exception e, int methodCount) {
+    public static void e(String tag, String message, Exception e) {
+        e(tag, message, e, settings.methodCount);
+    }
+
+    public static void e(String tag, String message, Exception e, int methodCount) {
         validateMethodCount(methodCount);
         if (e != null && message != null) {
             message += " : " + e.toString();
@@ -105,43 +157,75 @@ public final class Logger {
         if (message == null) {
             message = "No message/exception is set";
         }
-        log(Log.ERROR, message, methodCount);
+        log(Log.ERROR, tag, message, methodCount);
     }
 
     public static void w(String message) {
-        w(message, settings.methodCount);
+        w(TAG, message);
+    }
+
+    public static void w(String tag, String message) {
+        w(tag, message, settings.methodCount);
     }
 
     public static void w(String message, int methodCount) {
+        w(TAG, message, methodCount);
+    }
+
+    public static void w(String tag, String message, int methodCount) {
         validateMethodCount(methodCount);
-        log(Log.WARN, message, methodCount);
+        log(Log.WARN, tag, message, methodCount);
     }
 
     public static void i(String message) {
-        i(message, settings.methodCount);
+        i(TAG, message);
+    }
+
+    public static void i(String tag, String message) {
+        i(tag, message, settings.methodCount);
     }
 
     public static void i(String message, int methodCount) {
+        i(TAG, message, methodCount);
+    }
+
+    public static void i(String tag, String message, int methodCount) {
         validateMethodCount(methodCount);
-        log(Log.INFO, message, methodCount);
+        log(Log.INFO, tag, message, methodCount);
     }
 
     public static void v(String message) {
-        v(message, settings.methodCount);
+        v(TAG, message);
+    }
+
+    public static void v(String tag, String message) {
+        v(tag, message, settings.methodCount);
     }
 
     public static void v(String message, int methodCount) {
+        v(TAG, message, methodCount);
+    }
+
+    public static void v(String tag, String message, int methodCount) {
         validateMethodCount(methodCount);
-        log(Log.VERBOSE, message, methodCount);
+        log(Log.VERBOSE, tag, message, methodCount);
     }
 
     public static void wtf(String message) {
-        wtf(message, settings.methodCount);
+        wtf(TAG, message);
+    }
+
+    public static void wtf(String tag, String message) {
+        wtf(tag, message, settings.methodCount);
     }
 
     public static void wtf(String message, int methodCount) {
+        wtf(TAG, message, methodCount);
+    }
+
+    public static void wtf(String tag, String message, int methodCount) {
         validateMethodCount(methodCount);
-        log(Log.ASSERT, message, methodCount);
+        log(Log.ASSERT, tag, message, methodCount);
     }
 
     /**
@@ -150,7 +234,15 @@ public final class Logger {
      * @param json the json content
      */
     public static void json(String json) {
-        json(json, settings.methodCount);
+        json(TAG, json);
+    }
+
+    public static void json(String tag, String json) {
+        json(tag, json, settings.methodCount);
+    }
+
+    public static void json(String json, int methodCount) {
+        json(TAG, json, methodCount);
     }
 
     /**
@@ -159,67 +251,67 @@ public final class Logger {
      * @param json        the json content
      * @param methodCount number of the method that will be printed
      */
-    public static void json(String json, int methodCount) {
+    public static void json(String tag, String json, int methodCount) {
         validateMethodCount(methodCount);
         if (TextUtils.isEmpty(json)) {
-            d("Empty/Null json content", methodCount);
+            d(tag, "Empty/Null json content", methodCount);
             return;
         }
         try {
             if (json.startsWith("{")) {
                 JSONObject jsonObject = new JSONObject(json);
                 String message = jsonObject.toString(JSON_INDENT);
-                d(message, methodCount);
+                d(tag, message, methodCount);
                 return;
             }
             if (json.startsWith("[")) {
                 JSONArray jsonArray = new JSONArray(json);
                 String message = jsonArray.toString(JSON_INDENT);
-                d(message, methodCount);
+                d(tag, message, methodCount);
             }
         } catch (JSONException e) {
-            d(e.getCause().getMessage() + "\n" + json, methodCount);
+            d(tag, e.getCause().getMessage() + "\n" + json, methodCount);
         }
     }
 
-    private static void log(int logType, String message, int methodCount) {
+    private static void log(int logType, String tag, String message, int methodCount) {
         if (logLevel == LogLevel.NONE) {
             return;
         }
-        logHeader(logType);
-        logHeaderContent(logType, methodCount);
+        logTopBorder(logType, tag);
+        logHeaderContent(logType, tag, methodCount);
 
         //get bytes of message with system's default charset (which is UTF-8 for Android)
         byte[] bytes = message.getBytes();
         int length = bytes.length;
         if (length <= CHUNK_SIZE) {
             if (methodCount > 0) {
-                logDivider(logType);
+                logDivider(logType, tag);
             }
-            logContent(logType, message);
-            logFooter(logType);
+            logContent(logType, tag, message);
+            logBottomBorder(logType, tag);
             return;
         }
         if (methodCount > 0) {
-            logDivider(logType);
+            logDivider(logType, tag);
         }
         for (int i = 0; i < length; i += CHUNK_SIZE) {
             int count = Math.min(length - i, CHUNK_SIZE);
             //create a new String with system's default charset (which is UTF-8 for Android)
-            logContent(logType, new String(bytes, i, count));
+            logContent(logType, tag, new String(bytes, i, count));
         }
-        logFooter(logType);
+        logBottomBorder(logType, tag);
     }
 
-    private static void logHeader(int logType) {
-        logChunk(logType, "╔════════════════════════════════════════════════════════════════════════════════");
+    private static void logTopBorder(int logType, String tag) {
+        logChunk(logType, tag, TOP_BORDER);
     }
 
-    private static void logHeaderContent(int logType, int methodCount) {
+    private static void logHeaderContent(int logType, String tag, int methodCount) {
         StackTraceElement[] trace = Thread.currentThread().getStackTrace();
         if (settings.showThreadInfo) {
-            logChunk(logType, "║ Thread: " + Thread.currentThread().getName());
-            logDivider(logType);
+            logChunk(logType, tag, HORIZONTAL_DOUBLE_LINE + " Thread: " + Thread.currentThread().getName());
+            logDivider(logType, tag);
         }
         String level = "";
         for (int i = methodCount; i > 0; i--) {
@@ -237,46 +329,47 @@ public final class Logger {
                     .append(trace[stackIndex].getLineNumber())
                     .append(")");
             level += "   ";
-            logChunk(logType, builder.toString());
+            logChunk(logType, tag, builder.toString());
         }
     }
 
-    private static void logFooter(int logType) {
-        logChunk(logType, "╚════════════════════════════════════════════════════════════════════════════════");
+    private static void logBottomBorder(int logType, String tag) {
+        logChunk(logType, tag, BOTTOM_BORDER);
     }
 
-    private static void logDivider(int logType) {
-        logChunk(logType, "╟────────────────────────────────────────────────────────────────────────────────");
+    private static void logDivider(int logType, String tag) {
+        logChunk(logType, tag, MIDDLE_BORDER);
     }
 
-    private static void logContent(int logType, String chunk) {
+    private static void logContent(int logType, String tag, String chunk) {
         String[] lines = chunk.split(System.getProperty("line.separator"));
         for (String line : lines) {
-            logChunk(logType, "║ " + line);
+            logChunk(logType, tag, HORIZONTAL_DOUBLE_LINE + " " + line);
         }
     }
 
-    private static void logChunk(int logType, String chunk) {
+    private static void logChunk(int logType, String tag, String chunk) {
+        String finalTag = formatTag(tag);
         switch (logType) {
             case Log.ERROR:
-                Log.e(TAG, chunk);
+                Log.e(finalTag, chunk);
                 break;
             case Log.INFO:
-                Log.i(TAG, chunk);
+                Log.i(finalTag, chunk);
                 break;
             case Log.VERBOSE:
-                Log.v(TAG, chunk);
+                Log.v(finalTag, chunk);
                 break;
             case Log.WARN:
-                Log.w(TAG, chunk);
+                Log.w(finalTag, chunk);
                 break;
             case Log.ASSERT:
-                Log.wtf(TAG, chunk);
+                Log.wtf(finalTag, chunk);
                 break;
             case Log.DEBUG:
                 // Fall through, log debug by default
             default:
-                Log.d(TAG, chunk);
+                Log.d(finalTag, chunk);
                 break;
         }
     }
@@ -284,6 +377,19 @@ public final class Logger {
     private static String getSimpleClassName(String name) {
         int lastIndex = name.lastIndexOf(".");
         return name.substring(lastIndex + 1);
+    }
+
+    private static void validateMethodCount(int methodCount) {
+        if (methodCount < 0 || methodCount > MAX_METHOD_COUNT) {
+            throw new IllegalStateException("methodCount must be > 0 and < 5");
+        }
+    }
+
+    private static String formatTag(String tag) {
+        if (!TextUtils.isEmpty(tag) && !TextUtils.equals(TAG, tag)) {
+            return TAG + "-" + tag;
+        }
+        return TAG;
     }
 
     public static class Settings {
@@ -302,9 +408,5 @@ public final class Logger {
         }
     }
 
-    private static void validateMethodCount(int methodCount) {
-        if (methodCount < 0 || methodCount > 5) {
-            throw new IllegalStateException("methodCount must be bigger than 0 and less than 5");
-        }
-    }
+
 }
