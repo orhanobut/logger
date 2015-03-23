@@ -10,7 +10,7 @@ Logger provides :
 - Class information
 - Method information
 - Pretty-print for json content
-- Clean log
+- Clean output
 - Jump to source feature
 
 ### Gradle
@@ -42,15 +42,29 @@ Logger.wtf("hello");
 Logger.json(JSON_CONTENT);
 ```
 
+### Change TAG
+All logs
+```java
+Logger.init(YOUR_TAG);
+```
+Log based
+```java
+Logger.d("mytag", "hello");
+```
+<img src='https://github.com/orhanobut/logger/blob/master/images/custom-tag.png'/>
+
+
 ### Settings (optional)
-Change the settings with init. This should be called only once. Best place would be in application class
+Change the settings with init. This should be called only once. Best place would be in application class. All of them
+ are optional.
 ```java
 Logger
-   .init(LogLevel, YOUR_TAG)     // default tag : PRETTYLOGGER, LogLevel = FULL
-   .setMethodCount(3)  // default 2
-   .hideThreadInfo();  // default it is shown
+   .init(YOUR_TAG)               // default tag : PRETTYLOGGER or use just init()
+   .setMethodCount(3)            // default 2
+   .hideThreadInfo()             // default it is shown
+   .setLogLevel(LogLevel.NONE);  // default : LogLevel.FULL
 ```
-- If you init Logger with LogLevel.NONE, no log will be printed, use it for release versions.
+Note: Use LogLevel.NONE for the release versions.
 
 ### More log samples
 ```java
@@ -61,7 +75,7 @@ Logger.json(JSON_CONTENT);
 <img src='https://github.com/orhanobut/logger/blob/master/images/logger-log.png'/>
 
 ### Method info
-With logger, you can see caller methods in order and thread information. For example
+Observe the caller methods in the order they are invoked and also thread information.
 ```java
 void methodA(){
    methodB();
@@ -70,15 +84,16 @@ void methodA(){
    Logger.d("hello");
 }
 ```
-In logger, both method information will be shown, thus you will know which method actually called this method.
+Both method information will be shown in the order of invocation.
 
 <img src='https://github.com/orhanobut/logger/blob/master/images/two-method-with-thread-desc.png'/>
 
 ### Change method count (Default: 2)
+All logs
 ```java
 Logger.init().setMethodCount(1);
 ```
-or set it for specific logs
+Log based
 ```java
 Logger.d("hello", 1);
 ```
@@ -101,7 +116,7 @@ Logger.init().setMethodCount(0).hideThreadInfo();
 <img src='https://github.com/orhanobut/logger/blob/master/images/just-content.png'/>
 
 ### Pretty print json, Logger.json
-Logger has json call in order to format the json content.
+Format the json content in a pretty way
 ```java
 Logger.json(YOUR_JSON_DATA);
 ```
@@ -109,20 +124,19 @@ Logger.json(YOUR_JSON_DATA);
 <img src='https://github.com/orhanobut/logger/blob/master/images/json-log.png'/>
 
 ### Log exceptions in simple way
-Logger will show the cause of the exception
+Show the cause of the exception
 ```java
 Logger.e(exception);
 ```
 
-### Change TAG
-```java
-Logger.init(YOUR_TAG);
-```
-
 ### Notes
-For the better result, use filter
+- Use the filter for a better result
 
 <img src='https://github.com/orhanobut/logger/blob/master/images/filter.png'/>
+
+- Make sure that the wrap option is disabled
+
+<img src='https://github.com/orhanobut/logger/blob/master/images/wrap-closed.png'/>
 
 
 #### You might also like
