@@ -51,11 +51,6 @@ public final class Logger {
     private static final String MIDDLE_BORDER = MIDDLE_CORNER + SINGLE_DIVIDER + SINGLE_DIVIDER;
 
     /**
-     * Determines how logs will printed
-     */
-    private static LogLevel logLevel = LogLevel.FULL;
-
-    /**
      * TAG is used for the Log, the name is a little different
      * in order to differentiate the logs easily with the filter
      */
@@ -74,20 +69,12 @@ public final class Logger {
         return settings;
     }
 
-    public static Settings init(LogLevel logLevel) {
-        return init(logLevel, TAG);
-    }
-
-    public static Settings init(String tag) {
-        return init(LogLevel.FULL, tag);
-    }
-
     /**
      * It is used to change the tag
      *
      * @param tag is the given string which will be used in Logger
      */
-    public static Settings init(LogLevel logLevel, String tag) {
+    public static Settings init(String tag) {
         if (tag == null) {
             throw new NullPointerException("tag may not be null");
         }
@@ -95,7 +82,6 @@ public final class Logger {
             throw new IllegalStateException("tag may not be empty");
         }
         Logger.TAG = tag;
-        Logger.logLevel = logLevel;
         return settings;
     }
 
@@ -275,7 +261,7 @@ public final class Logger {
     }
 
     private static void log(int logType, String tag, String message, int methodCount) {
-        if (logLevel == LogLevel.NONE) {
+        if (settings.logLevel == LogLevel.NONE) {
             return;
         }
         logTopBorder(logType, tag);
@@ -396,6 +382,11 @@ public final class Logger {
         int methodCount = 2;
         boolean showThreadInfo = true;
 
+        /**
+         * Determines how logs will printed
+         */
+        LogLevel logLevel = LogLevel.FULL;
+
         public Settings hideThreadInfo() {
             showThreadInfo = false;
             return this;
@@ -404,6 +395,11 @@ public final class Logger {
         public Settings setMethodCount(int methodCount) {
             validateMethodCount(methodCount);
             this.methodCount = methodCount;
+            return this;
+        }
+
+        public Settings setLogLevel(LogLevel logLevel) {
+            this.logLevel = logLevel;
             return this;
         }
     }

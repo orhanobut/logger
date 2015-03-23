@@ -31,7 +31,7 @@ public class LoggerTest extends TestCase {
 
     public void testSetTag() {
         try {
-            Logger.init(LogLevel.FULL, null);
+            Logger.init(null);
             fail();
         } catch (Exception e) {
             Assert.assertTrue(true);
