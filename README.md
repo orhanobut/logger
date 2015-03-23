@@ -42,6 +42,21 @@ Logger.wtf("hello");
 Logger.json(JSON_CONTENT);
 ```
 
+### Change TAG
+Either change tag for whole logs
+```java
+Logger.init(YOUR_TAG);
+```
+
+or you can also use different tags for each log. Custom tag will be concat with TAG. Thus you will be able to use
+filter for both.
+
+```java
+Logger.d("mytag", "hello");
+```
+<img src='https://github.com/orhanobut/logger/blob/master/images/custom-tag.png'/>
+
+
 ### Settings (optional)
 Change the settings with init. This should be called only once. Best place would be in application class
 ```java
@@ -114,15 +129,14 @@ Logger will show the cause of the exception
 Logger.e(exception);
 ```
 
-### Change TAG
-```java
-Logger.init(YOUR_TAG);
-```
-
 ### Notes
-For the better result, use filter
+- For the better result, use filter
 
 <img src='https://github.com/orhanobut/logger/blob/master/images/filter.png'/>
+
+- Make sure that wrap option is disabled
+
+<img src='https://github.com/orhanobut/logger/blob/master/images/wrap-closed.png'/>
 
 
 #### You might also like
