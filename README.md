@@ -1,5 +1,7 @@
+[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Logger-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/1658)
+
 #Logger
-Simple,pretty and powerful log for android
+Simple,pretty and powerful logger for android
 
 <img src='https://github.com/orhanobut/logger/blob/master/images/logger-logo.png' width='128' height='128'/>
 
