@@ -10,7 +10,7 @@ Logger provides :
 - Class information
 - Method information
 - Pretty-print for json content
-- Clean log output
+- Clean output
 - Jump to source feature
 
 ### Gradle
@@ -64,7 +64,7 @@ Logger
    .hideThreadInfo()             // default it is shown
    .setLogLevel(LogLevel.NONE);  // default : LogLevel.FULL
 ```
-Note: Use LogLevel.NONE for release versions.
+Note: Use LogLevel.NONE for the release versions.
 
 ### More log samples
 ```java
@@ -75,7 +75,7 @@ Logger.json(JSON_CONTENT);
 <img src='https://github.com/orhanobut/logger/blob/master/images/logger-log.png'/>
 
 ### Method info
-Observe caller methods in the order they are invoked and also thread information. For example
+Observe the caller methods in the order they are invoked and also thread information.
 ```java
 void methodA(){
    methodB();
@@ -84,7 +84,7 @@ void methodA(){
    Logger.d("hello");
 }
 ```
-In logger, both method information will be shown and you will see the invocation order.
+Both method information will be shown in the order of invocation.
 
 <img src='https://github.com/orhanobut/logger/blob/master/images/two-method-with-thread-desc.png'/>
 
@@ -130,11 +130,11 @@ Logger.e(exception);
 ```
 
 ### Notes
-- Use filter for a better result
+- Use the filter for a better result
 
 <img src='https://github.com/orhanobut/logger/blob/master/images/filter.png'/>
 
-- Make sure that wrap option is disabled
+- Make sure that the wrap option is disabled
 
 <img src='https://github.com/orhanobut/logger/blob/master/images/wrap-closed.png'/>
 
