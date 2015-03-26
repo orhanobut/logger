@@ -261,7 +261,7 @@ public final class Logger {
     }
 
     /**
-     * This method should synchronized to avoid messy of logs' order.
+     * This method is synchronized in order to avoid messy of logs' order.
      */
     private synchronized static void log(int logType, String tag, String message, int methodCount) {
         if (settings.logLevel == LogLevel.NONE) {
