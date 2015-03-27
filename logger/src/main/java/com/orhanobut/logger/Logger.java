@@ -120,7 +120,7 @@ public final class Logger {
 
     public static void e(String message, int methodCount) {
         validateMethodCount(methodCount);
-        e(message, null, methodCount);
+        e(TAG, message, methodCount);
     }
 
     public static void e(String tag, String message, int methodCount) {
@@ -303,8 +303,21 @@ public final class Logger {
             logDivider(logType, tag);
         }
         String level = "";
+
+        int stackOffset = -1;
+        boolean foundThisClass = false;
+        for (StackTraceElement e : trace) {
+            //ignore this class in log output
+            if(!foundThisClass && e.getClassName().equals(Logger.class.getName())) {
+                foundThisClass = true;
+            } else if (foundThisClass && !e.getClassName().equals(Logger.class.getName())){
+                break;
+            }
+            stackOffset++;
+        }
+
         for (int i = methodCount; i > 0; i--) {
-            int stackIndex = i + 5;
+            int stackIndex = i + stackOffset;
             StringBuilder builder = new StringBuilder();
             builder.append("║ ")
                     .append(level)
