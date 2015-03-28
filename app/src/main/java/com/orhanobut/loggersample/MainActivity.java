@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 
-import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 
 
@@ -18,8 +17,7 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         Logger.init()
-                .setMethodCount(1)
-                .setLogLevel(LogLevel.NONE);
+                .setMethodCount(1);
 
         printNormalLog();
         printPretty();
