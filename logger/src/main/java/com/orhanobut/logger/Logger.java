@@ -33,6 +33,11 @@ public final class Logger {
     private static final int MAX_METHOD_COUNT = 5;
 
     /**
+     * The minimum stack trace index, starts at this class after two native calls.
+     */
+    private static final int MIN_STACK_OFFSET = 3;
+
+    /**
      * It is used to determine log settings such as method count, thread info visibility
      */
     private static final Settings settings = new Settings();
@@ -304,17 +309,7 @@ public final class Logger {
         }
         String level = "";
 
-        int stackOffset = -1;
-        boolean foundThisClass = false;
-        for (StackTraceElement e : trace) {
-            //ignore this class in log output
-            if(!foundThisClass && e.getClassName().equals(Logger.class.getName())) {
-                foundThisClass = true;
-            } else if (foundThisClass && !e.getClassName().equals(Logger.class.getName())){
-                break;
-            }
-            stackOffset++;
-        }
+        int stackOffset = getStackOffset(trace);
 
         for (int i = methodCount; i > 0; i--) {
             int stackIndex = i + stackOffset;
@@ -420,5 +415,20 @@ public final class Logger {
         }
     }
 
+    /**
+     * Determines the starting index of the stack trace, after method calls made by this class.
+     *
+     * @param trace the stack trace
+     * @return  the stack offset
+     */
+    private static int getStackOffset(StackTraceElement[] trace) {
+        for (int i = MIN_STACK_OFFSET; i < trace.length; i++) {
+            StackTraceElement e = trace[i];
+            if (!e.getClassName().equals(Logger.class.getName())) {
+                return --i;
+            }
+        }
+        return -1;
+    }
 
 }
