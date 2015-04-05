@@ -10,8 +10,9 @@ Logger provides :
 - Class information
 - Method information
 - Pretty-print for json content
+- Pretty-print for new line "\n"
 - Clean output
-- Jump to source feature
+- Jump to source
 
 ### Gradle
 ```groovy
@@ -58,11 +59,19 @@ Logger.d("mytag", "hello");
 Change the settings with init. This should be called only once. Best place would be in application class. All of them
  are optional.
 ```java
-Logger
-   .init(YOUR_TAG)               // default tag : PRETTYLOGGER or use just init()
-   .setMethodCount(3)            // default 2
-   .hideThreadInfo()             // default it is shown
-   .setLogLevel(LogLevel.NONE);  // default : LogLevel.FULL
+public class MyApplication extends Application {
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        Logger
+             .init(YOUR_TAG)               // default PRETTYLOGGER or use just init()
+             .setMethodCount(3)            // default 2
+             .hideThreadInfo()             // default shown
+             .setLogLevel(LogLevel.NONE);  // default LogLevel.FULL
+    }
+}
 ```
 Note: Use LogLevel.NONE for the release versions.
 
@@ -108,7 +117,7 @@ Logger.init().setMethodCount(1).hideThreadInfo();
 
 <img src='https://github.com/orhanobut/logger/blob/master/images/one-method-no-header.png'/>
 
-### Only show the content
+### Only show the message
 ```java
 Logger.init().setMethodCount(0).hideThreadInfo();
 ```
@@ -123,7 +132,7 @@ Logger.json(YOUR_JSON_DATA);
 
 <img src='https://github.com/orhanobut/logger/blob/master/images/json-log.png'/>
 
-### Log exceptions in simple way
+### Log exceptions in a simple way
 Show the cause of the exception
 ```java
 Logger.e(exception);
