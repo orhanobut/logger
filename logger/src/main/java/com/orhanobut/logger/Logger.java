@@ -7,6 +7,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.StringReader;
+import java.io.StringWriter;
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamSource;
+
 /**
  * Logger is a wrapper of {@link android.util.Log}
  * But more pretty, simple and powerful
@@ -262,6 +273,48 @@ public final class Logger {
             }
         } catch (JSONException e) {
             d(tag, e.getCause().getMessage() + "\n" + json, methodCount);
+        }
+    }
+
+    /**
+     * Formats the json content and print it
+     *
+     * @param xml the json content
+     */
+    public static void xml(String xml) {
+        xml(TAG, xml);
+    }
+
+    public static void xml(String tag, String xml) {
+        xml(tag, xml, settings.methodCount);
+    }
+
+    public static void xml(String xml, int methodCount) {
+        xml(TAG, xml, methodCount);
+    }
+
+    /**
+     * Formats the json content and print it
+     * @param xml         the xml content
+     * @param methodCount number of the method that will be printed
+     */
+    public static void xml(String tag, String xml, int methodCount) {
+        validateMethodCount(methodCount);
+        if (TextUtils.isEmpty(xml)) {
+            d(tag, "Empty/Null xml content", methodCount);
+            return;
+        }
+
+        try {
+            Source xmlInput = new StreamSource(new StringReader(xml));
+            StreamResult xmlOutput = new StreamResult(new StringWriter());
+            Transformer transformer = TransformerFactory.newInstance().newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+            transformer.transform(xmlInput, xmlOutput);
+            d(tag, xmlOutput.getWriter().toString().replaceFirst(">", ">\n"), methodCount);
+        } catch (TransformerException  e) {
+            d(tag, e.getCause().getMessage() + "\n" + xml, methodCount);
         }
     }
 

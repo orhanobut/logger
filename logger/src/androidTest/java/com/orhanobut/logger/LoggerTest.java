@@ -189,4 +189,38 @@ public class LoggerTest extends TestCase {
     public void testJson(){
         Logger.json("{\"test\":\"test\"}");
     }
+
+    public void testSetLogXmlForMethodCount(){
+        try {
+            Logger.xml("<xml></xml>", -1);
+            fail();
+        } catch (Exception e) {
+            Assert.assertTrue(true);
+        }
+        try {
+            Logger.xml("<xml></xml>", 6);
+            fail();
+        } catch (Exception e) {
+            Assert.assertTrue(true);
+        }
+        try {
+            Logger.xml("<xml></xml>", 3);
+            Assert.assertTrue(true);
+        } catch (Exception e) {
+            fail();
+        }
+    }
+
+    public void testXmlLogger(){
+        Logger.xml("<note>" +
+                "<to>Tove</to>" +
+                "<from>Jani</from>" +
+                "<heading>Reminder</heading>" +
+                "<body>Don't forget me this weekend!</body>" +
+                "</note>");
+    }
+
+    public void testEmptyXml(){
+        Logger.xml(" ");
+    }
 }
