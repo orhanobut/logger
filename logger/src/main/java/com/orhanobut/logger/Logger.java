@@ -366,6 +366,7 @@ public final class Logger {
 
         for (int i = methodCount; i > 0; i--) {
             int stackIndex = i + stackOffset;
+            stackIndex = correctStackIndex(trace, stackIndex);
             StringBuilder builder = new StringBuilder();
             builder.append("║ ")
                     .append(level)
@@ -381,6 +382,13 @@ public final class Logger {
             level += "   ";
             logChunk(logType, tag, builder.toString());
         }
+    }
+    
+    private static int correctStackIndex(final StackTraceElement[] trace, int stackIndex) {
+        while (stackIndex >= trace.length) {
+            stackIndex--;
+        }
+        return stackIndex;
     }
 
     private static void logBottomBorder(int logType, String tag) {
