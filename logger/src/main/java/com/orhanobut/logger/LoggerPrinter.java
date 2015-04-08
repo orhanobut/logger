@@ -246,6 +246,7 @@ final class LoggerPrinter implements Printer {
 
         int stackOffset = getStackOffset(trace);
 
+        //corresponding method count with the current stack may exceeds the stack trace. Trims the count
         if (methodCount + stackOffset > trace.length) {
             methodCount = trace.length - stackOffset - 1;
         }
