@@ -383,6 +383,13 @@ public final class Logger {
             logChunk(logType, tag, builder.toString());
         }
     }
+    
+    private static int correctStackIndex(final StackTraceElement[] trace, int stackIndex) {
+        while (stackIndex >= trace.length) {
+            stackIndex--;
+        }
+        return stackIndex;
+    }
 
     private static void logBottomBorder(int logType, String tag) {
         logChunk(logType, tag, BOTTOM_BORDER);
