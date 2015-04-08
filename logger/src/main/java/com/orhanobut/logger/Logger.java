@@ -366,6 +366,7 @@ public final class Logger {
 
         for (int i = methodCount; i > 0; i--) {
             int stackIndex = i + stackOffset;
+            stackIndex = correctStackIndex(trace, stackIndex);
             StringBuilder builder = new StringBuilder();
             builder.append("║ ")
                     .append(level)
