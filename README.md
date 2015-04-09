@@ -16,7 +16,7 @@ Logger provides :
 
 ### Gradle
 ```groovy
-compile 'com.orhanobut:logger:1.4'
+compile 'com.orhanobut:logger:1.5'
 ```
 
 ### Current Log system
@@ -30,6 +30,7 @@ Log.d(TAG,"hello");
 ### Logger
 ```java
 Logger.d("hello");
+Logger.d("hello %s %d", "world", 5);   // String.format
 ```
 <img src='https://github.com/orhanobut/logger/blob/master/images/description.png'/>
 
@@ -41,6 +42,7 @@ Logger.w("hello");
 Logger.v("hello");
 Logger.wtf("hello");
 Logger.json(JSON_CONTENT);
+Logger.xml(XML_CONTENT);
 ```
 
 ### Change TAG
@@ -50,7 +52,7 @@ Logger.init(YOUR_TAG);
 ```
 Log based
 ```java
-Logger.d("mytag", "hello");
+Logger.t("mytag").d("hello");
 ```
 <img src='https://github.com/orhanobut/logger/blob/master/images/custom-tag.png'/>
 
@@ -78,7 +80,7 @@ Note: Use LogLevel.NONE for the release versions.
 ### More log samples
 ```java
 Logger.d("hello");
-Logger.e(exception);
+Logger.e(exception, "message");
 Logger.json(JSON_CONTENT);
 ```
 <img src='https://github.com/orhanobut/logger/blob/master/images/logger-log.png'/>
@@ -104,7 +106,7 @@ Logger.init().setMethodCount(1);
 ```
 Log based
 ```java
-Logger.d("hello", 1);
+Logger.t(1).d("hello");
 ```
 
 <img src='https://github.com/orhanobut/logger/blob/master/images/one-method-with-thread.png'/>
@@ -135,7 +137,7 @@ Logger.json(YOUR_JSON_DATA);
 ### Log exceptions in a simple way
 Show the cause of the exception
 ```java
-Logger.e(exception);
+Logger.e(exception,"message");
 ```
 
 ### Notes
