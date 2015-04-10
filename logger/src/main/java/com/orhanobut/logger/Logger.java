@@ -66,6 +66,10 @@ public final class Logger {
         printer.v(message, args);
     }
 
+    public static void w(String message, Object... args) {
+        printer.w(message, args);
+    }
+
     public static void wtf(String message, Object... args) {
         printer.wtf(message, args);
     }
