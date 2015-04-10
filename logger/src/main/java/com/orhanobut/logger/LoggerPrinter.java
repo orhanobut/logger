@@ -124,6 +124,11 @@ final class LoggerPrinter implements Printer {
     }
 
     @Override
+    public void w(String message, Object... args) {
+        log(Log.WARN, message, args);
+    }
+
+    @Override
     public void i(String message, Object... args) {
         log(Log.INFO, message, args);
     }
