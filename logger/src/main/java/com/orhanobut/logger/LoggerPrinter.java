@@ -150,27 +150,24 @@ final class LoggerPrinter implements Printer {
      */
     @Override
     public void json(String json) {
-        String tag = getTag();
-        int methodCount = getMethodCount();
-
         if (TextUtils.isEmpty(json)) {
-            d(tag, "Empty/Null json content", methodCount);
+            d("Empty/Null json content");
             return;
         }
         try {
             if (json.startsWith("{")) {
                 JSONObject jsonObject = new JSONObject(json);
                 String message = jsonObject.toString(JSON_INDENT);
-                d(tag, message, methodCount);
+                d(message);
                 return;
             }
             if (json.startsWith("[")) {
                 JSONArray jsonArray = new JSONArray(json);
                 String message = jsonArray.toString(JSON_INDENT);
-                d(tag, message, methodCount);
+                d(message);
             }
         } catch (JSONException e) {
-            d(tag, e.getCause().getMessage() + "\n" + json, methodCount);
+            e(e.getCause().getMessage() + "\n" + json);
         }
     }
 
@@ -181,13 +178,10 @@ final class LoggerPrinter implements Printer {
      */
     @Override
     public void xml(String xml) {
-        String tag = getTag();
-        int methodCount = getMethodCount();
         if (TextUtils.isEmpty(xml)) {
-            d(tag, "Empty/Null xml content", methodCount);
+            d("Empty/Null xml content");
             return;
         }
-
         try {
             Source xmlInput = new StreamSource(new StringReader(xml));
             StreamResult xmlOutput = new StreamResult(new StringWriter());
@@ -195,9 +189,9 @@ final class LoggerPrinter implements Printer {
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
             transformer.transform(xmlInput, xmlOutput);
-            d(tag, xmlOutput.getWriter().toString().replaceFirst(">", ">\n"), methodCount);
+            d(xmlOutput.getWriter().toString().replaceFirst(">", ">\n"));
         } catch (TransformerException e) {
-            d(tag, e.getCause().getMessage() + "\n" + xml, methodCount);
+            e(e.getCause().getMessage() + "\n" + xml);
         }
     }
 
