@@ -16,7 +16,7 @@ Logger provides :
 
 ### Gradle
 ```groovy
-compile 'com.orhanobut:logger:1.6'
+compile 'com.orhanobut:logger:1.7'
 ```
 
 ### Current Log system

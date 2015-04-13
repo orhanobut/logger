@@ -258,6 +258,9 @@ final class LoggerPrinter implements Printer {
 
         for (int i = methodCount; i > 0; i--) {
             int stackIndex = i + stackOffset;
+            if (stackIndex >= trace.length) {
+                continue;
+            }
             StringBuilder builder = new StringBuilder();
             builder.append("║ ")
                     .append(level)
