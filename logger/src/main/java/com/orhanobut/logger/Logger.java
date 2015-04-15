@@ -50,6 +50,10 @@ public final class Logger {
         printer.d(message, args);
     }
 
+    public static void d(Object object, Object... args) {
+        printer.d(object, args);
+    }
+
     public static void e(String message, Object... args) {
         printer.e(null, message, args);
     }
