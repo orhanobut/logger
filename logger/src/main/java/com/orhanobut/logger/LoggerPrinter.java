@@ -105,6 +105,11 @@ final class LoggerPrinter implements Printer {
     }
 
     @Override
+    public void d(Object object, Object... args) {
+        d(object.toString(), args);
+    }
+
+    @Override
     public void e(String message, Object... args) {
         e(null, message, args);
     }
