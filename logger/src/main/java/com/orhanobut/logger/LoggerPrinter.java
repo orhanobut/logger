@@ -91,6 +91,11 @@ final class LoggerPrinter implements Printer {
     }
 
     @Override
+    public Settings getSettings() {
+        return settings;
+    }
+
+    @Override
     public Printer t(String tag, int methodCount) {
         if (tag != null) {
             LOCAL_TAG.set(tag);

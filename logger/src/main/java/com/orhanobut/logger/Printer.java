@@ -9,6 +9,8 @@ public interface Printer {
 
     Settings init(String tag);
 
+    Settings getSettings();
+
     void d(String message, Object... args);
 
     void e(String message, Object... args);

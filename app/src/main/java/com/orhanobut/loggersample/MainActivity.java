@@ -16,7 +16,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Logger.init("test").hideThreadInfo().setMethodCount(40);
+        Logger.init("test").hideThreadInfo().setMethodCount(0);
 
         printNormalLog();
         printPretty();
@@ -27,7 +27,6 @@ public class MainActivity extends ActionBarActivity {
         Log.v(TAG, "i = 0 + 1");
         Log.v(TAG, Dummy.JSON_WITH_NO_LINE_BREAK);
         Log.v("test", Dummy.JSON_WITH_LINE_BREAK);
-
     }
 
     void printPretty() {
@@ -45,6 +44,8 @@ public class MainActivity extends ActionBarActivity {
         Logger.json(Dummy.SMALL_SON_WITH_NO_LINE_BREAK);
 
         Logger.d("test");
+
+        Logger.t("TEST", 3).d("asdfasdf");
     }
 
     void test2() {

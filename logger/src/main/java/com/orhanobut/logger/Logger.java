@@ -9,7 +9,6 @@ package com.orhanobut.logger;
 public final class Logger {
 
     private static final Printer printer = new LoggerPrinter();
-    private static final int DEFAULT_METHOD_COUNT = 2;
     private static final String DEFAULT_TAG = "PRETTYLOGGER";
 
     //no instance
@@ -35,7 +34,7 @@ public final class Logger {
     }
 
     public static Printer t(String tag) {
-        return printer.t(tag, DEFAULT_METHOD_COUNT);
+        return printer.t(tag, printer.getSettings().getMethodCount());
     }
 
     public static Printer t(int methodCount) {
