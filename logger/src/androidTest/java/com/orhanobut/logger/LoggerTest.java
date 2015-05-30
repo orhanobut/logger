@@ -72,4 +72,27 @@ public class LoggerTest extends TestCase {
             fail();
         }
     }
+
+    public void testSetMethodOffset() {
+        try {
+            Logger.init().setMethodOffset(100);
+            Assert.assertTrue(true);
+        } catch (Exception e) {
+            fail();
+        }
+        try {
+            Logger.init().setMethodOffset(0);
+            Assert.assertTrue(true);
+        } catch (Exception e) {
+            fail();
+        }
+        try {
+            Logger.init()
+                    .setMethodCount(100)
+                    .setMethodOffset(100);
+            Assert.assertTrue(true);
+        } catch (Exception e) {
+            fail();
+        }
+    }
 }

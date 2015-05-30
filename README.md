@@ -16,7 +16,7 @@ Logger provides :
 
 ### Gradle
 ```groovy
-compile 'com.orhanobut:logger:1.9'
+compile 'com.orhanobut:logger:1.10'
 ```
 
 ### Current Log system
@@ -72,6 +72,7 @@ public class MyApplication extends Application {
              .setMethodCount(3)            // default 2
              .hideThreadInfo()             // default shown
              .setLogLevel(LogLevel.NONE);  // default LogLevel.FULL
+             .setMethodOffset(2)           // default 0
     }
 }
 ```
@@ -111,6 +112,11 @@ Logger.t(1).d("hello");
 
 <img src='https://github.com/orhanobut/logger/blob/master/images/one-method-with-thread.png'/>
 
+### Change method stack offset (Default: 0)
+To integrate logger with other libraries, you can set the offset in order to avoid that library's methods.
+```java
+Logger.init().setMethodOffset(5);
+```
 
 ### Hide thread information
 ```java

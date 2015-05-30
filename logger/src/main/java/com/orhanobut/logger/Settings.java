@@ -7,6 +7,7 @@ public final class Settings {
 
     private int methodCount = 2;
     private boolean showThreadInfo = true;
+    private int methodOffset = 0;
 
     /**
      * Determines how logs will printed
@@ -28,6 +29,11 @@ public final class Settings {
         return this;
     }
 
+    public Settings setMethodOffset(int offset) {
+        this.methodOffset = offset;
+        return this;
+    }
+
     public int getMethodCount() {
         return methodCount;
     }
@@ -38,5 +44,9 @@ public final class Settings {
 
     public LogLevel getLogLevel() {
         return logLevel;
+    }
+
+    public int getMethodOffset() {
+        return methodOffset;
     }
 }
