@@ -1,9 +1,9 @@
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Logger-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/1658) [![](https://img.shields.io/badge/AndroidWeekly-%23147-blue.svg)](http://androidweekly.net/issues/issue-147)
 
-#Logger
-Simple,pretty and powerful logger for android
+<img align="right" src='https://github.com/orhanobut/logger/blob/master/images/logger-logo.png' width='128' height='128'/>
 
-<img src='https://github.com/orhanobut/logger/blob/master/images/logger-logo.png' width='128' height='128'/>
+###Logger
+Simple, pretty and powerful logger for android
 
 Logger provides :
 - Thread information
