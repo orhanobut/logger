@@ -1,18 +1,23 @@
 apply plugin: 'com.android.library'
 android {
-    compileSdkVersion 21
-    buildToolsVersion "21.1.2"
+  compileSdkVersion 21
+  buildToolsVersion "21.1.1"
 
-    defaultConfig {
-        minSdkVersion 8
-        targetSdkVersion 21
-        versionCode 1
-        versionName "1.0"
-    }
+  defaultConfig {
+    minSdkVersion 8
+    targetSdkVersion 21
+  }
 
-    lintOptions {
-        abortOnError false
-    }
+  lintOptions {
+    abortOnError false
+  }
+}
+
+dependencies {
+  testCompile 'junit:junit:4.12'
+  testCompile "org.mockito:mockito-core:1.9.5"
+  testCompile "org.robolectric:robolectric:3.0"
+  testCompile 'org.assertj:assertj-core:1.7.0'
 }
 
 apply from: '../maven_push.gradle'

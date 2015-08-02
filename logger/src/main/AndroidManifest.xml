@@ -1,6 +1,3 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.orhanobut.logger">
-
-    <application android:allowBackup="true"/>
+<manifest package="com.orhanobut.logger">
 
 </manifest>
