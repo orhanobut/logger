@@ -15,4 +15,11 @@ android {
     }
 }
 
+dependencies {
+  testCompile 'junit:junit:4.12'
+  testCompile "org.mockito:mockito-core:1.9.5"
+  testCompile "org.robolectric:robolectric:3.0"
+  testCompile 'org.assertj:assertj-core:1.7.0'
+}
+
 apply from: '../maven_push.gradle'
