@@ -2,21 +2,15 @@ package com.orhanobut.logger;
 
 import android.text.TextUtils;
 import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.StringReader;
-import java.io.StringWriter;
-
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
+import java.io.StringReader;
+import java.io.StringWriter;
 
 /**
  * Logger is a wrapper of {@link Log}
@@ -207,6 +201,11 @@ final class LoggerPrinter implements Printer {
     if (settings.getLogLevel() == LogLevel.NONE) {
       return;
     }
+
+    if(exclude()) {
+      return;
+    }
+
     String tag = getTag();
     String message = createMessage(msg, args);
     int methodCount = getMethodCount();
@@ -374,6 +373,31 @@ final class LoggerPrinter implements Printer {
       }
     }
     return -1;
+  }
+
+  private boolean exclude() {
+    if(settings.hasExcludes()) {
+      String callerClassName = getCallerStackTraceElement().getClassName();
+      for (String keyword : settings.getExcludes()) {
+        if (callerClassName.indexOf(keyword) >= 0) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  /**
+   * maybe NULL!
+   * @return
+   */
+  private StackTraceElement getCallerStackTraceElement() {
+    StackTraceElement[] elements = Thread.currentThread().getStackTrace();
+    int target = getStackOffset(elements) + 1;
+    if(target >= 0 && target < elements.length) {
+      return elements[target];
+    }
+    return null;
   }
 
 }
