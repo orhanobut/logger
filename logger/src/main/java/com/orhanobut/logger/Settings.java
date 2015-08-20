@@ -59,8 +59,8 @@ public final class Settings {
   }
 
 
-  public Settings excludeByClassName(String className) {
-    excludes.add(className);
+  public Settings excludeByKeyword(String keyword) {
+    excludes.add(keyword);
     return this;
   }
 
