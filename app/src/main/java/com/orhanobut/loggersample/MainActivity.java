@@ -16,7 +16,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Logger.init("test").hideThreadInfo().setMethodCount(3).setMethodOffset(2);
+        Logger.init("test").hideThreadInfo().setMethodCount(3).setMethodOffset(2).excludeByClassName("MainActivity");
 
         printNormalLog();
         printPretty();

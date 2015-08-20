@@ -1,5 +1,8 @@
 package com.orhanobut.logger;
 
+import java.util.Collection;
+import java.util.HashSet;
+
 /**
  * @author Orhan Obut
  */
@@ -8,6 +11,8 @@ public final class Settings {
   private int methodCount = 2;
   private boolean showThreadInfo = true;
   private int methodOffset = 0;
+
+  private static final HashSet<String> excludes = new HashSet<>();
 
   /**
    * Determines how logs will printed
@@ -51,5 +56,19 @@ public final class Settings {
 
   public int getMethodOffset() {
     return methodOffset;
+  }
+
+
+  public Settings excludeByClassName(String className) {
+    excludes.add(className);
+    return this;
+  }
+
+  public Collection<String> getExcludes() {
+    return excludes;
+  }
+
+  public boolean hasExcludes() {
+    return excludes.size() != 0;
   }
 }
