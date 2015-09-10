@@ -91,4 +91,13 @@ public final class Logger {
     printer.xml(xml);
   }
 
+  /**
+   * Formats the json content and print it
+   * 
+   * @param object Bean,Array,Collection,Map and so on
+   */
+  public static void object(Object object) {
+    printer.object(object);
+  }
+  
 }
