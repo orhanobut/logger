@@ -8,6 +8,6 @@ import com.orhanobut.logger.Logger;
 public class Foo {
 
     public static void foo(){
-        Logger.d("hello");
+        Logger.d("other class");
     }
 }

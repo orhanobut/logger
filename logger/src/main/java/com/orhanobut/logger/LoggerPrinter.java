@@ -1,14 +1,22 @@
 package com.orhanobut.logger;
 
-import android.text.TextUtils;
-import android.util.Log;
+import com.orhanobut.logger.util.ArrayUtil;
+import com.orhanobut.logger.util.SystemUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.text.TextUtils;
+import android.util.Log;
+import android.util.Pair;
+
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
@@ -197,6 +205,68 @@ final class LoggerPrinter implements Printer {
       d(xmlOutput.getWriter().toString().replaceFirst(">", ">\n"));
     } catch (TransformerException e) {
       e(e.getCause().getMessage() + "\n" + xml);
+    }
+  }
+
+  /**
+   * support list、map、array
+   *
+   * @see "https://github.com/pengwei1024/LogUtils"
+   */
+  @Override
+  public void object(Object object) {
+    if (object != null) {
+      final String simpleName = object.getClass().getSimpleName();
+      if (object.getClass().isArray()) {
+        String msg = "Temporarily not support more than two dimensional Array!";
+        int dim = ArrayUtil.getArrayDimension(object);
+        switch (dim) {
+          case 1:
+            Pair pair = ArrayUtil.arrayToString(object);
+            msg = simpleName.replace("[]", "[" + pair.first + "] {\n");
+            msg += pair.second + "\n";
+            break;
+          case 2:
+            Pair pair1 = ArrayUtil.arrayToObject(object);
+            Pair pair2 = (Pair) pair1.first;
+            msg = simpleName.replace("[][]", "[" + pair2.first + "][" + pair2.second + "] {\n");
+            msg += pair1.second + "\n";
+            break;
+          default:
+            break;
+        }
+        d(msg + "}");
+      } else if (object instanceof Collection) {
+        Collection collection = (Collection) object;
+        String msg = "%s size = %d [\n";
+        msg = String.format(msg, simpleName, collection.size());
+        if (!collection.isEmpty()) {
+          Iterator<Object> iterator = collection.iterator();
+          int flag = 0;
+          while (iterator.hasNext()) {
+            String itemString = "[%d]:%s%s";
+            Object item = iterator.next();
+            msg += String.format(itemString, flag, SystemUtil.objectToString(item),
+                    flag++ < collection.size() - 1 ? ",\n" : "\n");
+          }
+        }
+        d(msg + "\n]");
+      } else if (object instanceof Map) {
+        String msg = simpleName + " {\n";
+        Map<Object, Object> map = (Map<Object, Object>) object;
+        Set<Object> keys = map.keySet();
+        for (Object key : keys) {
+          String itemString = "[%s -> %s]\n";
+          Object value = map.get(key);
+          msg += String.format(itemString, SystemUtil.objectToString(key),
+                  SystemUtil.objectToString(value));
+        }
+        d(msg + "}");
+      } else {
+        d(SystemUtil.objectToString(object));
+      }
+    } else {
+      d(null);
     }
   }
 

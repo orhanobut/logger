@@ -28,4 +28,6 @@ public interface Printer {
   void json(String json);
 
   void xml(String xml);
+
+  void object(Object object);
 }
