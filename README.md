@@ -15,9 +15,18 @@ Logger provides :
 - Clean output
 - Jump to source
 
-### Gradle
+### Dependency
+https://jitpack.io/#orhanobut/logger/1.12
+
 ```groovy
-compile 'com.orhanobut:logger:1.11'
+repositories {
+  // ...
+  maven { url "https://jitpack.io" }
+}
+
+dependencies {
+  compile 'com.github.orhanobut:logger:1.12'
+}
 ```
 
 ### Current Log system
@@ -62,22 +71,24 @@ Logger.t("mytag").d("hello");
 Change the settings with init. This should be called only once. Best place would be in application class. All of them
  are optional.
 ```java
-public class MyApplication extends Application {
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-
-        Logger
-             .init(YOUR_TAG)               // default PRETTYLOGGER or use just init()
-             .setMethodCount(3)            // default 2
-             .hideThreadInfo()             // default shown
-             .setLogLevel(LogLevel.NONE);  // default LogLevel.FULL
-             .setMethodOffset(2)           // default 0
-    }
+Logger
+  .init(YOUR_TAG)                 // default PRETTYLOGGER or use just init()
+  .methodCount(3)                 // default 2
+  .hideThreadInfo()               // default shown
+  .logLevel(LogLevel.NONE)        // default LogLevel.FULL
+  .methodOffset(2)                // default 0
+  .logTool(new AndroidLogTool()); // custom log tool, optional
 }
+
 ```
 Note: Use LogLevel.NONE for the release versions.
+
+### Use another log util instead of android.util.log
+- Implement LogTool
+- set it with init
+```java
+.logTool(new MyCustomLogTool())
+```
 
 ### More log samples
 ```java
@@ -156,13 +167,6 @@ Logger.e(exception,"message");
 
 <img src='https://github.com/orhanobut/logger/blob/master/images/wrap-closed.png'/>
 
-
-#### You might also like
-- [Hawk](https://github.com/orhanobut/hawk) Simple,powerful,secure key-value storage
-- [Wasp](https://github.com/orhanobut/wasp) All-in-one network solution
-- [Bee](https://github.com/orhanobut/bee) QA/Debug tool
-- [DialogPlus](https://github.com/orhanobut/dialogplus) Easy,simple dialog solution
-- [SimpleListView](https://github.com/orhanobut/simplelistview) Simple basic listview implementation with linearlayout
 
 ###License
 <pre>
