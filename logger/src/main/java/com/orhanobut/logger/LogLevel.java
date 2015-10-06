@@ -1,8 +1,5 @@
 package com.orhanobut.logger;
 
-/**
- * @author Orhan Obut
- */
 public enum LogLevel {
 
   /**

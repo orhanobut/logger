@@ -13,4 +13,4 @@ notifications:
 sudo: false
 
 script:
-- ./gradlew test
+- ./gradlew build

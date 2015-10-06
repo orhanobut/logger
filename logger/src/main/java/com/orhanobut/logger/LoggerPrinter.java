@@ -1,7 +1,6 @@
 package com.orhanobut.logger;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,12 +18,17 @@ import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
 /**
- * Logger is a wrapper of {@link Log}
+ * Logger is a wrapper for logging utils
  * But more pretty, simple and powerful
- *
- * @author Orhan Obut
  */
 final class LoggerPrinter implements Printer {
+
+  private static final int DEBUG = 3;
+  private static final int ERROR = 6;
+  private static final int ASSERT = 7;
+  private static final int INFO = 4;
+  private static final int VERBOSE = 2;
+  private static final int WARN = 5;
 
   /**
    * Android's max limit for a log entry is ~4076 bytes,
@@ -44,11 +48,6 @@ final class LoggerPrinter implements Printer {
   private static final int MIN_STACK_OFFSET = 3;
 
   /**
-   * It is used to determine log settings such as method count, thread info visibility
-   */
-  private static final Settings settings = new Settings();
-
-  /**
    * Drawing toolbox
    */
   private static final char TOP_LEFT_CORNER = '╔';
@@ -62,60 +61,60 @@ final class LoggerPrinter implements Printer {
   private static final String MIDDLE_BORDER = MIDDLE_CORNER + SINGLE_DIVIDER + SINGLE_DIVIDER;
 
   /**
-   * TAG is used for the Log, the name is a little different
+   * tag is used for the Log, the name is a little different
    * in order to differentiate the logs easily with the filter
    */
-  private static String TAG = "PRETTYLOGGER";
+  private String tag;
 
   /**
    * Localize single tag and method count for each thread
    */
-  private static final ThreadLocal<String> LOCAL_TAG = new ThreadLocal<>();
-  private static final ThreadLocal<Integer> LOCAL_METHOD_COUNT = new ThreadLocal<>();
+  private final ThreadLocal<String> localTag = new ThreadLocal<>();
+  private final ThreadLocal<Integer> localMethodCount = new ThreadLocal<>();
+
+  /**
+   * It is used to determine log settings such as method count, thread info visibility
+   */
+  private Settings settings;
 
   /**
    * It is used to change the tag
    *
    * @param tag is the given string which will be used in Logger
    */
-  @Override
-  public Settings init(String tag) {
+  @Override public Settings init(String tag) {
     if (tag == null) {
       throw new NullPointerException("tag may not be null");
     }
     if (tag.trim().length() == 0) {
       throw new IllegalStateException("tag may not be empty");
     }
-    LoggerPrinter.TAG = tag;
+    this.tag = tag;
+    this.settings = new Settings();
     return settings;
   }
 
-  @Override
-  public Settings getSettings() {
+  @Override public Settings getSettings() {
     return settings;
   }
 
-  @Override
-  public Printer t(String tag, int methodCount) {
+  @Override public Printer t(String tag, int methodCount) {
     if (tag != null) {
-      LOCAL_TAG.set(tag);
+      localTag.set(tag);
     }
-    LOCAL_METHOD_COUNT.set(methodCount);
+    localMethodCount.set(methodCount);
     return this;
   }
 
-  @Override
-  public void d(String message, Object... args) {
-    log(Log.DEBUG, message, args);
+  @Override public void d(String message, Object... args) {
+    log(DEBUG, message, args);
   }
 
-  @Override
-  public void e(String message, Object... args) {
+  @Override public void e(String message, Object... args) {
     e(null, message, args);
   }
 
-  @Override
-  public void e(Throwable throwable, String message, Object... args) {
+  @Override public void e(Throwable throwable, String message, Object... args) {
     if (throwable != null && message != null) {
       message += " : " + throwable.toString();
     }
@@ -125,27 +124,23 @@ final class LoggerPrinter implements Printer {
     if (message == null) {
       message = "No message/exception is set";
     }
-    log(Log.ERROR, message, args);
+    log(ERROR, message, args);
   }
 
-  @Override
-  public void w(String message, Object... args) {
-    log(Log.WARN, message, args);
+  @Override public void w(String message, Object... args) {
+    log(WARN, message, args);
   }
 
-  @Override
-  public void i(String message, Object... args) {
-    log(Log.INFO, message, args);
+  @Override public void i(String message, Object... args) {
+    log(INFO, message, args);
   }
 
-  @Override
-  public void v(String message, Object... args) {
-    log(Log.VERBOSE, message, args);
+  @Override public void v(String message, Object... args) {
+    log(VERBOSE, message, args);
   }
 
-  @Override
-  public void wtf(String message, Object... args) {
-    log(Log.ASSERT, message, args);
+  @Override public void wtf(String message, Object... args) {
+    log(ASSERT, message, args);
   }
 
   /**
@@ -153,8 +148,7 @@ final class LoggerPrinter implements Printer {
    *
    * @param json the json content
    */
-  @Override
-  public void json(String json) {
+  @Override public void json(String json) {
     if (TextUtils.isEmpty(json)) {
       d("Empty/Null json content");
       return;
@@ -181,8 +175,7 @@ final class LoggerPrinter implements Printer {
    *
    * @param xml the xml content
    */
-  @Override
-  public void xml(String xml) {
+  @Override public void xml(String xml) {
     if (TextUtils.isEmpty(xml)) {
       d("Empty/Null xml content");
       return;
@@ -198,6 +191,10 @@ final class LoggerPrinter implements Printer {
     } catch (TransformerException e) {
       e(e.getCause().getMessage() + "\n" + xml);
     }
+  }
+
+  @Override public void clear() {
+    settings = null;
   }
 
   /**
@@ -295,25 +292,25 @@ final class LoggerPrinter implements Printer {
   private void logChunk(int logType, String tag, String chunk) {
     String finalTag = formatTag(tag);
     switch (logType) {
-      case Log.ERROR:
-        Log.e(finalTag, chunk);
+      case ERROR:
+        settings.getLogTool().e(finalTag, chunk);
         break;
-      case Log.INFO:
-        Log.i(finalTag, chunk);
+      case INFO:
+        settings.getLogTool().i(finalTag, chunk);
         break;
-      case Log.VERBOSE:
-        Log.v(finalTag, chunk);
+      case VERBOSE:
+        settings.getLogTool().v(finalTag, chunk);
         break;
-      case Log.WARN:
-        Log.w(finalTag, chunk);
+      case WARN:
+        settings.getLogTool().w(finalTag, chunk);
         break;
-      case Log.ASSERT:
-        Log.wtf(finalTag, chunk);
+      case ASSERT:
+        settings.getLogTool().wtf(finalTag, chunk);
         break;
-      case Log.DEBUG:
+      case DEBUG:
         // Fall through, log debug by default
       default:
-        Log.d(finalTag, chunk);
+        settings.getLogTool().d(finalTag, chunk);
         break;
     }
   }
@@ -324,22 +321,22 @@ final class LoggerPrinter implements Printer {
   }
 
   private String formatTag(String tag) {
-    if (!TextUtils.isEmpty(tag) && !TextUtils.equals(TAG, tag)) {
-      return TAG + "-" + tag;
+    if (!TextUtils.isEmpty(tag) && !TextUtils.equals(this.tag, tag)) {
+      return this.tag + "-" + tag;
     }
-    return TAG;
+    return this.tag;
   }
 
   /**
    * @return the appropriate tag based on local or global
    */
   private String getTag() {
-    String tag = LOCAL_TAG.get();
+    String tag = localTag.get();
     if (tag != null) {
-      LOCAL_TAG.remove();
+      localTag.remove();
       return tag;
     }
-    return TAG;
+    return this.tag;
   }
 
   private String createMessage(String message, Object... args) {
@@ -347,10 +344,10 @@ final class LoggerPrinter implements Printer {
   }
 
   private int getMethodCount() {
-    Integer count = LOCAL_METHOD_COUNT.get();
+    Integer count = localMethodCount.get();
     int result = settings.getMethodCount();
     if (count != null) {
-      LOCAL_METHOD_COUNT.remove();
+      localMethodCount.remove();
       result = count;
     }
     if (result < 0) {
