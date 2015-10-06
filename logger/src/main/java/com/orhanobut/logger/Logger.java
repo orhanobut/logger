@@ -3,13 +3,11 @@ package com.orhanobut.logger;
 /**
  * Logger is a wrapper of {@link android.util.Log}
  * But more pretty, simple and powerful
- *
- * @author Orhan Obut
  */
 public final class Logger {
-
-  private static final Printer printer = new LoggerPrinter();
   private static final String DEFAULT_TAG = "PRETTYLOGGER";
+
+  private static Printer printer = new LoggerPrinter();
 
   //no instance
   private Logger() {
@@ -21,16 +19,22 @@ public final class Logger {
    * @return the settings object
    */
   public static Settings init() {
-    return printer.init(DEFAULT_TAG);
+    return init(DEFAULT_TAG);
   }
 
   /**
    * It is used to change the tag
    *
-   * @param tag is the given string which will be used in Logger
+   * @param tag is the given string which will be used in Logger as TAG
    */
   public static Settings init(String tag) {
+    printer = new LoggerPrinter();
     return printer.init(tag);
+  }
+
+  public static void clear() {
+    printer.clear();
+    printer = null;
   }
 
   public static Printer t(String tag) {
