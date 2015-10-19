@@ -45,6 +45,8 @@ Logger.d("hello %s %d", "world", 5);   // String.format
 <img src='https://github.com/orhanobut/logger/blob/master/images/description.png'/>
 
 ### Usage
+Note: Because of the latest changes, Logger.init() must be called once to initiate. This will be fixed in the next version
+
 ```java
 Logger.d("hello");
 Logger.e("hello");
