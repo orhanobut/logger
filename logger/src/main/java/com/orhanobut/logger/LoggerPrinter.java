@@ -209,7 +209,7 @@ final class LoggerPrinter implements Printer {
   }
 
   /**
-   * support list、map、array
+   * Only support for Collection、map、array
    *
    * @see "https://github.com/pengwei1024/LogUtils"
    */
@@ -241,7 +241,7 @@ final class LoggerPrinter implements Printer {
         String msg = "%s size = %d [\n";
         msg = String.format(msg, simpleName, collection.size());
         if (!collection.isEmpty()) {
-          Iterator<Object> iterator = collection.iterator();
+          Iterator iterator = collection.iterator();
           int flag = 0;
           while (iterator.hasNext()) {
             String itemString = "[%d]:%s%s";
@@ -330,20 +330,11 @@ final class LoggerPrinter implements Printer {
       if (stackIndex >= trace.length) {
         continue;
       }
-      StringBuilder builder = new StringBuilder();
-      builder.append("║ ")
-          .append(level)
-          .append(getSimpleClassName(trace[stackIndex].getClassName()))
-          .append(".")
-          .append(trace[stackIndex].getMethodName())
-          .append(" ")
-          .append(" (")
-          .append(trace[stackIndex].getFileName())
-          .append(":")
-          .append(trace[stackIndex].getLineNumber())
-          .append(")");
       level += "   ";
-      logChunk(logType, tag, builder.toString());
+      logChunk(logType, tag, "║ " 
+              + level + getSimpleClassName(trace[stackIndex].getClassName()) 
+              + "." + trace[stackIndex].getMethodName() + " " 
+              + " (" + trace[stackIndex].getFileName() + ":" + trace[stackIndex].getLineNumber() + ")");
     }
   }
 
