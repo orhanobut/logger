@@ -20,7 +20,8 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Logger.init()
+        Logger.init("")
+                .smartTag(true)
                 .hideThreadInfo() // default shown
                 .setMethodCount(2) // default 2
                 .setMethodOffset(0) // default 0

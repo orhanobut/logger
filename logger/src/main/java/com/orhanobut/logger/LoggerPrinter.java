@@ -89,10 +89,7 @@ final class LoggerPrinter implements Printer {
   @Override
   public Settings init(String tag) {
     if (tag == null) {
-      throw new NullPointerException("tag may not be null");
-    }
-    if (tag.trim().length() == 0) {
-      throw new IllegalStateException("tag may not be empty");
+      throw new IllegalStateException("tag may not be null");
     }
     LoggerPrinter.TAG = tag;
     return settings;
@@ -253,8 +250,8 @@ final class LoggerPrinter implements Printer {
         d(msg + "\n]");
       } else if (object instanceof Map) {
         String msg = simpleName + " {\n";
-        Map<Object, Object> map = (Map<Object, Object>) object;
-        Set<Object> keys = map.keySet();
+        Map map = (Map) object;
+        Set keys = map.keySet();
         for (Object key : keys) {
           String itemString = "[%s -> %s]\n";
           Object value = map.get(key);
@@ -354,7 +351,12 @@ final class LoggerPrinter implements Printer {
   }
 
   private void logChunk(int logType, String tag, String chunk) {
-    String finalTag = formatTag(tag);
+    final String finalTag;
+    if (settings.isSmartTag()) {
+      finalTag = getCurrentClassName() + formatTag(tag);
+    } else {
+      finalTag = formatTag(tag);
+    }
     switch (logType) {
       case Log.ERROR:
         Log.e(finalTag, chunk);
@@ -377,6 +379,16 @@ final class LoggerPrinter implements Printer {
         Log.d(finalTag, chunk);
         break;
     }
+  }
+
+  private String getCurrentClassName() {
+      StackTraceElement[] trace = Thread.currentThread().getStackTrace();
+      int offset = getStackOffset(trace);
+      StackTraceElement thisMethodStack = (new Exception()).getStackTrace()[offset - 1];
+      String result = thisMethodStack.getClassName();
+      int lastIndex = result.lastIndexOf(".");
+      result = result.substring(lastIndex + 1, result.length());
+      return result;
   }
 
   private String getSimpleClassName(String name) {

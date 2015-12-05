@@ -8,6 +8,7 @@ public final class Settings {
   private int methodCount = 2;
   private boolean showThreadInfo = true;
   private int methodOffset = 0;
+  private boolean smartTag = false;
 
   /**
    * Determines how logs will printed
@@ -37,6 +38,11 @@ public final class Settings {
     return this;
   }
 
+  public Settings smartTag(boolean smartTag) {
+    this.smartTag = smartTag;
+    return this;
+  }
+
   public int getMethodCount() {
     return methodCount;
   }
@@ -51,5 +57,9 @@ public final class Settings {
 
   public int getMethodOffset() {
     return methodOffset;
+  }
+
+  public boolean isSmartTag() {
+    return smartTag;
   }
 }
