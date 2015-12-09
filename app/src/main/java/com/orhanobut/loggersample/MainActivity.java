@@ -25,8 +25,9 @@ public class MainActivity extends ActionBarActivity {
                 .hideThreadInfo() // default shown
                 .setMethodCount(2) // default 2
                 .setMethodOffset(0) // default 0
+                .setMethodOffset(1)
                 .setLogLevel(BuildConfig.DEBUG ? LogLevel.FULL : LogLevel.NONE); // show log in debug state
-        
+
         printNormalLog();
         printPretty();
     }
@@ -86,9 +87,7 @@ public class MainActivity extends ActionBarActivity {
     }
 
     public static class User {
-
         private String name;
-
         private String sex;
 
         User(String name, String sex) {

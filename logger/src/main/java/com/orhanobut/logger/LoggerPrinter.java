@@ -383,7 +383,7 @@ final class LoggerPrinter implements Printer {
 
   private String getCurrentClassName() {
       StackTraceElement[] trace = Thread.currentThread().getStackTrace();
-      int offset = getStackOffset(trace);
+      int offset = getStackOffset(trace) + settings.getMethodOffset();
       StackTraceElement thisMethodStack = (new Exception()).getStackTrace()[offset - 1];
       String result = thisMethodStack.getClassName();
       int lastIndex = result.lastIndexOf(".");
