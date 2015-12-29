@@ -28,6 +28,9 @@ public class MainActivity extends ActionBarActivity {
                 .setMethodOffset(1)
                 .setLogLevel(BuildConfig.DEBUG ? LogLevel.FULL : LogLevel.NONE); // show log in debug state
 
+        
+        Logger.d("test %s%s", "v", 5); // 多参数 可以解决字符拼接的问题
+        Logger.d(null);
         printNormalLog();
         printPretty();
     }

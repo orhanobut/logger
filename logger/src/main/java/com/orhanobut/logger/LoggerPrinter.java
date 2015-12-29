@@ -416,6 +416,9 @@ final class LoggerPrinter implements Printer {
   }
 
   private String createMessage(String message, Object... args) {
+    if (message == null) {
+      message = "null";
+    }
     return args.length == 0 ? message : String.format(message, args);
   }
 
