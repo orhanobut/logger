@@ -204,6 +204,9 @@ final class LoggerPrinter implements Printer {
     if (settings.getLogLevel() == LogLevel.NONE) {
       return;
     }
+    if(!settings.getLogValve()){
+      return;
+    }
     String tag = getTag();
     String message = createMessage(msg, args);
     int methodCount = getMethodCount();
