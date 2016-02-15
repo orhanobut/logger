@@ -1,6 +1,7 @@
 package com.orhanobut.logger;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -116,7 +117,7 @@ final class LoggerPrinter implements Printer {
 
   @Override public void e(Throwable throwable, String message, Object... args) {
     if (throwable != null && message != null) {
-      message += " : " + throwable.toString();
+      message += " : " + Log.getStackTraceString(throwable);
     }
     if (throwable != null && message == null) {
       message = throwable.toString();
@@ -154,6 +155,7 @@ final class LoggerPrinter implements Printer {
       return;
     }
     try {
+      json = json.trim();
       if (json.startsWith("{")) {
         JSONObject jsonObject = new JSONObject(json);
         String message = jsonObject.toString(JSON_INDENT);
