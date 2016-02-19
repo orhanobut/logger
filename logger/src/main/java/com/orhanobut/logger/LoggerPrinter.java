@@ -210,6 +210,10 @@ final class LoggerPrinter implements Printer {
     String message = createMessage(msg, args);
     int methodCount = getMethodCount();
 
+    if (TextUtils.isEmpty(message)) {
+      message = "Empty/NULL log message";
+    }
+
     logTopBorder(logType, tag);
     logHeaderContent(logType, tag, methodCount);
 
