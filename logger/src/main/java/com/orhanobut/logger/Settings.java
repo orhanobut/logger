@@ -6,6 +6,7 @@ public final class Settings {
   private boolean showThreadInfo = true;
   private int methodOffset = 0;
   private LogTool logTool;
+  private boolean logValve = true;//a valve to set logger work or not
 
   /**
    * Determines how logs will printed
@@ -14,6 +15,17 @@ public final class Settings {
 
   public Settings hideThreadInfo() {
     showThreadInfo = false;
+    return this;
+  }
+
+  /***
+   * set a valve to control logger work or not-work
+   * use with BuildConfig.DEBUG is a good choice
+   * @param valve if true, logger work,or logger not work
+   * @return Settings
+   */
+  public Settings setLogValve(boolean valve){
+    this.logValve = valve;
     return this;
   }
 
@@ -83,5 +95,9 @@ public final class Settings {
       logTool = new AndroidLogTool();
     }
     return logTool;
+  }
+
+  public boolean getLogValve() {
+    return logValve;
   }
 }
