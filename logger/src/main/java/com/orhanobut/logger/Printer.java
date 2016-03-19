@@ -21,8 +21,6 @@ public interface Printer {
 
     void v(String message, Object... args);
 
-    void wtf(String message, Object... args);
-
     void json(String json);
 
     void xml(String xml);

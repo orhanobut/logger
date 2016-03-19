@@ -9,14 +9,6 @@ import java.lang.reflect.Field;
  */
 public class ObjectUtil {
 
-    /**
-     * 获取StackTraceElement对象
-     */
-    public static StackTraceElement getStackTrace() {
-        return Thread.currentThread().getStackTrace()[4];
-    }
-
-
     // 基本数据类型
     private final static String[] types = {"int", "java.lang.String", "boolean", "char",
             "float", "double", "long", "short", "byte"};

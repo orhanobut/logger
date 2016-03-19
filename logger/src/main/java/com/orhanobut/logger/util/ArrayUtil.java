@@ -2,8 +2,6 @@ package com.orhanobut.logger.util;
 
 import android.util.Pair;
 
-import java.util.Arrays;
-
 /**
  * Created by pengwei08 on 2015/7/25.
  * Thanks to zhutiantao for providing an array of analytical methods.
@@ -100,7 +98,7 @@ public final class ArrayUtil {
      */
     public static Pair arrayToString(Object object) {
         StringBuilder builder = new StringBuilder("[");
-        int length = 0;
+        int length;
         if (object instanceof int[]) {
             int[] ints = (int[]) object;
             length = ints.length;
@@ -158,73 +156,5 @@ public final class ArrayUtil {
         }
         return Pair.create(length, builder.replace(builder.length() - 2, builder.length(), "]").toString());
     }
-
-    /**
-     * 是否为数组
-     */
-    public static boolean isArray(Object object) {
-        return object.getClass().isArray();
-    }
-
-    /**
-     * 获取数组类型
-     *
-     * @param object 如L为int型
-     */
-    public static char getType(Object object) {
-        if (isArray(object)) {
-            String str = object.toString();
-            return str.substring(str.lastIndexOf("[") + 1, str.lastIndexOf("[") + 2).charAt(0);
-        }
-        return 0;
-    }
-
-    /**
-     * 遍历数组
-     */
-    private static void traverseArray(StringBuilder result, Object object) {
-        if (!isArray(object)) {
-            result.append(object.toString());
-            return;
-        }
-        if (getArrayDimension(object) == 1) {
-            switch (getType(object)) {
-                case 'I':
-                    result.append(Arrays.toString((int[]) object)).append("\n");
-                    return;
-                case 'D':
-                    result.append(Arrays.toString((double[]) object)).append("\n");
-                    return;
-                case 'Z':
-                    result.append(Arrays.toString((boolean[]) object)).append("\n");
-                    return;
-                case 'B':
-                    result.append(Arrays.toString((byte[]) object)).append("\n");
-                    return;
-                case 'S':
-                    result.append(Arrays.toString((short[]) object)).append("\n");
-                    return;
-                case 'J':
-                    result.append(Arrays.toString((long[]) object)).append("\n");
-                    return;
-                case 'F':
-                    result.append(Arrays.toString((float[]) object)).append("\n");
-                    return;
-                case 'L':
-                    result.append(Arrays.toString((Object[]) object)).append("\n");
-                default:
-                    return;
-            }
-        }
-        for (int i = 0; i < ((Object[]) object).length; i++) {
-            traverseArray(result, ((Object[]) object)[i]);
-        }
-    }
-
-    public static String traverseArray(Object object) {
-        StringBuilder result = new StringBuilder();
-        traverseArray(result, object);
-        return result.toString();
-    }
-
+    
 }

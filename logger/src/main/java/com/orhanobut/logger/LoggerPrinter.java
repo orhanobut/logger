@@ -107,6 +107,11 @@ final class LoggerPrinter implements Printer {
     }
 
     @Override
+    public void w(String message, Object... args) {
+        log(Log.WARN, message, args);
+    }
+
+    @Override
     public void e(@Nullable String message, Object... args) {
         e(null, message, args);
     }
@@ -123,16 +128,6 @@ final class LoggerPrinter implements Printer {
             message = "No message/exception is set";
         }
         log(Log.ERROR, message, args);
-    }
-
-    @Override
-    public void w(String message, Object... args) {
-        log(Log.WARN, message, args);
-    }
-
-    @Override
-    public void wtf(String message, Object... args) {
-        log(Log.ASSERT, message, args);
     }
 
     /**
@@ -260,7 +255,7 @@ final class LoggerPrinter implements Printer {
             return;
         }
         String tag = formatTag();
-        String message = createMessage(msg, args);
+        String message = TextUtils.isEmpty(msg) ? "null" : String.format(msg, args);
 
         //get bytes of message with system's default charset (which is UTF-8 for Android)
         byte[] bytes = message.getBytes();
@@ -386,13 +381,6 @@ final class LoggerPrinter implements Printer {
         } else {
             return tag;
         }
-    }
-
-    private String createMessage(@Nullable String message, Object... args) {
-        if (message == null) {
-            message = "null";
-        }
-        return args.length == 0 ? message : String.format(message, args);
     }
 
     private int getMethodCount() {
