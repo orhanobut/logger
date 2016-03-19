@@ -7,7 +7,7 @@ import java.lang.reflect.Field;
  *
  * @see "https://github.com/pengwei1024/LogUtils"
  */
-public class SystemUtil {
+public class ObjectUtil {
 
     /**
      * 获取StackTraceElement对象
@@ -45,7 +45,6 @@ public class SystemUtil {
                         } finally {
                             builder.append(String.format("%s=%s, ", field.getName(),
                                     value == null ? "null" : value.toString()));
-                            break;
                         }
                     }
                 }

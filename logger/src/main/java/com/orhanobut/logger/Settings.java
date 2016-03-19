@@ -1,65 +1,39 @@
 package com.orhanobut.logger;
 
+import android.support.annotation.IntRange;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Builder;
+
 /**
  * @author Orhan Obut
  */
+@Builder
 public final class Settings {
 
-  private int methodCount = 2;
-  private boolean showThreadInfo = true;
-  private int methodOffset = 0;
-  private boolean smartTag = false;
+    @Getter
+    private int methodCount = 1;
 
-  /**
-   * Determines how logs will printed
-   */
-  private LogLevel logLevel = LogLevel.FULL;
+    @Getter
+    @Setter
+    private boolean showThreadInfo = false;
 
-  public Settings hideThreadInfo() {
-    showThreadInfo = false;
-    return this;
-  }
+    @Getter
+    @Setter
+    private int methodOffset = 0;
 
-  public Settings setMethodCount(int methodCount) {
-    if (methodCount < 0) {
-      methodCount = 0;
+    @Getter
+    @Setter
+    private boolean isSmartTag = false;
+
+    @Getter
+    @Setter
+    private LogLevel logLevel = LogLevel.FULL;
+
+    public Settings setMethodCount(@IntRange(from = 0) int methodCount) {
+        this.methodCount = methodCount < 0 ? 0 : methodCount;
+        return this;
     }
-    this.methodCount = methodCount;
-    return this;
-  }
 
-  public Settings setLogLevel(LogLevel logLevel) {
-    this.logLevel = logLevel;
-    return this;
-  }
-
-  public Settings setMethodOffset(int offset) {
-    this.methodOffset = offset;
-    return this;
-  }
-
-  public Settings smartTag(boolean smartTag) {
-    this.smartTag = smartTag;
-    return this;
-  }
-
-  public int getMethodCount() {
-    return methodCount;
-  }
-
-  public boolean isShowThreadInfo() {
-    return showThreadInfo;
-  }
-
-  public LogLevel getLogLevel() {
-    return logLevel;
-  }
-
-  public int getMethodOffset() {
-    return methodOffset;
-  }
-
-  public boolean isSmartTag() {
-    return smartTag;
-  }
 }
