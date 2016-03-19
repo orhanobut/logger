@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Logger.initialize(Settings.builder()
-                .isSmartTag(true)
+                .isSmartTag(true) // default true
                 .showThreadInfo(true) // default false
                 .methodCount(1) // default 1
                 .methodOffset(0) // default 0
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void largeDataTest() {
-        for (int i =0;i<20;i++) {
+        for (int i = 0; i < 20; i++) {
             Logger.d("No." + i);
         }
     }
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
     ///////////////////////////////////////////////////////////////////////////
     // 内部类
     ///////////////////////////////////////////////////////////////////////////
-    
+
     public static class User {
 
         private String name;
