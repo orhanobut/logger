@@ -14,26 +14,38 @@ Logger provides :
 - Pretty-print for new line "\n"
 - Clean output
 - Jump to source
+- Smart log tag
 
 ### Gradle
+Add it in your root build.gradle at the end of repositories:  
 ```groovy
-compile 'com.orhanobut:logger:1.11'
-```
-
-### Current Log system
-```java
-Log.d(TAG,"hello");
-```
-
-<img src='https://github.com/orhanobut/logger/blob/master/images/current-log.png'/>
+allprojects {
+	repositories {
+		...
+		maven { url "https://jitpack.io" }
+	}
+}
+```  
+Add the dependency  
+> compile 'com.github.tianzhijiexian:logger:[Latest release](https://github.com/tianzhijiexian/logger/releases)'
 
 
 ### Logger
 ```java
-Logger.d("hello");
-Logger.d("hello %s %d", "world", 5);   // String.format
+private void levTest() {
+    Logger.v(null);
+    Logger.d("%s test", "kale");
+    Logger.t("tag", 3).i("logger with 3 method count");
+    try {
+        Class.forName("kale");
+    } catch (ClassNotFoundException e) {
+        Logger.e(e, "something happened"); // exception
+    }
+
+    Logger.d("first\nsecond\nthird");
+}
 ```
-<img src='https://github.com/orhanobut/logger/blob/master/images/description.png'/>
+![](./images/lev_test.png)
 
 ### Usage
 ```java
@@ -44,19 +56,8 @@ Logger.v("hello");
 Logger.wtf("hello");
 Logger.json(JSON_CONTENT);
 Logger.xml(XML_CONTENT);
+logger.object(...); // bean/map/Collection...
 ```
-
-### Change TAG
-All logs
-```java
-Logger.init(YOUR_TAG);
-```
-Log based
-```java
-Logger.t("mytag").d("hello");
-```
-<img src='https://github.com/orhanobut/logger/blob/master/images/custom-tag.png'/>
-
 
 ### Settings (optional)
 Change the settings with init. This should be called only once. Best place would be in application class. All of them
@@ -67,85 +68,18 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        Logger
-             .init(YOUR_TAG)               // default PRETTYLOGGER or use just init()
-             .setMethodCount(3)            // default 2
-             .hideThreadInfo()             // default shown
-             .setLogLevel(LogLevel.NONE);  // default LogLevel.FULL
-             .setMethodOffset(2)           // default 0
+        Logger.initialize(
+                Settings.builder()
+                        .isSmartTag(true) // default true
+                        .showThreadInfo(true) // default false
+                        .methodCount(1) // default 1
+                        .methodOffset(0) // default 0
+                        .logLevel(BuildConfig.DEBUG ? LogLevel.FULL : LogLevel.NONE).build() // show log in debug state
+        );
     }
 }
 ```
 Note: Use LogLevel.NONE for the release versions.
-
-### More log samples
-```java
-Logger.d("hello");
-Logger.e(exception, "message");
-Logger.json(JSON_CONTENT);
-```
-<img src='https://github.com/orhanobut/logger/blob/master/images/logger-log.png'/>
-
-### Method info
-Observe the caller methods in the order they are invoked and also thread information.
-```java
-void methodA(){
-   methodB();
-}
-void methodA(){
-   Logger.d("hello");
-}
-```
-Both method information will be shown in the order of invocation.
-
-<img src='https://github.com/orhanobut/logger/blob/master/images/two-method-with-thread-desc.png'/>
-
-### Change method count (Default: 2)
-All logs
-```java
-Logger.init().setMethodCount(1);
-```
-Log based
-```java
-Logger.t(1).d("hello");
-```
-
-<img src='https://github.com/orhanobut/logger/blob/master/images/one-method-with-thread.png'/>
-
-### Change method stack offset (Default: 0)
-To integrate logger with other libraries, you can set the offset in order to avoid that library's methods.
-```java
-Logger.init().setMethodOffset(5);
-```
-
-### Hide thread information
-```java
-Logger.init().setMethodCount(1).hideThreadInfo();
-```
-
-<img src='https://github.com/orhanobut/logger/blob/master/images/one-method-no-header.png'/>
-
-### Only show the message
-```java
-Logger.init().setMethodCount(0).hideThreadInfo();
-```
-
-<img src='https://github.com/orhanobut/logger/blob/master/images/just-content.png'/>
-
-### Pretty print json, Logger.json
-Format the json content in a pretty way
-```java
-Logger.json(YOUR_JSON_DATA);
-```
-
-<img src='https://github.com/orhanobut/logger/blob/master/images/json-log.png'/>
-
-### Log exceptions in a simple way
-Show the cause of the exception
-```java
-Logger.e(exception,"message");
-```
 
 ### Notes
 - Use the filter for a better result
