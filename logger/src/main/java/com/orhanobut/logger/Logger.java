@@ -8,29 +8,29 @@ package com.orhanobut.logger;
  */
 public final class Logger {
 
-    private static Printer printer;
+    private static LogPrinter printer;
 
     // @formatter:off
     @Deprecated private Logger() {}
     // @formatter:on
 
     public static void initialize(Settings settings) {
-        printer = new LoggerPrinter(settings);
+        printer = new LogPrinter(settings);
     }
 
     public static Settings getSettings() {
         return printer.getSettings();
     }
 
-    public static Printer t(String tag) {
-        return printer.t(tag, printer.getSettings().getMethodCount());
+    public static LogPrinter t(String tag) {
+        return printer.t(tag, printer.getSettings().methodCount);
     }
 
-    public static Printer t(int methodCount) {
+    public static LogPrinter t(int methodCount) {
         return printer.t(null, methodCount);
     }
 
-    public static Printer t(String tag, int methodCount) {
+    public static LogPrinter t(String tag, int methodCount) {
         return printer.t(tag, methodCount);
     }
 

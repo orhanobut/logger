@@ -16,7 +16,7 @@ import lombok.Getter;
  *
  * @author Orhan Obut
  */
-final class LoggerPrinter implements Printer {
+public final class LogPrinter {
 
     /**
      * Android's max limit for a log entry is ~4076 bytes,
@@ -52,12 +52,11 @@ final class LoggerPrinter implements Printer {
 
     private static final ThreadLocal<Integer> LOCAL_METHOD_COUNT = new ThreadLocal<>();
 
-    public LoggerPrinter(Settings settings) {
+    public LogPrinter(Settings settings) {
         this.settings = settings;
     }
 
-    @Override
-    public Printer t(String tag, int methodCount) {
+    public LogPrinter t(String tag, int methodCount) {
         if (tag != null) {
             LOCAL_TAG.set(tag);
         }
@@ -65,32 +64,26 @@ final class LoggerPrinter implements Printer {
         return this;
     }
 
-    @Override
     public void v(@Nullable String message, Object... args) {
         log(Log.VERBOSE, message, args);
     }
 
-    @Override
     public void d(@Nullable String message, Object... args) {
         log(Log.DEBUG, message, args);
     }
 
-    @Override
     public void i(@Nullable String message, Object... args) {
         log(Log.INFO, message, args);
     }
 
-    @Override
     public void w(String message, Object... args) {
         log(Log.WARN, message, args);
     }
 
-    @Override
     public void e(@Nullable String message, Object... args) {
         e(null, message, args);
     }
 
-    @Override
     public void e(Throwable throwable, @Nullable String message, Object... args) {
         if (throwable != null && message != null) {
             message += " : " + throwable.toString();
@@ -109,7 +102,6 @@ final class LoggerPrinter implements Printer {
      *
      * @param json the json content
      */
-    @Override
     public void json(@Nullable String json) {
         d(XmlJsonParser.json(json));
     }
@@ -119,7 +111,6 @@ final class LoggerPrinter implements Printer {
      *
      * @param xml the xml content
      */
-    @Override
     public void xml(String xml) {
         d(XmlJsonParser.xml(xml));
     }
@@ -129,7 +120,6 @@ final class LoggerPrinter implements Printer {
      *
      * @see "https://github.com/pengwei1024/LogUtils"
      */
-    @Override
     public void object(@Nullable Object object) {
         d(ObjParser.parseObj(object));
     }
@@ -138,7 +128,7 @@ final class LoggerPrinter implements Printer {
      * This method is synchronized in order to avoid messy of logs' order.
      */
     private synchronized void log(int logType, @Nullable String msg, Object... args) {
-        if (settings.getLogLevel() == LogLevel.NONE) {
+        if (settings.logLevel == LogLevel.NONE) {
             return;
         }
         String tag = formatTag();
@@ -149,18 +139,13 @@ final class LoggerPrinter implements Printer {
         int length = bytes.length;
         if (length <= CHUNK_SIZE) {
             logContent(logType, tag, message);
-            logBottomBorder(logType, tag);
         } else {
             for (int i = 0; i < length; i += CHUNK_SIZE) {
                 int count = Math.min(length - i, CHUNK_SIZE);
                 //create a new String with system's default charset (which is UTF-8 for Android)
                 logContent(logType, tag, new String(bytes, i, count));
             }
-            logBottomBorder(logType, tag);
         }
-    }
-
-    private void logBottomBorder(int logType, String tag) {
         printLog(logType, tag, BOTTOM_BORDER);
     }
 
@@ -181,7 +166,7 @@ final class LoggerPrinter implements Printer {
     private String getTail() {
         StackTraceElement[] trace = Thread.currentThread().getStackTrace();
 
-        int stackOffset = getStackOffset(trace) + settings.getMethodOffset();
+        int stackOffset = getStackOffset(trace) + settings.methodOffset;
         //corresponding method count with the current stack may exceeds the stack trace. Trims the count
         int methodCount = getMethodCount();
 
@@ -197,12 +182,13 @@ final class LoggerPrinter implements Printer {
             }
             sb.append(" ==> ").append(trace[stackIndex].getMethodName()) // onCreate
                     .append("(")
-                    .append(trace[stackIndex].getFileName()).append(":") // MainActivity.java:
+                    .append(trace[stackIndex].getFileName()) // MainActivity.java
+                    .append(":") 
                     .append(trace[stackIndex].getLineNumber()) // 827
                     .append(")");
         }
 
-        if (settings.isShowThreadInfo()) {
+        if (settings.showThreadInfo) {
             sb.append(" Thread: ").append(Thread.currentThread().getName()); // Thread:main
         }
         return sb.toString();
@@ -235,7 +221,7 @@ final class LoggerPrinter implements Printer {
 
     private String getCurrentClassName() {
         StackTraceElement[] trace = Thread.currentThread().getStackTrace();
-        int offset = getStackOffset(trace) + settings.getMethodOffset();
+        int offset = getStackOffset(trace) + settings.methodOffset;
         StackTraceElement thisMethodStack = (new Exception()).getStackTrace()[offset - 1];
         String result = thisMethodStack.getClassName();
         int lastIndex = result.lastIndexOf(".");
@@ -259,7 +245,7 @@ final class LoggerPrinter implements Printer {
 
     private String formatTag() {
         String tag = getTag();
-        if (settings.isSmartTag()) {
+        if (settings.isSmartTag) {
             if (TAG.equals(tag)) {
                 return getCurrentClassName();
             } else {
@@ -272,7 +258,7 @@ final class LoggerPrinter implements Printer {
 
     private int getMethodCount() {
         Integer count = LOCAL_METHOD_COUNT.get();
-        int result = settings.getMethodCount();
+        int result = settings.methodCount;
         if (count != null) {
             LOCAL_METHOD_COUNT.remove();
             result = count;
@@ -293,7 +279,7 @@ final class LoggerPrinter implements Printer {
         for (int i = MIN_STACK_OFFSET; i < trace.length; i++) {
             StackTraceElement e = trace[i];
             String name = e.getClassName();
-            if (!name.equals(LoggerPrinter.class.getName()) && !name.equals(Logger.class.getName())) {
+            if (!name.equals(LogPrinter.class.getName()) && !name.equals(Logger.class.getName())) {
                 return --i;
             }
         }

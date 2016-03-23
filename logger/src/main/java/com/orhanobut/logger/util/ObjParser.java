@@ -82,7 +82,7 @@ public class ObjParser {
     /**
      * 将对象转化为String
      */
-    public static <T> String objectToString(T object) {
+    protected static <T> String objectToString(T object) {
         if (object == null) {
             return "Object{object is null}";
         }
