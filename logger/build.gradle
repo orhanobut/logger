@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
@@ -8,9 +9,6 @@ android {
         targetSdkVersion 23
     }
 
-    lintOptions {
-        abortOnError false
-    }
 }
 
 dependencies {
