@@ -1,33 +1,12 @@
 package com.orhanobut.logger;
 
-import com.orhanobut.logger.util.ArrayUtil;
-import com.orhanobut.logger.util.ObjectUtil;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.orhanobut.logger.util.ObjParser;
+import com.orhanobut.logger.util.XmlJsonParser;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.Pair;
-
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Source;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.transform.stream.StreamSource;
 
 import lombok.Getter;
 
@@ -47,16 +26,11 @@ final class LoggerPrinter implements Printer {
     private static final int CHUNK_SIZE = 4000;
 
     /**
-     * It is used for json pretty print
-     */
-    private static final int JSON_INDENT = 4;
-
-    /**
      * The minimum stack trace index, starts at this class after two native calls.
      */
     private static final int MIN_STACK_OFFSET = 3;
 
-    private static final String BOTTOM_BORDER = "═══════════════════════════";
+    private static final String BOTTOM_BORDER = "╚═══════════════════════════";
 
 
     /**
@@ -137,25 +111,7 @@ final class LoggerPrinter implements Printer {
      */
     @Override
     public void json(@Nullable String json) {
-        if (TextUtils.isEmpty(json)) {
-            d("Empty/Null json content.(This msg from logger)");
-            return;
-        }
-        try {
-            if (json.startsWith("{")) {
-                JSONObject jsonObject = new JSONObject(json);
-                String message = jsonObject.toString(JSON_INDENT);
-                d(message);
-                return;
-            }
-            if (json.startsWith("[")) {
-                JSONArray jsonArray = new JSONArray(json);
-                String message = jsonArray.toString(JSON_INDENT);
-                d(message);
-            }
-        } catch (JSONException e) {
-            e(e.getCause().getMessage() + "\n" + json);
-        }
+        d(XmlJsonParser.json(json));
     }
 
     /**
@@ -165,21 +121,7 @@ final class LoggerPrinter implements Printer {
      */
     @Override
     public void xml(String xml) {
-        if (TextUtils.isEmpty(xml)) {
-            d("Empty/Null xml content.(This msg from logger)");
-            return;
-        }
-        try {
-            Source xmlInput = new StreamSource(new StringReader(xml));
-            StreamResult xmlOutput = new StreamResult(new StringWriter());
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
-            transformer.transform(xmlInput, xmlOutput);
-            d(xmlOutput.getWriter().toString().replaceFirst(">", ">\n"));
-        } catch (TransformerException e) {
-            e(e.getCause().getMessage() + "\n" + xml);
-        }
+        d(XmlJsonParser.xml(xml));
     }
 
     /**
@@ -189,62 +131,7 @@ final class LoggerPrinter implements Printer {
      */
     @Override
     public void object(@Nullable Object object) {
-        if (object == null) {
-            d("null");
-            return;
-        }
-
-        final String simpleName = object.getClass().getSimpleName();
-        if (object.getClass().isArray()) {
-            StringBuilder msg = new StringBuilder("Temporarily not support more than two dimensional Array!");
-            int dim = ArrayUtil.getArrayDimension(object);
-            switch (dim) {
-                case 1:
-                    Pair pair = ArrayUtil.arrayToString(object);
-                    msg = new StringBuilder(simpleName.replace("[]", "[" + pair.first + "] {\n"));
-                    msg.append(pair.second).append("\n");
-                    break;
-                case 2:
-                    Pair pair1 = ArrayUtil.arrayToObject(object);
-                    Pair pair2 = (Pair) pair1.first;
-                    msg = new StringBuilder(simpleName.replace("[][]", "[" + pair2.first + "][" + pair2.second + "] {\n"));
-                    msg.append(pair1.second).append("\n");
-                    break;
-                default:
-                    break;
-            }
-            d(msg + "}");
-        } else if (object instanceof Collection) {
-            Collection collection = (Collection) object;
-            String msg = "%s size = %d [\n";
-            msg = String.format(Locale.ENGLISH, msg, simpleName, collection.size());
-            if (!collection.isEmpty()) {
-                Iterator iterator = collection.iterator();
-                int flag = 0;
-                while (iterator.hasNext()) {
-                    String itemString = "[%d]:%s%s";
-                    Object item = iterator.next();
-                    msg += String.format(Locale.ENGLISH, itemString,
-                            flag,
-                            ObjectUtil.objectToString(item),
-                            flag++ < collection.size() - 1 ? ",\n" : "\n");
-                }
-            }
-            d(msg + "\n]");
-        } else if (object instanceof Map) {
-            String msg = simpleName + " {\n";
-            Map map = (Map) object;
-            Set keys = map.keySet();
-            for (Object key : keys) {
-                String itemString = "[%s -> %s]\n";
-                Object value = map.get(key);
-                msg += String.format(itemString, ObjectUtil.objectToString(key),
-                        ObjectUtil.objectToString(value));
-            }
-            d(msg + "}");
-        } else {
-            d(ObjectUtil.objectToString(object));
-        }
+        d(ObjParser.parseObj(object));
     }
 
     /**
@@ -281,9 +168,9 @@ final class LoggerPrinter implements Printer {
         String[] lines = chunk.split(System.getProperty("line.separator"));
         for (int i = 0, length = lines.length; i < length; i++) {
             if (i == length - 1) {
-                printLog(logType, tag, lines[i] + getTail());
+                printLog(logType, tag, "║" + lines[i] + getTail());
             } else {
-                printLog(logType, tag, lines[i]);
+                printLog(logType, tag, "║" + lines[i]);
             }
         }
     }
@@ -309,7 +196,7 @@ final class LoggerPrinter implements Printer {
                 continue;
             }
             sb.append(" ==> ").append(trace[stackIndex].getMethodName()) // onCreate
-                    .append(" (")
+                    .append("(")
                     .append(trace[stackIndex].getFileName()).append(":") // MainActivity.java:
                     .append(trace[stackIndex].getLineNumber()) // 827
                     .append(")");

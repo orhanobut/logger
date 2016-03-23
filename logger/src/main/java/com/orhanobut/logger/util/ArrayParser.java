@@ -6,7 +6,7 @@ import android.util.Pair;
  * Created by pengwei08 on 2015/7/25.
  * Thanks to zhutiantao for providing an array of analytical methods.
  */
-public final class ArrayUtil {
+public final class ArrayParser {
 
     /**
      * 获取数组的纬度
@@ -151,7 +151,7 @@ public final class ArrayUtil {
             Object[] objects = (Object[]) object;
             length = objects.length;
             for (Object item : objects) {
-                builder.append(ObjectUtil.objectToString(item)).append(",\t");
+                builder.append(ObjParser.objectToString(item)).append(",\t");
             }
         }
         return Pair.create(length, builder.replace(builder.length() - 2, builder.length(), "]").toString());
