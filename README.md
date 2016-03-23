@@ -70,10 +70,10 @@ public class MyApplication extends Application {
         super.onCreate();
         Logger.initialize(
                 Settings.builder()
-                        .isSmartTag(true) // default true
-                        .showThreadInfo(true) // default false
-                        .methodCount(1) // default 1
-                        .methodOffset(0) // default 0
+                        .isSmartTag(true)
+                        .showThreadInfo(true)
+                        .methodCount(1)
+                        .methodOffset(0)
                         .logLevel(BuildConfig.DEBUG ? LogLevel.FULL : LogLevel.NONE).build() // show log in debug state
         );
     }
