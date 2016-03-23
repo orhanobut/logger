@@ -36,6 +36,10 @@ public class MainActivity extends AppCompatActivity {
     private void levTest() {
         Logger.v(null);
         Logger.d("%s test", "kale"); // 多参数 可以解决release版本中字符拼接带来的性能消耗
+        String test = "abc %s def %s ghi";
+        Logger.d(test);
+        Logger.d(test, "s");
+        
         Logger.t("tag", 3).i("logger with 3 method count");
         try {
             Class.forName("kale");

@@ -5,8 +5,9 @@ import com.orhanobut.logger.util.XmlJsonParser;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 import android.util.Log;
+
+import java.util.MissingFormatArgumentException;
 
 import lombok.Getter;
 
@@ -131,14 +132,14 @@ public final class LogPrinter {
         if (settings.logLevel == LogLevel.NONE) {
             return;
         }
-        String tag = formatTag();
-        String message = TextUtils.isEmpty(msg) ? "null" : String.format(msg, args);
+        final String tag = formatTag();
+        msg = formatMsg(msg, args);
 
         //get bytes of message with system's default charset (which is UTF-8 for Android)
-        byte[] bytes = message.getBytes();
+        final byte[] bytes = msg.getBytes();
         int length = bytes.length;
         if (length <= CHUNK_SIZE) {
-            logContent(logType, tag, message);
+            logContent(logType, tag, msg);
         } else {
             for (int i = 0; i < length; i += CHUNK_SIZE) {
                 int count = Math.min(length - i, CHUNK_SIZE);
@@ -147,6 +148,20 @@ public final class LogPrinter {
             }
         }
         printLog(logType, tag, BOTTOM_BORDER);
+    }
+
+    private String formatMsg(@Nullable String msg, Object[] args) {
+        if (msg != null) {
+            try {
+                // Fix: String.format(%s %s abc,"a");
+                msg = args.length == 0 ? msg : String.format(msg, args);
+            } catch (MissingFormatArgumentException e) {
+                e.printStackTrace();
+            }
+        } else {
+            msg = "null";
+        }
+        return msg;
     }
 
     private void logContent(int logType, String tag, String chunk) {
