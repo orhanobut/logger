@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        minSdkVersion 8
+        minSdkVersion 15
         targetSdkVersion 23
     }
 
@@ -14,6 +14,9 @@ android {
 dependencies {
     provided 'com.android.support:support-annotations:23.2.1'
     provided "org.projectlombok:lombok:1.12.6"
+
+    compile 'com.jakewharton.timber:timber:4.1.1'
+    
     testCompile 'junit:junit:4.12'
     testCompile "org.mockito:mockito-core:1.9.5"
     testCompile "org.robolectric:robolectric:3.0"

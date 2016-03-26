@@ -1,6 +1,5 @@
 package com.orhanobut.loggersample;
 
-import com.orhanobut.logger.LogLevel;
 import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.Settings;
 
@@ -18,13 +17,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Logger.initialize(
-                Settings.builder()
-                        .isSmartTag(true)
-                        .showThreadInfo(true)
-                        .methodCount(1)
-                        .methodOffset(0)
-                        .logLevel(BuildConfig.DEBUG ? LogLevel.FULL : LogLevel.NONE).build() // show log in debug state
-        );
+                Settings.getInstance()
+                        .setMethodOffset(5)
+                        .isShowThreadInfo(true));
 
         levTest();
         objTest();
@@ -36,11 +31,12 @@ public class MainActivity extends AppCompatActivity {
     private void levTest() {
         Logger.v(null);
         Logger.d("%s test", "kale"); // 多参数 可以解决release版本中字符拼接带来的性能消耗
-        String test = "abc %s def %s ghi";
+        String test = "abc %s def %s gh";
         Logger.d(test);
-        Logger.d(test, "s");
-        
-        Logger.t("tag", 3).i("logger with 3 method count");
+
+        //Logger.d(test, "s"); // Note:incorrect
+
+        Logger.t("Custom Tag").w("logger with custom tag");
         try {
             Class.forName("kale");
         } catch (ClassNotFoundException e) {
@@ -48,6 +44,11 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Logger.d("first\nsecond\nthird");
+        test();
+    }
+
+    private void test() {
+        Logger.d("just test");
     }
 
     private void objTest() {
@@ -82,7 +83,6 @@ public class MainActivity extends AppCompatActivity {
             Logger.d("No." + i);
         }
     }
-    
 
     ///////////////////////////////////////////////////////////////////////////
     // 内部类中打log测试

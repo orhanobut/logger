@@ -37,7 +37,7 @@ public class SettingsTest extends TestCase {
 
     @Test
     public void testCustomShowThreadInfo() {
-        settings.setShowThreadInfo(true);
+        settings.isShowThreadInfo(true);
         assertThat(settings.isShowThreadInfo()).isTrue();
     }
 
