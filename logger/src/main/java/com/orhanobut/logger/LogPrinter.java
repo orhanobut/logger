@@ -1,43 +1,46 @@
 package com.orhanobut.logger;
 
+import android.support.annotation.NonNull;
+
 import lombok.Getter;
 import timber.log.Timber;
 
 public final class LogPrinter extends Timber.DebugTree {
 
-    /**
-     * The minimum stack trace index, starts at this class after two native calls.
-     */
-    private static final int MIN_STACK_OFFSET = 3;
-
-    private static final int STACK_OFFSET = 3;
+    private static final int STACK_OFFSET = 8;
 
     private static final String BOTTOM_BORDER = "╚═══════════════════════════";
 
     public static final String PREFIX_BORDER = "║";
 
+    /**
+     * 因为如果设置了tag，那么会在timber中多走一个方法，所以堆栈会发生变化，造成不准确的情况。
+     */
+    private boolean isCustomTag = true;
+
     @Getter
-    private final Settings settings;
+    private final Logger.Settings settings;
 
     private static final String PROPERTY = System.getProperty("line.separator");
 
-    public LogPrinter(Settings settings) {
+    public LogPrinter(Logger.Settings settings) {
         this.settings = settings;
     }
 
+    /**
+     * rule for auto tag
+     */
     @Override
     protected String createStackElementTag(StackTraceElement ignored) {
+        isCustomTag = false;
         int offset = STACK_OFFSET + settings.methodOffset;
-        StackTraceElement thisMethodStack = (new Exception()).getStackTrace()[offset - 1];
+        StackTraceElement thisMethodStack = new Throwable().getStackTrace()[offset - 1];
         return super.createStackElementTag(thisMethodStack);
     }
 
-    protected void log(int priority, String tag, String message, Throwable t) {
-        if (message == null) {
-            message = "null";
-        }
-
+    protected void log(int priority, String tag, @NonNull String message, Throwable ignored) {
         String[] lines = message.split(PROPERTY);
+        // 处理有换行的信息
         for (int i = 0, length = lines.length; i < length; i++) {
             if (i == length - 1) {
                 printLog(priority, tag, PREFIX_BORDER + lines[i] + getTail());
@@ -47,6 +50,8 @@ public final class LogPrinter extends Timber.DebugTree {
         }
         // finally print bottom line
         printLog(priority, tag, BOTTOM_BORDER);
+
+        isCustomTag = true;
     }
 
     private void printLog(int priority, String tag, String msg) {
@@ -55,14 +60,19 @@ public final class LogPrinter extends Timber.DebugTree {
 
     /**
      * ==> onCreate(MainActivity.java:827) Thread:main
-     *
-     * 因为如果设置了tag，那么会在timber中多走一个方法，所以堆栈会发生变化，造成不准确的情况。
-     * 目前没找到好的解决方案！
      */
     private String getTail() {
-        StackTraceElement[] trace = Thread.currentThread().getStackTrace();
-        final int stackIndex = STACK_OFFSET + settings.methodOffset + 1;
+        if (!settings.showMethodLink) {
+            return ""; 
+        }
+        
+        final StackTraceElement[] trace = Thread.currentThread().getStackTrace();
+        int stackIndex = STACK_OFFSET + settings.methodOffset + 1;
 
+        if (isCustomTag) {
+            stackIndex -= 2;
+        }
+        
         StringBuilder sb = new StringBuilder();
         sb.append(" ==> ").append(trace[stackIndex].getMethodName()) // onCreate
                 .append("(")
@@ -85,6 +95,13 @@ public final class LogPrinter extends Timber.DebugTree {
     protected boolean isLoggable(int priority) {
         return true;
     }
+
+
+    /**
+     * The minimum stack trace index, starts at this class after two native calls.
+     */
+    private static final int MIN_STACK_OFFSET = 3;
+    
     
     /*private int getMethodCount() {
         Integer count = LOCAL_METHOD_COUNT.get();

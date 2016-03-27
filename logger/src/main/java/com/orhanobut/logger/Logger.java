@@ -3,6 +3,8 @@ package com.orhanobut.logger;
 import com.orhanobut.logger.util.ObjParser;
 import com.orhanobut.logger.util.XmlJsonParser;
 
+import android.support.annotation.NonNull;
+
 import timber.log.Timber;
 
 /**
@@ -33,30 +35,37 @@ public final class Logger {
     }
 
     public static void v(String message, Object... args) {
+        message = handleNullMsg(message);
         Timber.v(message, args);
     }
 
     public static void d(String message, Object... args) {
+        message = handleNullMsg(message);
         Timber.d(message, args);
     }
 
     public static void i(String message, Object... args) {
+        message = handleNullMsg(message);
         Timber.i(message, args);
     }
 
     public static void w(String message, Object... args) {
+        message = handleNullMsg(message);
         Timber.w(message, args);
     }
 
     public static void w(Throwable throwable, String message, Object... args) {
+        message = handleNullMsg(message);
         Timber.w(throwable, message, args);
     }
 
     public static void e(String message, Object... args) {
+        message = handleNullMsg(message);
         Timber.e(message, args);
     }
 
     public static void e(Throwable throwable, String message, Object... args) {
+        message = handleNullMsg(message);
         Timber.e(throwable, message, args);
     }
 
@@ -90,9 +99,52 @@ public final class Logger {
     public static void plant(Timber.Tree tree) {
         Timber.plant(tree);
     }
-    
+
     public static void uprootAll() {
         Timber.uprootAll();
+    }
+
+    /**
+     * Timber will swallow message if it's null and there's no throwable.
+     */
+    @NonNull
+    private static String handleNullMsg(String message) {
+        if (message == null) {
+            message = "null";
+        }
+        return message;
+    }
+
+    public final static class Settings {
+
+        protected int methodOffset;
+
+        protected boolean showMethodLink = true;
+
+        protected boolean showThreadInfo;
+
+        public static Settings getInstance() {
+            return new Settings();
+        }
+
+        private Settings() {
+            
+        }
+
+        public Settings setMethodOffset(int methodOffset) {
+            this.methodOffset = methodOffset;
+            return this;
+        }
+
+        public Settings isShowThreadInfo(boolean showThreadInfo) {
+            this.showThreadInfo = showThreadInfo;
+            return this;
+        }
+
+        public Settings isShowMethodLink(boolean showMethodLink) {
+            this.showMethodLink = showMethodLink;
+            return this;
+        }
     }
 
 }

@@ -1,7 +1,6 @@
 package com.orhanobut.loggersample;
 
 import com.orhanobut.logger.Logger;
-import com.orhanobut.logger.Settings;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,8 +16,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Logger.initialize(
-                Settings.getInstance()
-                        .setMethodOffset(5)
+                Logger.Settings.getInstance()
+                        .setMethodOffset(0)
+                        .isShowMethodLink(true)
                         .isShowThreadInfo(true));
 
         levTest();
