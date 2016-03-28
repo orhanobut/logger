@@ -115,36 +115,4 @@ public final class Logger {
         return message;
     }
 
-    public final static class Settings {
-
-        protected int methodOffset;
-
-        protected boolean showMethodLink = true;
-
-        protected boolean showThreadInfo;
-
-        public static Settings getInstance() {
-            return new Settings();
-        }
-
-        private Settings() {
-            
-        }
-
-        public Settings setMethodOffset(int methodOffset) {
-            this.methodOffset = methodOffset;
-            return this;
-        }
-
-        public Settings isShowThreadInfo(boolean showThreadInfo) {
-            this.showThreadInfo = showThreadInfo;
-            return this;
-        }
-
-        public Settings isShowMethodLink(boolean showMethodLink) {
-            this.showMethodLink = showMethodLink;
-            return this;
-        }
-    }
-
 }
