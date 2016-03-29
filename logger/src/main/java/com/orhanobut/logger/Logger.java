@@ -13,12 +13,12 @@ import timber.log.Timber;
  *
  * @author Orhan Obut
  */
-public final class Logger {
+public class Logger {
 
     private static LogPrinter printer;
 
     // @formatter:off
-    @Deprecated private Logger() {}
+    @Deprecated protected Logger() {}
     // @formatter:on
 
     public static void initialize(Settings settings) {

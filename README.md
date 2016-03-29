@@ -1,7 +1,7 @@
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Logger-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/1658) [![](https://img.shields.io/badge/AndroidWeekly-%23147-blue.svg)](http://androidweekly.net/issues/issue-147)
 [![Join the chat at https://gitter.im/orhanobut/logger](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/orhanobut/logger?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-<img align="right" src='https://github.com/orhanobut/logger/blob/master/images/logger-logo.png' width='128' height='128'/>
+<img align="right" src='https://raw.githubusercontent.com/tianzhijiexian/logger/master/images/logger-logo.png' width='128' height='128'/>
 
 ###Logger
 Simple, pretty and powerful logger for android
@@ -15,6 +15,7 @@ Logger provides :
 - Clean output
 - Jump to source
 - Smart log tag
+- support large string  
 
 ### Gradle
 Add it in your root build.gradle at the end of repositories:  
@@ -30,22 +31,15 @@ Add the dependency
 > compile 'com.github.tianzhijiexian:logger:[Latest release](https://github.com/tianzhijiexian/logger/releases)'
 
 
-### Logger
-```java
-private void levTest() {
-    Logger.v(null);
-    Logger.d("%s test", "kale");
-    Logger.t("tag", 3).i("logger with 3 method count");
-    try {
-        Class.forName("kale");
-    } catch (ClassNotFoundException e) {
-        Logger.e(e, "something happened"); // exception
-    }
+### Logger  
 
-    Logger.d("first\nsecond\nthird");
-}
-```
-![](./images/lev_test.png)
+![](./images/obj.png)  
+
+![](./images/json.png)  
+
+![](./images/large_data.png)  
+
+![](./images/error.png)
 
 ### Usage
 ```java
@@ -57,6 +51,14 @@ Logger.wtf("hello");
 Logger.json(JSON_CONTENT);
 Logger.xml(XML_CONTENT);
 logger.object(...); // bean/map/Collection...
+Logger.t("Custom Tag").w("logger with custom tag");
+try {
+		Class.forName("kale");
+} catch (ClassNotFoundException e) {
+		Logger.e(e, "something happened"); // exception
+}
+
+Logger.d("first\nsecond\nthird");
 ```
 
 ### Settings (optional)
@@ -68,28 +70,17 @@ public class MyApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Logger.initialize(
-                Settings.builder()
-                        .isSmartTag(true)
-                        .showThreadInfo(true)
-                        .methodCount(1)
-                        .methodOffset(0)
-                        .logLevel(BuildConfig.DEBUG ? LogLevel.FULL : LogLevel.NONE).build() // show log in debug state
+				Logger.initialize(
+                Settings.getInstance()
+                        .isShowMethodLink(true)
+                        .isShowThreadInfo(false)
+                        .setMethodOffset(0)
+                        .setLogPriority(BuildConfig.DEBUG ? Log.VERBOSE : Log.ASSERT)
         );
     }
 }
 ```
 Note: Use LogLevel.NONE for the release versions.
-
-### Notes
-- Use the filter for a better result
-
-<img src='https://github.com/orhanobut/logger/blob/master/images/filter.png'/>
-
-- Make sure that the wrap option is disabled
-
-<img src='https://github.com/orhanobut/logger/blob/master/images/wrap-closed.png'/>
-
 
 #### You might also like
 - [Hawk](https://github.com/orhanobut/hawk) Simple,powerful,secure key-value storage

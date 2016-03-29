@@ -19,9 +19,12 @@ public class MainActivity extends AppCompatActivity {
 
         Logger.initialize(
                 Settings.getInstance()
+                        .isShowMethodLink(true)
+                        .isShowThreadInfo(false)
+                        .setMethodOffset(0)
                         .setLogPriority(BuildConfig.DEBUG ? Log.VERBOSE : Log.ASSERT)
         );
-
+        
         levTest();
         objTest();
         jsonTest();
