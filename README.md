@@ -1,5 +1,5 @@
+[![](https://jitpack.io/v/tianzhijiexian/logger.svg)](https://jitpack.io/#tianzhijiexian/logger)
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Logger-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/1658) [![](https://img.shields.io/badge/AndroidWeekly-%23147-blue.svg)](http://androidweekly.net/issues/issue-147)
-[![Join the chat at https://gitter.im/orhanobut/logger](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/orhanobut/logger?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 <img align="right" src='https://raw.githubusercontent.com/tianzhijiexian/logger/master/images/logger-logo.png' width='128' height='128'/>
 
