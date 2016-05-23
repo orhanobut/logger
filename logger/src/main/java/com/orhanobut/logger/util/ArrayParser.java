@@ -156,5 +156,5 @@ public final class ArrayParser {
         }
         return Pair.create(length, builder.replace(builder.length() - 2, builder.length(), "]").toString());
     }
-    
+
 }

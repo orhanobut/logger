@@ -39,6 +39,9 @@ public class Settings {
         return this;
     }
 
+    /**
+     * @param priority one of {@link Log#VERBOSE},{@link Log#DEBUG},{@link Log#INFO},{@link Log#WARN},{@link Log#ERROR}
+     */
     public Settings setLogPriority(int priority) {
         this.priority = priority;
         return this;

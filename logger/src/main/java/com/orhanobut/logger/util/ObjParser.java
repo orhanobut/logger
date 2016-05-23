@@ -15,15 +15,13 @@ import java.util.Set;
  */
 public class ObjParser {
 
-    private static final String NULL = "null";
-
     // 基本数据类型
     private final static String[] TYPES = {"int", "java.lang.String", "boolean", "char",
             "float", "double", "long", "short", "byte"};
 
     public static String parseObj(Object object) {
         if (object == null) {
-            return NULL;
+            return "null";
         }
 
         final String simpleName = object.getClass().getSimpleName();

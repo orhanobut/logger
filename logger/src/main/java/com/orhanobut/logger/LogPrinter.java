@@ -94,7 +94,6 @@ public final class LogPrinter extends Timber.DebugTree {
         return priority >= settings.priority;
     }
 
-
     /**
      * The minimum stack trace index, starts at this class after two native calls.
      */

@@ -29,7 +29,7 @@ public class XmlJsonParser {
      * It is used for json pretty print
      */
     private static final int JSON_INDENT = 4;
-    
+
     @CheckResult
     public static String xml(String xml) {
         if (TextUtils.isEmpty(xml)) {

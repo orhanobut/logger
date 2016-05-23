@@ -18,7 +18,7 @@ public class Logger {
     private static LogPrinter printer;
 
     // @formatter:off
-    @Deprecated protected Logger() {}
+    protected Logger() {}
     // @formatter:on
 
     public static void initialize(Settings settings) {
