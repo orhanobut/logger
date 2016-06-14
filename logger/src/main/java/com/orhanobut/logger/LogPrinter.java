@@ -21,7 +21,7 @@ public final class LogPrinter extends Timber.DebugTree {
      */
     private boolean isCustomTag = true;
 
-    private final StringBuilder sb = new StringBuilder();
+    private StringBuilder sb = new StringBuilder();
 
     @Getter
     private final Settings settings;
@@ -72,7 +72,12 @@ public final class LogPrinter extends Timber.DebugTree {
         }
         final StackTraceElement stack = Thread.currentThread().getStackTrace()[index];
 
-        sb.delete(0, sb.length());
+        if (sb.length() < 0) {
+            sb = new StringBuilder();
+        } else {
+            sb.setLength(0);
+        }
+        
         sb.append(String.format(" ==> %s(%s:%s)",
                 stack.getMethodName(),
                 stack.getFileName(),
@@ -93,39 +98,5 @@ public final class LogPrinter extends Timber.DebugTree {
     protected boolean isLoggable(int priority) {
         return priority >= settings.priority;
     }
-
-    /**
-     * The minimum stack trace index, starts at this class after two native calls.
-     */
-    private static final int MIN_STACK_OFFSET = 3;
-    
-    
-    /*private int getMethodCount() {
-        Integer count = LOCAL_METHOD_COUNT.get();
-        if (count != null) {
-            LOCAL_METHOD_COUNT.remove();
-            return count;
-        }
-        return settings.methodCount;
-    }*/
-/*
-    *//**
-     * Determines the starting index of the stack trace, after method calls made by this class.
-     *
-     * @param trace the stack trace
-     * @return the stack offset
-     *//*
-    @Deprecated
-    private int getStackOffset(StackTraceElement[] trace) {
-        for (int i = MIN_STACK_OFFSET; i < trace.length; i++) {
-            StackTraceElement e = trace[i];
-            String name = e.getClassName();
-            if (!name.equals(LogPrinter.class.getName())
-                    && !name.equals(Timber.class.getName())) {
-                return --i;
-            }
-        }
-        return -1;
-    }*/
 
 }
