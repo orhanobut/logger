@@ -18,8 +18,6 @@
  */
 package com.orhanobut.logger;
 
-import android.support.annotation.Nullable;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.UnknownHostException;
@@ -36,7 +34,7 @@ final class Helper {
      * @param str the string to be examined
      * @return true if str is null or zero length
      */
-    static boolean isEmpty(@Nullable CharSequence str) {
+    static boolean isEmpty(CharSequence str) {
         return str == null || str.length() == 0;
     }
 
