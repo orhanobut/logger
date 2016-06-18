@@ -46,18 +46,23 @@ final class Helper {
      * @param a first CharSequence to check
      * @param b second CharSequence to check
      * @return true if a and b are equal
+     *
+     * NOTE: Logic slightly change due to strict policy on CI -
+     * "Inner assignments should be avoided"
      */
     static boolean equals(CharSequence a, CharSequence b) {
         if (a == b) return true;
-        int length;
-        if (a != null && b != null && (length = a.length()) == b.length()) {
-            if (a instanceof String && b instanceof String) {
-                return a.equals(b);
-            } else {
-                for (int i = 0; i < length; i++) {
-                    if (a.charAt(i) != b.charAt(i)) return false;
+        if (a != null && b != null) {
+            int length = a.length();
+            if (length == b.length()) {
+                if (a instanceof String && b instanceof String) {
+                    return a.equals(b);
+                } else {
+                    for (int i = 0; i < length; i++) {
+                        if (a.charAt(i) != b.charAt(i)) return false;
+                    }
+                    return true;
                 }
-                return true;
             }
         }
         return false;
