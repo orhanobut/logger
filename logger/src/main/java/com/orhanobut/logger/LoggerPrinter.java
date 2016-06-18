@@ -1,8 +1,5 @@
 package com.orhanobut.logger;
 
-import android.text.TextUtils;
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -117,7 +114,7 @@ final class LoggerPrinter implements Printer {
 
   @Override public void e(Throwable throwable, String message, Object... args) {
     if (throwable != null && message != null) {
-      message += " : " + Log.getStackTraceString(throwable);
+      message += " : " + Helper.getStackTraceString(throwable);
     }
     if (throwable != null && message == null) {
       message = throwable.toString();
@@ -150,7 +147,7 @@ final class LoggerPrinter implements Printer {
    * @param json the json content
    */
   @Override public void json(String json) {
-    if (TextUtils.isEmpty(json)) {
+    if (Helper.isEmpty(json)) {
       d("Empty/Null json content");
       return;
     }
@@ -178,7 +175,7 @@ final class LoggerPrinter implements Printer {
    * @param xml the xml content
    */
   @Override public void xml(String xml) {
-    if (TextUtils.isEmpty(xml)) {
+    if (Helper.isEmpty(xml)) {
       d("Empty/Null xml content");
       return;
     }
@@ -210,7 +207,7 @@ final class LoggerPrinter implements Printer {
     String message = createMessage(msg, args);
     int methodCount = getMethodCount();
 
-    if (TextUtils.isEmpty(message)) {
+    if (Helper.isEmpty(message)) {
       message = "Empty/NULL log message";
     }
 
@@ -327,7 +324,7 @@ final class LoggerPrinter implements Printer {
   }
 
   private String formatTag(String tag) {
-    if (!TextUtils.isEmpty(tag) && !TextUtils.equals(this.tag, tag)) {
+    if (!Helper.isEmpty(tag) && !Helper.equals(this.tag, tag)) {
       return this.tag + "-" + tag;
     }
     return this.tag;
