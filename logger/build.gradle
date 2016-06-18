@@ -14,12 +14,12 @@ task checkstyle(type: Checkstyle) {
 }
 
 android {
-  compileSdkVersion 23
+  compileSdkVersion 24
   buildToolsVersion "24.0.0"
 
   defaultConfig {
     minSdkVersion 8
-    targetSdkVersion 23
+    targetSdkVersion 24
   }
 
   lintOptions {
