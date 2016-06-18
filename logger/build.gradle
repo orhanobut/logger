@@ -14,12 +14,12 @@ task checkstyle(type: Checkstyle) {
 }
 
 android {
-  compileSdkVersion 21
-  buildToolsVersion "21.1.2"
+  compileSdkVersion 23
+  buildToolsVersion "24.0.0"
 
   defaultConfig {
     minSdkVersion 8
-    targetSdkVersion 22
+    targetSdkVersion 23
   }
 
   lintOptions {
@@ -47,6 +47,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 dependencies {
   testCompile 'junit:junit:4.12'
-  testCompile "org.robolectric:robolectric:3.0"
+  compile 'com.android.support:support-annotations:24.0.0'
+  testCompile 'org.robolectric:robolectric:3.0'
   testCompile 'org.assertj:assertj-core:1.7.0'
 }
