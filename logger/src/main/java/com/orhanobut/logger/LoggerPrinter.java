@@ -15,11 +15,9 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-/**
- * Logger is a wrapper for logging utils
- * But more pretty, simple and powerful
- */
 final class LoggerPrinter implements Printer {
+
+  private static final String DEFAULT_TAG = "PRETTYLOGGER";
 
   private static final int DEBUG = 3;
   private static final int ERROR = 6;
@@ -38,7 +36,7 @@ final class LoggerPrinter implements Printer {
   /**
    * It is used for json pretty print
    */
-  private static final int JSON_INDENT = 4;
+  private static final int JSON_INDENT = 2;
 
   /**
    * The minimum stack trace index, starts at this class after two native calls.
@@ -73,7 +71,11 @@ final class LoggerPrinter implements Printer {
   /**
    * It is used to determine log settings such as method count, thread info visibility
    */
-  private Settings settings;
+  private final Settings settings = new Settings();
+
+  public LoggerPrinter() {
+    init(DEFAULT_TAG);
+  }
 
   /**
    * It is used to change the tag
@@ -88,7 +90,6 @@ final class LoggerPrinter implements Printer {
       throw new IllegalStateException("tag may not be empty");
     }
     this.tag = tag;
-    this.settings = new Settings();
     return settings;
   }
 
@@ -117,7 +118,7 @@ final class LoggerPrinter implements Printer {
       message += " : " + Helper.getStackTraceString(throwable);
     }
     if (throwable != null && message == null) {
-      message = throwable.toString();
+      message = Helper.getStackTraceString(throwable);
     }
     if (message == null) {
       message = "No message/exception is set";
@@ -163,9 +164,11 @@ final class LoggerPrinter implements Printer {
         JSONArray jsonArray = new JSONArray(json);
         String message = jsonArray.toString(JSON_INDENT);
         d(message);
+        return;
       }
+      e("Invalid Json");
     } catch (JSONException e) {
-      e(e.getCause().getMessage() + "\n" + json);
+      e("Invalid Json");
     }
   }
 
@@ -193,7 +196,7 @@ final class LoggerPrinter implements Printer {
   }
 
   @Override public void clear() {
-    settings = null;
+    settings.reset();
   }
 
   /**
@@ -296,24 +299,24 @@ final class LoggerPrinter implements Printer {
     String finalTag = formatTag(tag);
     switch (logType) {
       case ERROR:
-        settings.getLogTool().e(finalTag, chunk);
+        settings.getLogAdapter().e(finalTag, chunk);
         break;
       case INFO:
-        settings.getLogTool().i(finalTag, chunk);
+        settings.getLogAdapter().i(finalTag, chunk);
         break;
       case VERBOSE:
-        settings.getLogTool().v(finalTag, chunk);
+        settings.getLogAdapter().v(finalTag, chunk);
         break;
       case WARN:
-        settings.getLogTool().w(finalTag, chunk);
+        settings.getLogAdapter().w(finalTag, chunk);
         break;
       case ASSERT:
-        settings.getLogTool().wtf(finalTag, chunk);
+        settings.getLogAdapter().wtf(finalTag, chunk);
         break;
       case DEBUG:
         // Fall through, log debug by default
       default:
-        settings.getLogTool().d(finalTag, chunk);
+        settings.getLogAdapter().d(finalTag, chunk);
         break;
     }
   }
@@ -343,7 +346,7 @@ final class LoggerPrinter implements Printer {
   }
 
   private String createMessage(String message, Object... args) {
-    return args.length == 0 ? message : String.format(message, args);
+    return args == null || args.length == 0 ? message : String.format(message, args);
   }
 
   private int getMethodCount() {
@@ -363,6 +366,7 @@ final class LoggerPrinter implements Printer {
    * Determines the starting index of the stack trace, after method calls made by this class.
    *
    * @param trace the stack trace
+   *
    * @return the stack offset
    */
   private int getStackOffset(StackTraceElement[] trace) {

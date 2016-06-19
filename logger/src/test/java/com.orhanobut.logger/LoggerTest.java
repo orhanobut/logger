@@ -1,6 +1,8 @@
 package com.orhanobut.logger;
 
 import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -10,7 +12,7 @@ import org.robolectric.shadows.ShadowLog.LogItem;
 
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.google.common.truth.Truth.assertThat;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
@@ -23,109 +25,149 @@ public class LoggerTest {
   public static final int VERBOSE = 2;
   public static final int WARN = 5;
 
+  String threadName;
+
+  @Before public void setup() {
+    threadName = Thread.currentThread().getName();
+
+    Logger.init();
+  }
+
   @After public void tearDown() {
     Logger.clear();
   }
 
   @Test public void debugLog() {
-    Logger.init();
     Logger.d("message");
-    assertLog(DEBUG, "message")
-        .hasTopBorder()
-        .hasThread("Test worker")
-        .hasMiddleBorder()
-        .skip()
-        .skip()
-        .hasMiddleBorder()
-        .hasMessage()
-        .hasBottomBorder()
-        .hasNoMoreMessages();
+
+    assertLog(DEBUG).hasMessageWithDefaultSettings("message");
   }
 
   @Test public void verboseLog() {
-    Logger.init();
     Logger.v("message");
-    assertLog(VERBOSE, "message")
-        .hasTopBorder()
-        .hasThread("Test worker")
-        .hasMiddleBorder()
-        .skip()
-        .skip()
-        .hasMiddleBorder()
-        .hasMessage()
-        .hasBottomBorder()
-        .hasNoMoreMessages();
+
+    assertLog(VERBOSE).hasMessageWithDefaultSettings("message");
   }
 
   @Test public void warningLog() {
-    Logger.init();
     Logger.w("message");
-    assertLog(WARN, "message")
-        .hasTopBorder()
-        .hasThread("Test worker")
-        .hasMiddleBorder()
-        .skip()
-        .skip()
-        .hasMiddleBorder()
-        .hasMessage()
-        .hasBottomBorder()
-        .hasNoMoreMessages();
+
+    assertLog(WARN).hasMessageWithDefaultSettings("message");
   }
 
   @Test public void errorLog() {
-    Logger.init();
     Logger.e("message");
-    assertLog(ERROR, "message")
-        .hasTopBorder()
-        .hasThread("Test worker")
-        .hasMiddleBorder()
-        .skip()
-        .skip()
-        .hasMiddleBorder()
-        .hasMessage()
-        .hasBottomBorder()
-        .hasNoMoreMessages();
+
+    assertLog(ERROR).hasMessageWithDefaultSettings("message");
+  }
+
+  @Ignore("Through Terminal somehow not working, but on Studio it works, needs investigation")
+  @Test public void errorLogWithThrowable() {
+    Throwable throwable = new Throwable("throwable");
+    Logger.e(throwable, "message");
+
+    String stackString = "message : " + Helper.getStackTraceString(throwable);
+    String[] stackItems = stackString.split("\\n");
+
+    assertLog(ERROR).hasMessageWithDefaultSettings(stackItems);
+  }
+
+  @Ignore("Through Terminal somehow not working, but on Studio it works, needs investigation")
+  @Test public void errorLogWithThrowableWithoutMessage() {
+    Throwable throwable = new Throwable("throwable");
+    Logger.e(throwable, null);
+
+    String stackString = Helper.getStackTraceString(throwable);
+    String[] stackItems = stackString.split("\\n");
+
+    assertLog(ERROR).hasMessageWithDefaultSettings(stackItems);
+  }
+
+  @Ignore("Through Terminal somehow not working, but on Studio it works, needs investigation")
+  @Test public void errorLogNoThrowableNoMessage() {
+    Logger.e(null, null);
+
+    assertLog(ERROR).hasMessageWithDefaultSettings("No message/exception is set");
   }
 
   @Test public void infoLog() {
-    Logger.init();
     Logger.i("message");
-    assertLog(INFO, "message")
-        .hasTopBorder()
-        .hasThread("Test worker")
-        .hasMiddleBorder()
-        .skip()
-        .skip()
-        .hasMiddleBorder()
-        .hasMessage()
-        .hasBottomBorder()
-        .hasNoMoreMessages();
+
+    assertLog(INFO).hasMessageWithDefaultSettings("message");
   }
 
   @Test public void wtfLog() {
-    Logger.init();
     Logger.wtf("message");
-    assertLog(ASSERT, "message")
-        .hasTopBorder()
-        .hasThread("Test worker")
-        .hasMiddleBorder()
-        .skip()
-        .skip()
-        .hasMiddleBorder()
-        .hasMessage()
-        .hasBottomBorder()
-        .hasNoMoreMessages();
+
+    assertLog(ASSERT).hasMessageWithDefaultSettings("message");
+  }
+
+  @Test public void jsonLObjectLog() {
+    String[] messages = new String[]{"{", "  \"key\": 3", "}"};
+
+    Logger.json("  {\"key\":3}");
+
+    assertLog(DEBUG).hasMessageWithDefaultSettings(messages);
+  }
+
+  @Test public void jsonArrayLog() {
+    String[] messages = new String[]{
+        "[",
+        "  {",
+        "    \"key\": 3",
+        "  }",
+        "]"
+    };
+
+    Logger.json("[{\"key\":3}]");
+
+    assertLog(DEBUG).hasMessageWithDefaultSettings(messages);
+  }
+
+  @Test public void testInvalidJsonLog() {
+    Logger.json("no json");
+    assertLog(ERROR).hasMessageWithDefaultSettings("Invalid Json");
+
+    Logger.json("{ missing end");
+    assertLog(ERROR).hasMessageWithDefaultSettings("Invalid Json");
+  }
+
+  @Test public void jsonLogEmptyOrNull() {
+    Logger.json(null);
+    assertLog(DEBUG).hasMessageWithDefaultSettings("Empty/Null json content");
+
+    Logger.json("");
+    assertLog(DEBUG).hasMessageWithDefaultSettings("Empty/Null json content");
+  }
+
+  @Test public void xmlLog() {
+    String[] messages = new String[]{
+        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
+        "<xml>Test</xml>"
+    };
+
+    Logger.xml("<xml>Test</xml>");
+
+    assertLog(DEBUG).hasMessageWithDefaultSettings(messages);
+  }
+
+  @Test public void xmlLogNullOrEmpty() {
+    Logger.xml(null);
+    assertLog(DEBUG).hasMessageWithDefaultSettings("Empty/Null xml content");
+
+    Logger.xml("");
+    assertLog(DEBUG).hasMessageWithDefaultSettings("Empty/Null xml content");
   }
 
   @Test public void logWithoutThread() {
     Logger.init().hideThreadInfo();
     Logger.i("message");
-    assertLog(INFO, "message")
+    assertLog(INFO)
         .hasTopBorder()
         .skip()
         .skip()
         .hasMiddleBorder()
-        .hasMessage()
+        .hasMessage("message")
         .hasBottomBorder()
         .hasNoMoreMessages();
   }
@@ -133,14 +175,14 @@ public class LoggerTest {
   @Test public void logWithCustomTag() {
     Logger.init("CustomTag");
     Logger.i("message");
-    assertLog("CustomTag", INFO, "message")
+    assertLog("CustomTag", INFO)
         .hasTopBorder()
-        .hasThread("Test worker")
+        .hasThread(threadName)
         .hasMiddleBorder()
         .skip()
         .skip()
         .hasMiddleBorder()
-        .hasMessage()
+        .hasMessage("message")
         .hasBottomBorder()
         .hasNoMoreMessages();
   }
@@ -148,13 +190,13 @@ public class LoggerTest {
   @Test public void logWithOneMethodInfo() {
     Logger.init().methodCount(1);
     Logger.i("message");
-    assertLog(INFO, "message")
+    assertLog(INFO)
         .hasTopBorder()
-        .hasThread("Test worker")
+        .hasThread(threadName)
         .hasMiddleBorder()
         .skip()
         .hasMiddleBorder()
-        .hasMessage()
+        .hasMessage("message")
         .hasBottomBorder()
         .hasNoMoreMessages();
   }
@@ -163,11 +205,11 @@ public class LoggerTest {
     Logger.init().methodCount(0);
     Logger.i("message");
 
-    assertLog(INFO, "message")
+    assertLog(INFO)
         .hasTopBorder()
-        .hasThread("Test worker")
+        .hasThread(threadName)
         .hasMiddleBorder()
-        .hasMessage()
+        .hasMessage("message")
         .hasBottomBorder()
         .hasNoMoreMessages();
   }
@@ -176,9 +218,9 @@ public class LoggerTest {
     Logger.init().methodCount(0).hideThreadInfo();
     Logger.i("message");
 
-    assertLog(INFO, "message")
+    assertLog(INFO)
         .hasTopBorder()
-        .hasMessage()
+        .hasMessage("message")
         .hasBottomBorder()
         .hasNoMoreMessages();
   }
@@ -188,13 +230,13 @@ public class LoggerTest {
     Logger.t("CustomTag").i("message");
     Logger.i("message");
 
-    assertLog("PRETTYLOGGER-CustomTag", INFO, "message")
+    assertLog("PRETTYLOGGER-CustomTag", INFO)
         .hasTopBorder()
-        .hasMessage()
+        .hasMessage("message")
         .hasBottomBorder()
         .defaultTag()
         .hasTopBorder()
-        .hasMessage()
+        .hasMessage("message")
         .hasBottomBorder()
         .hasNoMoreMessages();
   }
@@ -204,14 +246,14 @@ public class LoggerTest {
     Logger.t(1).i("message");
     Logger.i("message");
 
-    assertLog(INFO, "message")
+    assertLog(INFO)
         .hasTopBorder()
         .skip()
         .hasMiddleBorder()
-        .hasMessage()
+        .hasMessage("message")
         .hasBottomBorder()
         .hasTopBorder()
-        .hasMessage()
+        .hasMessage("message")
         .hasBottomBorder()
         .hasNoMoreMessages();
   }
@@ -221,15 +263,15 @@ public class LoggerTest {
     Logger.t("CustomTag", 1).i("message");
     Logger.i("message");
 
-    assertLog("PRETTYLOGGER-CustomTag", INFO, "message")
+    assertLog("PRETTYLOGGER-CustomTag", INFO)
         .hasTopBorder()
         .skip()
         .hasMiddleBorder()
-        .hasMessage()
+        .hasMessage("message")
         .hasBottomBorder()
         .defaultTag()
         .hasTopBorder()
-        .hasMessage()
+        .hasMessage("message")
         .hasBottomBorder()
         .hasNoMoreMessages();
   }
@@ -238,16 +280,30 @@ public class LoggerTest {
     Logger.init().logLevel(LogLevel.NONE);
     Logger.i("message");
 
-    assertLog(INFO, "message")
+    assertLog(INFO)
         .hasNoMoreMessages();
   }
 
-  private static LogAssert assertLog(int priority, String message) {
-    return assertLog(null, priority, message);
+  @Test public void useDefaultSettingsIfInitNotCalled() {
+    Logger.i("message");
+    assertLog(INFO)
+        .hasTopBorder()
+        .hasThread(threadName)
+        .hasMiddleBorder()
+        .skip()
+        .skip()
+        .hasMiddleBorder()
+        .hasMessage("message")
+        .hasBottomBorder()
+        .hasNoMoreMessages();
   }
 
-  private static LogAssert assertLog(String tag, int priority, String message) {
-    return new LogAssert(ShadowLog.getLogs(), tag, priority, message);
+  private static LogAssert assertLog(int priority) {
+    return assertLog(null, priority);
+  }
+
+  private static LogAssert assertLog(String tag, int priority) {
+    return new LogAssert(ShadowLog.getLogs(), tag, priority);
   }
 
   private static final class LogAssert {
@@ -264,18 +320,16 @@ public class LoggerTest {
     private static final String MIDDLE_BORDER = MIDDLE_CORNER + SINGLE_DIVIDER + SINGLE_DIVIDER;
 
     private final List<LogItem> items;
-    private final String message;
     private final int priority;
 
     private String tag;
 
     private int index = 0;
 
-    private LogAssert(List<LogItem> items, String tag, int priority, String message) {
+    private LogAssert(List<LogItem> items, String tag, int priority) {
       this.items = items;
       this.tag = tag == null ? DEFAULT_TAG : tag;
       this.priority = priority;
-      this.message = message;
     }
 
     public LogAssert hasTopBorder() {
@@ -298,7 +352,7 @@ public class LoggerTest {
       return hasLog(priority, tag, HORIZONTAL_DOUBLE_LINE + " " + methodInfo);
     }
 
-    public LogAssert hasMessage() {
+    public LogAssert hasMessage(String message) {
       return hasLog(priority, tag, HORIZONTAL_DOUBLE_LINE + " " + message);
     }
 
@@ -322,6 +376,25 @@ public class LoggerTest {
 
     public void hasNoMoreMessages() {
       assertThat(items).hasSize(index);
+      ShadowLog.getLogs().clear();
+    }
+
+    public LogAssert hasMessageWithDefaultSettings(String... messages) {
+      hasTopBorder();
+      skip();
+      hasMiddleBorder();
+      skip();
+      skip();
+      hasMiddleBorder();
+
+      for (String message : messages) {
+        hasMessage(message);
+      }
+
+      hasBottomBorder();
+      hasNoMoreMessages();
+
+      return this;
     }
   }
 }
