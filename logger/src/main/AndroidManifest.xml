@@ -1,1 +1,11 @@
-<manifest package="com.orhanobut.logger"/>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.orhanobut.logger">
+
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <application>
+        <activity
+            android:name=".permissions.PermissionRequesterActivity"
+            android:theme="@style/Theme.Transparent" />
+    </application>
+</manifest>
