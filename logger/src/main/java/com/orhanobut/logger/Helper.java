@@ -28,6 +28,10 @@ import java.net.UnknownHostException;
  */
 final class Helper {
 
+    private Helper() {
+        // Hidden constructor.
+    }
+
     /**
      * Returns true if the string is null or 0-length.
      *
