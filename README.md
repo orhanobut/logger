@@ -80,7 +80,6 @@ Logger
   .logLevel(LogLevel.NONE)        // default LogLevel.FULL
   .methodOffset(2)                // default 0
   .logTool(new AndroidLogTool()); // custom log tool, optional
-}
 
 ```
 Note: Use LogLevel.NONE for the release versions.
