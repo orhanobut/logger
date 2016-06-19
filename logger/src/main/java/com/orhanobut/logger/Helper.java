@@ -1,5 +1,5 @@
 /*
- * (C) 2006 The Android Open Source Project
+ * Copyright 2015 Orhan Obut
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * NOTICE:
- * Code is copied from following Android classes: android.util.Log, android.text.TextUtils
+ * This software contains code derived from the following Android classes:
+ * android.util.Log, android.text.TextUtils.
  */
 package com.orhanobut.logger;
 
