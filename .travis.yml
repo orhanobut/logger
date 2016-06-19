@@ -2,15 +2,8 @@ language: android
 
 android:
   components:
-    - build-tools-21.1.1
-    - android-18
-  licenses:
-    - 'android-sdk-license-.+'
-
-notifications:
-  email: true
-
-sudo: false
+    - build-tools-23.0.1
+    - android-23
 
 script:
-- ./gradlew build
+- ./gradlew testDebugUnitTest checkstyle

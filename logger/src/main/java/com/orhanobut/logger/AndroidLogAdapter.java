@@ -2,7 +2,7 @@ package com.orhanobut.logger;
 
 import android.util.Log;
 
-class AndroidLogTool implements LogTool {
+class AndroidLogAdapter implements LogAdapter {
   @Override public void d(String tag, String message) {
     Log.d(tag, message);
   }

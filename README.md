@@ -16,17 +16,8 @@ Logger provides :
 - Jump to source
 
 ### Dependency
-https://jitpack.io/#orhanobut/logger/1.12
-
 ```groovy
-repositories {
-  // ...
-  maven { url "https://jitpack.io" }
-}
-
-dependencies {
-  compile 'com.github.orhanobut:logger:1.12'
-}
+compile 'com.orhanobut:logger:1.13'
 ```
 
 ### Current Log system
@@ -79,17 +70,17 @@ Logger
   .hideThreadInfo()               // default shown
   .logLevel(LogLevel.NONE)        // default LogLevel.FULL
   .methodOffset(2)                // default 0
-  .logTool(new AndroidLogTool()); // custom log tool, optional
+  .logAdapter(new AndroidLogAdapter()); //default AndroidLogAdapter
 }
 
 ```
 Note: Use LogLevel.NONE for the release versions.
 
 ### Use another log util instead of android.util.log
-- Implement LogTool
+- Implement LogAdapter
 - set it with init
 ```java
-.logTool(new MyCustomLogTool())
+.logAdapter(new CustomLogAdapter())
 ```
 
 ### More log samples

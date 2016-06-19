@@ -1,6 +1,7 @@
 package com.orhanobut.logger;
 
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
@@ -23,6 +24,12 @@ public class LoggerTest {
   public static final int VERBOSE = 2;
   public static final int WARN = 5;
 
+  String threadName;
+
+  @Before public void setup() {
+    threadName = Thread.currentThread().getName();
+  }
+
   @After public void tearDown() {
     Logger.clear();
   }
@@ -32,7 +39,7 @@ public class LoggerTest {
     Logger.d("message");
     assertLog(DEBUG, "message")
         .hasTopBorder()
-        .hasThread("Test worker")
+        .hasThread(threadName)
         .hasMiddleBorder()
         .skip()
         .skip()
@@ -47,7 +54,7 @@ public class LoggerTest {
     Logger.v("message");
     assertLog(VERBOSE, "message")
         .hasTopBorder()
-        .hasThread("Test worker")
+        .hasThread(threadName)
         .hasMiddleBorder()
         .skip()
         .skip()
@@ -62,7 +69,7 @@ public class LoggerTest {
     Logger.w("message");
     assertLog(WARN, "message")
         .hasTopBorder()
-        .hasThread("Test worker")
+        .hasThread(threadName)
         .hasMiddleBorder()
         .skip()
         .skip()
@@ -77,7 +84,7 @@ public class LoggerTest {
     Logger.e("message");
     assertLog(ERROR, "message")
         .hasTopBorder()
-        .hasThread("Test worker")
+        .hasThread(threadName)
         .hasMiddleBorder()
         .skip()
         .skip()
@@ -92,7 +99,7 @@ public class LoggerTest {
     Logger.i("message");
     assertLog(INFO, "message")
         .hasTopBorder()
-        .hasThread("Test worker")
+        .hasThread(threadName)
         .hasMiddleBorder()
         .skip()
         .skip()
@@ -107,7 +114,7 @@ public class LoggerTest {
     Logger.wtf("message");
     assertLog(ASSERT, "message")
         .hasTopBorder()
-        .hasThread("Test worker")
+        .hasThread(threadName)
         .hasMiddleBorder()
         .skip()
         .skip()
@@ -135,7 +142,7 @@ public class LoggerTest {
     Logger.i("message");
     assertLog("CustomTag", INFO, "message")
         .hasTopBorder()
-        .hasThread("Test worker")
+        .hasThread(threadName)
         .hasMiddleBorder()
         .skip()
         .skip()
@@ -150,7 +157,7 @@ public class LoggerTest {
     Logger.i("message");
     assertLog(INFO, "message")
         .hasTopBorder()
-        .hasThread("Test worker")
+        .hasThread(threadName)
         .hasMiddleBorder()
         .skip()
         .hasMiddleBorder()
@@ -165,7 +172,7 @@ public class LoggerTest {
 
     assertLog(INFO, "message")
         .hasTopBorder()
-        .hasThread("Test worker")
+        .hasThread(threadName)
         .hasMiddleBorder()
         .hasMessage()
         .hasBottomBorder()
@@ -239,6 +246,20 @@ public class LoggerTest {
     Logger.i("message");
 
     assertLog(INFO, "message")
+        .hasNoMoreMessages();
+  }
+
+  @Test public void useDefaultSettingsIfInitNotCalled() {
+    Logger.i("message");
+    assertLog(INFO, "message")
+        .hasTopBorder()
+        .hasThread(threadName)
+        .hasMiddleBorder()
+        .skip()
+        .skip()
+        .hasMiddleBorder()
+        .hasMessage()
+        .hasBottomBorder()
         .hasNoMoreMessages();
   }
 
