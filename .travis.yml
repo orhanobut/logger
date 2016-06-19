@@ -2,15 +2,11 @@ language: android
 
 android:
   components:
-    - build-tools-21.1.1
-    - android-18
-  licenses:
-    - 'android-sdk-license-.+'
-
-notifications:
-  email: true
-
-sudo: false
+    - tools
+    - platform-tools
+    - build-tools-24.0.0
+    - android-23
+    - android-24
 
 script:
-- ./gradlew build
+- ./gradlew check

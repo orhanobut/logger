@@ -16,17 +16,8 @@ Logger provides :
 - Jump to source
 
 ### Dependency
-https://jitpack.io/#orhanobut/logger/1.12
-
 ```groovy
-repositories {
-  // ...
-  maven { url "https://jitpack.io" }
-}
-
-dependencies {
-  compile 'com.github.orhanobut:logger:1.12'
-}
+compile 'com.orhanobut:logger:1.13'
 ```
 
 ### Current Log system
@@ -43,9 +34,6 @@ Logger.d("hello");
 Logger.d("hello %s %d", "world", 5);   // String.format
 ```
 <img src='https://github.com/orhanobut/logger/blob/master/images/description.png'/>
-
-### Usage
-Note: Because of the latest changes, Logger.init() must be called once to initiate. This will be fixed in the next version
 
 ```java
 Logger.d("hello");
@@ -71,7 +59,7 @@ Logger.t("mytag").d("hello");
 
 ### Settings (optional)
 Change the settings with init. This should be called only once. Best place would be in application class. All of them
- are optional.
+ are optional. You can just use the default settings if you don't init Logger.
 ```java
 Logger
   .init(YOUR_TAG)                 // default PRETTYLOGGER or use just init()
@@ -79,17 +67,17 @@ Logger
   .hideThreadInfo()               // default shown
   .logLevel(LogLevel.NONE)        // default LogLevel.FULL
   .methodOffset(2)                // default 0
-  .logTool(new AndroidLogTool()); // custom log tool, optional
+  .logAdapter(new AndroidLogAdapter()); //default AndroidLogAdapter
 }
 
 ```
 Note: Use LogLevel.NONE for the release versions.
 
 ### Use another log util instead of android.util.log
-- Implement LogTool
+- Implement LogAdapter
 - set it with init
 ```java
-.logTool(new MyCustomLogTool())
+.logAdapter(new CustomLogAdapter())
 ```
 
 ### More log samples

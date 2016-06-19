@@ -1,52 +1,24 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.github.dcendents.android-maven'
-apply plugin: 'checkstyle'
-
-check.dependsOn('checkstyle')
-
-task checkstyle(type: Checkstyle) {
-  configFile = rootProject.file('checkstyle.xml')
-  source 'src'
-  include '**/*.java'
-  exclude '**/gen/**'
-
-  classpath = files()
-}
 
 android {
-  compileSdkVersion 21
-  buildToolsVersion "21.1.2"
+  compileSdkVersion rootProject.ext.compileSdkVersion
+  buildToolsVersion rootProject.ext.buildToolsVersion
 
   defaultConfig {
-    minSdkVersion 8
-    targetSdkVersion 22
+    minSdkVersion rootProject.ext.minSdkVersion
   }
 
   lintOptions {
-    abortOnError false
+    textReport true
+    textOutput 'stdout'
   }
 }
 
-// build a jar with source files
-task sourcesJar(type: Jar) {
-  from android.sourceSets.main.java.srcDirs
-  classifier = 'sources'
-}
-
-task javadoc(type: Javadoc) {
-  failOnError false
-  source = android.sourceSets.main.java.sourceFiles
-  classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
-}
-
-// build a jar with javadoc
-task javadocJar(type: Jar, dependsOn: javadoc) {
-  classifier = 'javadoc'
-  from javadoc.destinationDir
-}
-
 dependencies {
-  testCompile 'junit:junit:4.12'
-  testCompile "org.robolectric:robolectric:3.0"
-  testCompile 'org.assertj:assertj-core:1.7.0'
+  testCompile deps.junit
+  testCompile deps.truth
+  testCompile deps.robolectric
+  testCompile deps.mockito
 }
+
+apply from: rootProject.file('maven_push.gradle')

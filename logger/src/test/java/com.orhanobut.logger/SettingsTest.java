@@ -1,27 +1,13 @@
 package com.orhanobut.logger;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.annotation.Config;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static com.google.common.truth.Truth.assertThat;
+import static org.mockito.Mockito.mock;
 
-@RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21)
 public class SettingsTest {
 
-  private Settings settings;
-
-  @Before public void setup() {
-    settings = new Settings();
-  }
-
-  @After public void tearDown() {
-    settings = null;
-  }
+  private Settings settings = new Settings();
 
   @Test public void testDefaultShowThreadInfo() {
     assertThat(settings.isShowThreadInfo()).isTrue();
@@ -29,6 +15,7 @@ public class SettingsTest {
 
   @Test public void testCustomShowThreadInfo() {
     settings.hideThreadInfo();
+
     assertThat(settings.isShowThreadInfo()).isFalse();
   }
 
@@ -45,7 +32,7 @@ public class SettingsTest {
   }
 
   @Test public void testMethodCount() {
-    //default
+    //default 2
     assertThat(settings.getMethodCount()).isEqualTo(2);
 
     settings.methodCount(4);
@@ -65,5 +52,26 @@ public class SettingsTest {
 
     settings.methodOffset(-10);
     assertThat(settings.getMethodOffset()).isEqualTo(-10);
+  }
+
+  @Test public void testLogAdapter() {
+    LogAdapter logAdapter = mock(LogAdapter.class);
+    settings.logAdapter(logAdapter);
+
+    assertThat(settings.getLogAdapter()).isEqualTo(logAdapter);
+  }
+
+  @Test public void testReset() {
+    settings.methodCount(4);
+    settings.logLevel(LogLevel.NONE);
+    settings.methodOffset(100);
+    settings.hideThreadInfo();
+
+    settings.reset();
+
+    assertThat(settings.getMethodCount()).isEqualTo(2);
+    assertThat(settings.getLogLevel()).isEqualTo(LogLevel.FULL);
+    assertThat(settings.getMethodOffset()).isEqualTo(0);
+    assertThat(settings.isShowThreadInfo()).isTrue();
   }
 }
