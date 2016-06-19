@@ -5,10 +5,10 @@ public final class Settings {
   private int methodCount = 2;
   private boolean showThreadInfo = true;
   private int methodOffset = 0;
-  private LogTool logTool;
+  private LogAdapter logAdapter;
 
   /**
-   * Determines how logs will printed
+   * Determines to how logs will be printed
    */
   private LogLevel logLevel = LogLevel.FULL;
 
@@ -32,24 +32,9 @@ public final class Settings {
     return this;
   }
 
-  /**
-   * Use {@link #logLevel}
-   */
-  @Deprecated
-  public Settings setLogLevel(LogLevel logLevel) {
-    return logLevel(logLevel);
-  }
-
   public Settings logLevel(LogLevel logLevel) {
     this.logLevel = logLevel;
     return this;
-  }
-
-  /**
-   * Use {@link #methodOffset}
-   */
-  @Deprecated public Settings setMethodOffset(int offset) {
-    return methodOffset(offset);
   }
 
   public Settings methodOffset(int offset) {
@@ -57,8 +42,8 @@ public final class Settings {
     return this;
   }
 
-  public Settings logTool(LogTool logTool) {
-    this.logTool = logTool;
+  public Settings logAdapter(LogAdapter logAdapter) {
+    this.logAdapter = logAdapter;
     return this;
   }
 
@@ -78,10 +63,17 @@ public final class Settings {
     return methodOffset;
   }
 
-  public LogTool getLogTool() {
-    if (logTool == null) {
-      logTool = new AndroidLogTool();
+  public LogAdapter getLogAdapter() {
+    if (logAdapter == null) {
+      logAdapter = new AndroidLogAdapter();
     }
-    return logTool;
+    return logAdapter;
+  }
+
+  public void reset() {
+    methodCount = 2;
+    methodOffset = 0;
+    showThreadInfo = true;
+    logLevel = LogLevel.FULL;
   }
 }

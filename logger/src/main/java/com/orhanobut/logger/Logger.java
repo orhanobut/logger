@@ -34,7 +34,6 @@ public final class Logger {
 
   public static void clear() {
     printer.clear();
-    printer = null;
   }
 
   public static Printer t(String tag) {

@@ -1,6 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'com.github.dcendents.android-maven'
 apply plugin: 'checkstyle'
+apply from: '../maven_push.gradle'
 
 check.dependsOn('checkstyle')
 
@@ -14,12 +15,16 @@ task checkstyle(type: Checkstyle) {
 }
 
 android {
-  compileSdkVersion 21
-  buildToolsVersion "21.1.2"
+  compileSdkVersion 23
+  buildToolsVersion "23.0.1"
+
+  compileOptions {
+    sourceCompatibility JavaVersion.VERSION_1_7
+    targetCompatibility JavaVersion.VERSION_1_7
+  }
 
   defaultConfig {
     minSdkVersion 8
-    targetSdkVersion 22
   }
 
   lintOptions {

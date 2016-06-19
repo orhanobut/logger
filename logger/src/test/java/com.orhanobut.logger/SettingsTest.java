@@ -3,14 +3,9 @@ package com.orhanobut.logger;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
-import org.robolectric.annotation.Config;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21)
 public class SettingsTest {
 
   private Settings settings;
@@ -65,5 +60,19 @@ public class SettingsTest {
 
     settings.methodOffset(-10);
     assertThat(settings.getMethodOffset()).isEqualTo(-10);
+  }
+
+  @Test public void testReset() {
+    settings.methodCount(4);
+    settings.logLevel(LogLevel.NONE);
+    settings.methodOffset(100);
+    settings.hideThreadInfo();
+
+    settings.reset();
+
+    assertThat(settings.getMethodCount()).isEqualTo(2);
+    assertThat(settings.getLogLevel()).isEqualTo(LogLevel.FULL);
+    assertThat(settings.getMethodOffset()).isEqualTo(0);
+    assertThat(settings.isShowThreadInfo()).isTrue();
   }
 }
