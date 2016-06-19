@@ -105,7 +105,7 @@ Both method information will be shown in the order of invocation.
 ### Change method count (Default: 2)
 All logs
 ```java
-Logger.init().setMethodCount(1);
+Logger.init().methodCount(1);
 ```
 Log based
 ```java
@@ -117,19 +117,19 @@ Logger.t(1).d("hello");
 ### Change method stack offset (Default: 0)
 To integrate logger with other libraries, you can set the offset in order to avoid that library's methods.
 ```java
-Logger.init().setMethodOffset(5);
+Logger.init().methodOffset(5);
 ```
 
 ### Hide thread information
 ```java
-Logger.init().setMethodCount(1).hideThreadInfo();
+Logger.init().methodCount(1).hideThreadInfo();
 ```
 
 <img src='https://github.com/orhanobut/logger/blob/master/images/one-method-no-header.png'/>
 
 ### Only show the message
 ```java
-Logger.init().setMethodCount(0).hideThreadInfo();
+Logger.init().methodCount(0).hideThreadInfo();
 ```
 
 <img src='https://github.com/orhanobut/logger/blob/master/images/just-content.png'/>
