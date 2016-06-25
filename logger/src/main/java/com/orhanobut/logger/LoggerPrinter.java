@@ -6,6 +6,7 @@ import org.json.JSONObject;
 
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Arrays;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
@@ -109,6 +110,16 @@ final class LoggerPrinter implements Printer {
     log(DEBUG, message, args);
   }
 
+  @Override public void d(Object object) {
+    String message;
+    if (object.getClass().isArray()) {
+      message = Arrays.deepToString((Object[]) object);
+    } else {
+      message = object.toString();
+    }
+    log(DEBUG, message);
+  }
+
   @Override public void e(String message, Object... args) {
     e(null, message, args);
   }
@@ -191,18 +202,18 @@ final class LoggerPrinter implements Printer {
       transformer.transform(xmlInput, xmlOutput);
       d(xmlOutput.getWriter().toString().replaceFirst(">", ">\n"));
     } catch (TransformerException e) {
-      e(e.getCause().getMessage() + "\n" + xml);
+      e("Invalid xml");
     }
   }
 
-  @Override public void clear() {
+  @Override public void resetSettings() {
     settings.reset();
   }
 
   /**
    * This method is synchronized in order to avoid messy of logs' order.
    */
-  private synchronized void log(int logType, String msg, Object... args) {
+  @Override public synchronized void log(int priority, String msg, Object... args) {
     if (settings.getLogLevel() == LogLevel.NONE) {
       return;
     }
@@ -214,35 +225,36 @@ final class LoggerPrinter implements Printer {
       message = "Empty/NULL log message";
     }
 
-    logTopBorder(logType, tag);
-    logHeaderContent(logType, tag, methodCount);
+    logTopBorder(priority, tag);
+    logHeaderContent(priority, tag, methodCount);
 
     //get bytes of message with system's default charset (which is UTF-8 for Android)
     byte[] bytes = message.getBytes();
     int length = bytes.length;
     if (length <= CHUNK_SIZE) {
       if (methodCount > 0) {
-        logDivider(logType, tag);
+        logDivider(priority, tag);
       }
-      logContent(logType, tag, message);
-      logBottomBorder(logType, tag);
+      logContent(priority, tag, message);
+      logBottomBorder(priority, tag);
       return;
     }
     if (methodCount > 0) {
-      logDivider(logType, tag);
+      logDivider(priority, tag);
     }
     for (int i = 0; i < length; i += CHUNK_SIZE) {
       int count = Math.min(length - i, CHUNK_SIZE);
       //create a new String with system's default charset (which is UTF-8 for Android)
-      logContent(logType, tag, new String(bytes, i, count));
+      logContent(priority, tag, new String(bytes, i, count));
     }
-    logBottomBorder(logType, tag);
+    logBottomBorder(priority, tag);
   }
 
   private void logTopBorder(int logType, String tag) {
     logChunk(logType, tag, TOP_BORDER);
   }
 
+  @SuppressWarnings("StringBufferReplaceableByString")
   private void logHeaderContent(int logType, String tag, int methodCount) {
     StackTraceElement[] trace = Thread.currentThread().getStackTrace();
     if (settings.isShowThreadInfo()) {

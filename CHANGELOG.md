@@ -1,5 +1,10 @@
 # CHANGELOG
 
+### 1.14
+- Logger.log(int priority, String tag, Object... args) added.
+- Logger.d(Object object) added. Array, Map, Set and List are supported now. If the object type is none of them
+Object.toString() will be used anyway.
+
 ### 1.13
 
 - LogTool is renamed to LogAdapter

@@ -10,20 +10,24 @@ import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLog;
 import org.robolectric.shadows.ShadowLog.LogItem;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static com.google.common.truth.Truth.assertThat;
+import static com.orhanobut.logger.Logger.ASSERT;
+import static com.orhanobut.logger.Logger.DEBUG;
+import static com.orhanobut.logger.Logger.ERROR;
+import static com.orhanobut.logger.Logger.INFO;
+import static com.orhanobut.logger.Logger.VERBOSE;
+import static com.orhanobut.logger.Logger.WARN;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
 public class LoggerTest {
-
-  public static final int DEBUG = 3;
-  public static final int ERROR = 6;
-  public static final int ASSERT = 7;
-  public static final int INFO = 4;
-  public static final int VERBOSE = 2;
-  public static final int WARN = 5;
 
   String threadName;
 
@@ -34,7 +38,13 @@ public class LoggerTest {
   }
 
   @After public void tearDown() {
-    Logger.clear();
+    Logger.resetSettings();
+  }
+
+  @Test public void log() {
+    Logger.log(ASSERT, "message %s", "1");
+
+    assertLog(ASSERT).hasMessageWithDefaultSettings("message 1");
   }
 
   @Test public void debugLog() {
@@ -102,6 +112,45 @@ public class LoggerTest {
     assertLog(ASSERT).hasMessageWithDefaultSettings("message");
   }
 
+  @Test public void logArray() {
+    double[][] doubles = {{1.2, 1.6, 1.7, 30, 33},
+        {1.2, 1.6, 1.7, 30, 33},
+        {1.2, 1.6, 1.7, 30, 33},
+        {1.2, 1.6, 1.7, 30, 33}};
+
+    Logger.d(doubles);
+
+    String message = Arrays.deepToString(doubles);
+    assertLog(DEBUG).hasMessageWithDefaultSettings(message);
+  }
+
+  @Test public void logList() {
+    List<String> list = Arrays.asList("foo", "bar");
+    Logger.d(list);
+
+    assertLog(DEBUG).hasMessageWithDefaultSettings(list.toString());
+  }
+
+  @Test public void logMap() {
+    Map<String, String> map = new HashMap<>();
+    map.put("key", "value");
+    map.put("key2", "value2");
+
+    Logger.d(map);
+
+    assertLog(DEBUG).hasMessageWithDefaultSettings(map.toString());
+  }
+
+  @Test public void logSet() {
+    Set<String> set = new HashSet<>();
+    set.add("key");
+    set.add("key1");
+
+    Logger.d(set);
+
+    assertLog(DEBUG).hasMessageWithDefaultSettings(set.toString());
+  }
+
   @Test public void jsonLObjectLog() {
     String[] messages = new String[]{"{", "  \"key\": 3", "}"};
 
@@ -149,6 +198,12 @@ public class LoggerTest {
     Logger.xml("<xml>Test</xml>");
 
     assertLog(DEBUG).hasMessageWithDefaultSettings(messages);
+  }
+
+  @Test public void invalidXmlLog() {
+    Logger.xml("xml>Test</xml>");
+
+    assertLog(ERROR).hasMessageWithDefaultSettings("Invalid xml");
   }
 
   @Test public void xmlLogNullOrEmpty() {
