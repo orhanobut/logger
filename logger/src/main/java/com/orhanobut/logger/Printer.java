@@ -10,6 +10,8 @@ public interface Printer {
 
   void d(String message, Object... args);
 
+  void d(Object object);
+
   void e(String message, Object... args);
 
   void e(Throwable throwable, String message, Object... args);
@@ -26,5 +28,8 @@ public interface Printer {
 
   void xml(String xml);
 
-  void clear();
+  void log(int priority, String message, Object... args);
+
+  void resetSettings();
+
 }

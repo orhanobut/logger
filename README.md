@@ -17,7 +17,7 @@ Logger provides :
 
 ### Dependency
 ```groovy
-compile 'com.orhanobut:logger:1.13'
+compile 'com.orhanobut:logger:1.14'
 ```
 
 ### Current Log system
@@ -43,6 +43,19 @@ Logger.v("hello");
 Logger.wtf("hello");
 Logger.json(JSON_CONTENT);
 Logger.xml(XML_CONTENT);
+```
+
+#### String format arguments are supported
+```java
+Logger.d("hello %s", "world");
+```
+
+#### Array, Map, Set and List are supported
+```java
+Logger.d(list);
+Logger.d(map);
+Logger.d(set);
+Logger.d(new String[]);
 ```
 
 ### Change TAG

@@ -5,6 +5,13 @@ package com.orhanobut.logger;
  * But more pretty, simple and powerful
  */
 public final class Logger {
+  public static final int DEBUG = 3;
+  public static final int ERROR = 6;
+  public static final int ASSERT = 7;
+  public static final int INFO = 4;
+  public static final int VERBOSE = 2;
+  public static final int WARN = 5;
+
   private static final String DEFAULT_TAG = "PRETTYLOGGER";
 
   private static Printer printer = new LoggerPrinter();
@@ -32,8 +39,8 @@ public final class Logger {
     return printer.init(tag);
   }
 
-  public static void clear() {
-    printer.clear();
+  public static void resetSettings() {
+    printer.resetSettings();
   }
 
   public static Printer t(String tag) {
@@ -48,8 +55,16 @@ public final class Logger {
     return printer.t(tag, methodCount);
   }
 
+  public static void log(int priority, String message, Object... args) {
+    printer.log(priority, message, args);
+  }
+
   public static void d(String message, Object... args) {
     printer.d(message, args);
+  }
+
+  public static void d(Object object) {
+    printer.d(object);
   }
 
   public static void e(String message, Object... args) {
