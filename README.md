@@ -43,6 +43,7 @@ Logger.v("hello");
 Logger.wtf("hello");
 Logger.json(JSON_CONTENT);
 Logger.xml(XML_CONTENT);
+Logger.log(DEBUG, "message %s", "args");
 ```
 
 #### String format arguments are supported
