@@ -28,7 +28,7 @@ public interface Printer {
 
   void xml(String xml);
 
-  void log(int priority, String message, Object... args);
+  void log(int priority, String tag, String message, Throwable throwable);
 
   void resetSettings();
 

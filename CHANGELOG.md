@@ -1,4 +1,9 @@
 # CHANGELOG
+### 1.15
+- Logger.log signature is changed
+```java
+Logger.log(int priority, String tag, String message, Throwable throwable);
+```
 
 ### 1.14
 - Logger.log(int priority, String tag, Object... args) added.

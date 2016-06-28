@@ -107,7 +107,7 @@ final class LoggerPrinter implements Printer {
   }
 
   @Override public void d(String message, Object... args) {
-    log(DEBUG, message, args);
+    log(DEBUG, null, message, args);
   }
 
   @Override public void d(Object object) {
@@ -117,7 +117,7 @@ final class LoggerPrinter implements Printer {
     } else {
       message = object.toString();
     }
-    log(DEBUG, message);
+    log(DEBUG, null, message);
   }
 
   @Override public void e(String message, Object... args) {
@@ -125,32 +125,23 @@ final class LoggerPrinter implements Printer {
   }
 
   @Override public void e(Throwable throwable, String message, Object... args) {
-    if (throwable != null && message != null) {
-      message += " : " + Helper.getStackTraceString(throwable);
-    }
-    if (throwable != null && message == null) {
-      message = Helper.getStackTraceString(throwable);
-    }
-    if (message == null) {
-      message = "No message/exception is set";
-    }
-    log(ERROR, message, args);
+    log(ERROR, throwable, message, args);
   }
 
   @Override public void w(String message, Object... args) {
-    log(WARN, message, args);
+    log(WARN, null, message, args);
   }
 
   @Override public void i(String message, Object... args) {
-    log(INFO, message, args);
+    log(INFO, null, message, args);
   }
 
   @Override public void v(String message, Object... args) {
-    log(VERBOSE, message, args);
+    log(VERBOSE, null, message, args);
   }
 
   @Override public void wtf(String message, Object... args) {
-    log(ASSERT, message, args);
+    log(ASSERT, null, message, args);
   }
 
   /**
@@ -206,21 +197,20 @@ final class LoggerPrinter implements Printer {
     }
   }
 
-  @Override public void resetSettings() {
-    settings.reset();
-  }
-
-  /**
-   * This method is synchronized in order to avoid messy of logs' order.
-   */
-  @Override public synchronized void log(int priority, String msg, Object... args) {
+  @Override public synchronized void log(int priority, String tag, String message, Throwable throwable) {
     if (settings.getLogLevel() == LogLevel.NONE) {
       return;
     }
-    String tag = getTag();
-    String message = createMessage(msg, args);
+    if (throwable != null && message != null) {
+      message += " : " + Helper.getStackTraceString(throwable);
+    }
+    if (throwable != null && message == null) {
+      message = Helper.getStackTraceString(throwable);
+    }
+    if (message == null) {
+      message = "No message/exception is set";
+    }
     int methodCount = getMethodCount();
-
     if (Helper.isEmpty(message)) {
       message = "Empty/NULL log message";
     }
@@ -248,6 +238,22 @@ final class LoggerPrinter implements Printer {
       logContent(priority, tag, new String(bytes, i, count));
     }
     logBottomBorder(priority, tag);
+  }
+
+  @Override public void resetSettings() {
+    settings.reset();
+  }
+
+  /**
+   * This method is synchronized in order to avoid messy of logs' order.
+   */
+  private synchronized void log(int priority, Throwable throwable, String msg, Object... args) {
+    if (settings.getLogLevel() == LogLevel.NONE) {
+      return;
+    }
+    String tag = getTag();
+    String message = createMessage(msg, args);
+    log(priority, tag, message, throwable);
   }
 
   private void logTopBorder(int logType, String tag) {

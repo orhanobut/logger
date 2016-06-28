@@ -21,4 +21,4 @@ dependencies {
   testCompile deps.mockito
 }
 
-apply from: rootProject.file('maven_push.gradle')
+apply from: rootProject.file('gradle/maven_push.gradle')

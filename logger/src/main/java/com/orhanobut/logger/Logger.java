@@ -55,8 +55,8 @@ public final class Logger {
     return printer.t(tag, methodCount);
   }
 
-  public static void log(int priority, String message, Object... args) {
-    printer.log(priority, message, args);
+  public static void log(int priority, String tag, String message, Throwable throwable) {
+    printer.log(priority, tag, message, throwable);
   }
 
   public static void d(String message, Object... args) {
