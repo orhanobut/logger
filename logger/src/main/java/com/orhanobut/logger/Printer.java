@@ -1,8 +1,12 @@
 package com.orhanobut.logger;
 
+import com.orhanobut.logger.Settings;
+
 public interface Printer {
 
   Printer t(String tag, int methodCount);
+
+  Printer h(int actFragHashCode);
 
   Settings init(String tag);
 
@@ -28,7 +32,9 @@ public interface Printer {
 
   void xml(String xml);
 
-  void log(int priority, String tag, String message, Throwable throwable);
+  void lifecycle(String className, String methodName);
+
+  void log(int priority, boolean isLifecycleLog, String message, Object... args);
 
   void resetSettings();
 

@@ -1,5 +1,7 @@
 package com.orhanobut.logger;
 
+import com.orhanobut.logger.Printer;
+
 /**
  * Logger is a wrapper of {@link android.util.Log}
  * But more pretty, simple and powerful
@@ -55,8 +57,17 @@ public final class Logger {
     return printer.t(tag, methodCount);
   }
 
-  public static void log(int priority, String tag, String message, Throwable throwable) {
-    printer.log(priority, tag, message, throwable);
+  /**
+   * Intended for use by {@link com.orhanobut.logger.LoggerActivity} and
+   * {@link com.orhanobut.logger.LoggerFragment} only, otherwise the hash code
+   * cannot reliably be paired with the appropriate class in the log printout.
+   */
+  public static Printer h(int actFragHashCode) {
+    return printer.h(actFragHashCode);
+  }
+
+  public static void log(int priority, String message, Object... args) {
+    printer.log(priority, false, message, args);
   }
 
   public static void d(String message, Object... args) {
@@ -107,6 +118,22 @@ public final class Logger {
    */
   public static void xml(String xml) {
     printer.xml(xml);
+  }
+
+  /**
+   * Intended for use by {@link com.orhanobut.logger.lifecycle.LoggerActivity} and
+   * {@link com.orhanobut.logger.lifecycle.LoggerFragment} only, for logging lifecycle
+   * callbacks.
+   *
+   * <p>Getting the class name and the method name from the thread stack trace
+   * is unreliable for lifecycle callbacks. If a child class of
+   * {@link com.orhanobut.logger.lifecycle.LoggerActivity} or
+   * {@link com.orhanobut.logger.lifecycle.LoggerFragment} does not override the lifecycle
+   * callback, the method name in the stacktrace may be different (i.e., callActivityOnStart vs OnStart),
+   * and only the parent class name, not the child class name, will be present.</p>
+   */
+  public static void lifecycle(String className, String methodName) {
+    printer.lifecycle(className, methodName);
   }
 
 }
