@@ -27,6 +27,7 @@ public class ExampleLoggerActivity extends LoggerActivity implements View.OnClic
         setContentView(R.layout.activity_example_logger);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Example LoggerActivity");
 
         findViewById(R.id.logger_activity_button_1).setOnClickListener(this);
 
