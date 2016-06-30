@@ -1,7 +1,5 @@
 package com.orhanobut.logger;
 
-import com.orhanobut.logger.Settings;
-
 public interface Printer {
 
   Printer t(String tag, int methodCount);
@@ -34,7 +32,7 @@ public interface Printer {
 
   void lifecycle(String className, String methodName);
 
-  void log(int priority, boolean isLifecycleLog, String message, Object... args);
+  void log(int priority, boolean isLifecycleLog, String tag, String message, Throwable throwable);
 
   void resetSettings();
 

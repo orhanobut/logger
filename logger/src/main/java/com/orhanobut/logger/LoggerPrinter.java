@@ -1,10 +1,5 @@
 package com.orhanobut.logger;
 
-import com.orhanobut.logger.LoggerActivity;
-import com.orhanobut.logger.LoggerFragment;
-import com.orhanobut.logger.LogLevel;
-import com.orhanobut.logger.Printer;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -70,7 +65,8 @@ final class LoggerPrinter implements Printer {
   private String tag;
 
   /**
-   * Localize single tag and method count for each thread
+   * Localize single tag, method count, activity/fragment hash code, and lifecycle
+   * logging class name for each thread
    */
   private final ThreadLocal<String> localTag = new ThreadLocal<>();
   private final ThreadLocal<Integer> localMethodCount = new ThreadLocal<>();
@@ -123,7 +119,7 @@ final class LoggerPrinter implements Printer {
   }
 
   @Override public void d(String message, Object... args) {
-    log(DEBUG, false, message, args);
+    log(DEBUG, false, null, message, args);
   }
 
   @Override public void d(Object object) {
@@ -133,7 +129,7 @@ final class LoggerPrinter implements Printer {
     } else {
       message = object.toString();
     }
-    log(DEBUG, false, message);
+    log(DEBUG, false, null, message);
   }
 
   @Override public void e(String message, Object... args) {
@@ -141,32 +137,23 @@ final class LoggerPrinter implements Printer {
   }
 
   @Override public void e(Throwable throwable, String message, Object... args) {
-    if (throwable != null && message != null) {
-      message += " : " + Helper.getStackTraceString(throwable);
-    }
-    if (throwable != null && message == null) {
-      message = Helper.getStackTraceString(throwable);
-    }
-    if (message == null) {
-      message = "No message/exception is set";
-    }
-    log(ERROR, false, message, args);
+    log(ERROR, false, throwable, message, args);
   }
 
   @Override public void w(String message, Object... args) {
-    log(WARN, false, message, args);
+    log(WARN, false, null, message, args);
   }
 
   @Override public void i(String message, Object... args) {
-    log(INFO, false, message, args);
+    log(INFO, false, null, message, args);
   }
 
   @Override public void v(String message, Object... args) {
-    log(VERBOSE, false, message, args);
+    log(VERBOSE, false, null, message, args);
   }
 
   @Override public void wtf(String message, Object... args) {
-    log(ASSERT, false, message, args);
+    log(ASSERT, false, null, message, args);
   }
 
   /**
@@ -225,41 +212,50 @@ final class LoggerPrinter implements Printer {
   @Override
   public void lifecycle(String className, String methodName) {
     localLifecycleLogClass.set(className);
-    log(VERBOSE, true, methodName);
-  }
-
-  @Override public void resetSettings() {
-    settings.reset();
+    log(VERBOSE, true, null, methodName);
   }
 
   /**
    * This method is synchronized in order to avoid messy of logs' order.
    */
-  @Override public synchronized void log(int priority, boolean isLifecycleLog, String msg, Object... args) {
+  private synchronized void log(int priority, boolean isLifecycleLog, Throwable throwable, String msg, Object... args) {
+    if (settings.getLogLevel() == LogLevel.NONE) {
+      return;
+    }
+    String tag = getTag();
+    String message = createMessage(msg, args);
+    log(priority, isLifecycleLog, tag, message, throwable);
+  }
 
+  @Override public synchronized void log(int priority, boolean isLifecycleLog, String tag, String message, Throwable throwable) {
     if (settings.getLogLevel() == LogLevel.NONE) {
       return;
     }
 
-    String tag = getTag();
-
     if (isLifecycleLog) {
       logTopBorder(priority, tag);
-      logLifecycleContent(priority, tag, msg);
+      logLifecycleContent(priority, tag, message);
       logBottomBorder(priority, tag);
       return;
 
     } else {
 
-      String message = createMessage(msg, args);
+      if (throwable != null && message != null) {
+        message += " : " + Helper.getStackTraceString(throwable);
+      }
+      if (throwable != null && message == null) {
+        message = Helper.getStackTraceString(throwable);
+      }
+      if (message == null) {
+        message = "No message/exception is set";
+      }
       int methodCount = getMethodCount();
-
-      logTopBorder(priority, tag);
-      logHeaderContent(priority, tag, methodCount);
-
       if (Helper.isEmpty(message)) {
         message = "Empty/NULL log message";
       }
+
+      logTopBorder(priority, tag);
+      logHeaderContent(priority, tag, methodCount);
 
       //get bytes of message with system's default charset (which is UTF-8 for Android)
       byte[] bytes = message.getBytes();
@@ -272,11 +268,9 @@ final class LoggerPrinter implements Printer {
         logBottomBorder(priority, tag);
         return;
       }
-
       if (methodCount > 0) {
         logDivider(priority, tag);
       }
-
       for (int i = 0; i < length; i += CHUNK_SIZE) {
         int count = Math.min(length - i, CHUNK_SIZE);
         //create a new String with system's default charset (which is UTF-8 for Android)
@@ -284,6 +278,10 @@ final class LoggerPrinter implements Printer {
       }
       logBottomBorder(priority, tag);
     }
+  }
+
+  @Override public void resetSettings() {
+    settings.reset();
   }
 
   private void logTopBorder(int logType, String tag) {
@@ -342,7 +340,7 @@ final class LoggerPrinter implements Printer {
               .append(getSimpleClassName(trace[stackIndex].getClassName()));
 
       if (i == 1 && actFragHashCode != 0) {
-        builder.append("(").append(String.format(Locale.US, "%d", actFragHashCode)).append(")");
+        builder.append("(").append(String.format("%d", actFragHashCode)).append(")");
       }
 
       builder.append(".")
