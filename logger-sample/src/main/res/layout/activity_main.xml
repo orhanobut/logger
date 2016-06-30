@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/page_default_padding">
+    
+    <Button
+        android:id="@+id/main_button_1"
+        style="@style/ButtonStyle"
+        android:text="Logger.d(String message, Object... args)" />
+
+    <Button
+        android:id="@+id/main_button_2"
+        style="@style/ButtonStyle"
+        android:text="Logger.t(String tag).d(Object object)" />
+
+    <Button
+        android:id="@+id/main_button_3"
+        style="@style/ButtonStyle"
+        android:text="Logger.json(String json)" />
+
+    <Button
+        android:id="@+id/main_button_4"
+        style="@style/ButtonStyle"
+        android:text="Logger.xml(String xml)" />
+
+    <Button
+        android:id="@+id/main_button_5"
+        style="@style/ButtonStyle"
+        android:text="Go to Example LoggerActivity"/>
+
+</LinearLayout>

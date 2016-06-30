@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="page_default_padding">25dp</dimen>
+
+    <dimen name="element_spacing_small">5dp</dimen>
+    <dimen name="element_spacing">10dp</dimen>
+    <dimen name="element_spacing_medium">15dp</dimen>
+    <dimen name="element_spacing_large">20dp</dimen>
+    <dimen name="element_spacing_extra_large">25dp</dimen>
+
+    <dimen name="button_height">60dp</dimen>
+    <dimen name="button_width">200dp</dimen>
+
+</resources>
