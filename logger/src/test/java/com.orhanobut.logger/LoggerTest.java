@@ -169,7 +169,7 @@ public class LoggerTest {
 
     Logger.json("  {\"key\":3}");
 
-    assertLog(DEBUG).hasMessageWithDefaultSettings(messages);
+    assertLog(DEBUG).hasMessageWithDefaultSettingsSerializedLogs(messages);
   }
 
   @Test public void jsonArrayLog() {
@@ -183,7 +183,16 @@ public class LoggerTest {
 
     Logger.json("[{\"key\":3}]");
 
-    assertLog(DEBUG).hasMessageWithDefaultSettings(messages);
+    assertLog(DEBUG).hasMessageWithDefaultSettingsSerializedLogs(messages);
+  }
+
+  @Test public void lifecycleLog(){
+    Logger.lifecycle(LoggerTest.this.getClass().getSimpleName(), "lifecycleLog test");
+
+    assertLog(VERBOSE)
+            .hasTopBorder()
+            .hasMessage(LoggerTest.this.getClass().getSimpleName() + " " + "lifecycleLog test")
+            .hasBottomBorder();
   }
 
   @Test public void testInvalidJsonLog() {
@@ -210,7 +219,7 @@ public class LoggerTest {
 
     Logger.xml("<xml>Test</xml>");
 
-    assertLog(DEBUG).hasMessageWithDefaultSettings(messages);
+    assertLog(DEBUG).hasMessageWithDefaultSettingsSerializedLogs(messages);
   }
 
   @Test public void invalidXmlLog() {
@@ -342,6 +351,24 @@ public class LoggerTest {
         .hasMessage("message")
         .hasBottomBorder()
         .hasNoMoreMessages();
+  }
+
+  @Test public void logWithHashcode() {
+
+    int hashCode = this.hashCode();
+
+    Logger.h(hashCode).i("message");
+
+    assertLog(INFO)
+            .hasTopBorder()
+            .skip()
+            .hasMiddleBorder()
+            .skip()
+            .messageContains(String.format("%d", hashCode))
+            .hasMiddleBorder()
+            .hasMessage("message")
+            .hasBottomBorder()
+            .hasNoMoreMessages();
   }
 
   @Test public void logNone() {
