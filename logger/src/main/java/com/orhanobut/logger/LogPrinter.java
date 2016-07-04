@@ -28,7 +28,7 @@ public final class LogPrinter extends Timber.DebugTree {
 
     private static final String PROPERTY = System.getProperty("line.separator");
 
-    public LogPrinter(Settings settings) {
+    LogPrinter(Settings settings) {
         this.settings = settings;
     }
 

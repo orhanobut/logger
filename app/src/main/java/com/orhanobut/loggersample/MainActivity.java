@@ -6,6 +6,7 @@ import com.orhanobut.logger.Settings;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.TextView;
 
 import java.util.Arrays;
 
@@ -16,13 +17,23 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        CrashHandler.getInstance().init();
+
+        TextView view = new TextView(this);
+//        view.setText(12345); // 如果出现了崩溃，那么就会调用崩溃处理机制
+
         Logger.initialize(
-                Settings.getInstance()
+                new Settings()
                         .isShowMethodLink(true)
                         .isShowThreadInfo(false)
                         .setMethodOffset(0)
                         .setLogPriority(BuildConfig.DEBUG ? Log.VERBOSE : Log.ASSERT)
         );
+
+        if (!BuildConfig.DEBUG) {
+            // for release
+            Logger.plant(new CrashlyticsTree());
+        }
         
         levTest();
         objTest();
@@ -38,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         Logger.d(test);
 
         //Logger.d(test, "s"); // Note:incorrect
-
+        Logger.t("Custom Tag");
         Logger.t("Custom Tag").w("logger with custom tag");
         try {
             Class.forName("kale");
@@ -91,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
     // 内部类中打log测试
     ///////////////////////////////////////////////////////////////////////////
 
-    public static class User {
+    private static class User {
 
         private String name;
 
@@ -102,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
             this.sex = sex;
         }
 
-        public void show() {
+        void show() {
             Logger.d("name:%s sex:%s", name, sex);
         }
     }

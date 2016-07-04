@@ -8,21 +8,13 @@ import android.util.Log;
  */
 public class Settings {
 
-    protected int methodOffset = 0;
+    int methodOffset = 0;
 
-    protected boolean showMethodLink = true;
+    boolean showMethodLink = true;
 
-    protected boolean showThreadInfo = false;
+    boolean showThreadInfo = false;
 
-    protected int priority = Log.VERBOSE;
-
-    public static Settings getInstance() {
-        return new Settings();
-    }
-
-    private Settings() {
-
-    }
+    int priority = Log.VERBOSE;
 
     public Settings setMethodOffset(int methodOffset) {
         this.methodOffset = methodOffset;
@@ -40,7 +32,12 @@ public class Settings {
     }
 
     /**
-     * @param priority one of {@link Log#VERBOSE},{@link Log#DEBUG},{@link Log#INFO},{@link Log#WARN},{@link Log#ERROR}
+     * @param priority one of
+     *                 {@link Log#VERBOSE},
+     *                 {@link Log#DEBUG},
+     *                 {@link Log#INFO},
+     *                 {@link Log#WARN},
+     *                 {@link Log#ERROR}
      */
     public Settings setLogPriority(int priority) {
         this.priority = priority;
