@@ -30,35 +30,78 @@ allprojects {
 Add the dependency  
 > compile 'com.github.tianzhijiexian:logger:[Latest release](https://github.com/tianzhijiexian/logger/releases)'
 
+and also compile https://github.com/JakeWharton/timber
 
 ### Logger  
-
-![](./images/obj.png)  
-
-![](./images/json.png)  
-
-![](./images/large_data.png)  
-
-![](./images/error.png)
+```
+D/MainActivity: ║first
+D/MainActivity: ║second
+D/MainActivity: ║third ==> levTest(MainActivity.java:62)
+D/MainActivity: ╚═══════════════════════════
+D/MainActivity: ║just test ==> test(MainActivity.java:67)
+D/MainActivity: ╚═══════════════════════════
+D/MainActivity: ║User{name=jack, sex=f, $change=Object}  ==> objTest(MainActivity.java:72)
+D/MainActivity: ╚═══════════════════════════
+D/MainActivity: ║ArrayList size = 3 [
+D/MainActivity: ║[0]:kale,
+D/MainActivity: ║[1]:jack,
+D/MainActivity: ║[2]:tony
+D/MainActivity: ║
+D/MainActivity: ║] ==> objTest(MainActivity.java:74)
+D/MainActivity: ╚═══════════════════════════
+D/MainActivity: ║String[3] {
+D/MainActivity: ║[Android,	ios,	wp]
+D/MainActivity: ║} ==> objTest(MainActivity.java:76)
+D/MainActivity: ╚═══════════════════════════
+D/MainActivity: ║double[4][5] {
+D/MainActivity: ║[1.2,	1.6,	1.7,	30.0,	33.0]
+D/MainActivity: ║[1.2,	1.6,	1.7,	30.0,	33.0]
+D/MainActivity: ║[1.2,	1.6,	1.7,	30.0,	33.0]
+D/MainActivity: ║[1.2,	1.6,	1.7,	30.0,	33.0]
+D/MainActivity: ║
+D/MainActivity: ║} ==> objTest(MainActivity.java:83)
+D/MainActivity: ╚═══════════════════════════
+D/MainActivity: ║{
+D/MainActivity: ║    "widget": {
+D/MainActivity: ║        "debug": "on",
+D/MainActivity: ║        "window": {
+D/MainActivity: ║            "title": "Sample Konfabulator Widget",
+D/MainActivity: ║            "name": "main_window",
+D/MainActivity: ║            "width": 500,
+D/MainActivity: ║            "height": 500
+D/MainActivity: ║        }
+D/MainActivity: ║    }
+D/MainActivity: ║} ==> jsonTest(MainActivity.java:87)
+D/MainActivity: ╚═══════════════════════════
+```
 
 ### Usage
 ```java
-Logger.d("hello");
-Logger.e("hello");
-Logger.w("hello");
-Logger.v("hello");
-Logger.wtf("hello");
-Logger.json(JSON_CONTENT);
-Logger.xml(XML_CONTENT);
+Logger.d("hello"); // debug
+
+Logger.e("hello"); // error
+
+Logger.w("hello"); // warnning
+
+Logger.v("hello"); // verbose
+
+Logger.wtf("hello"); // what the fuck
+
+Logger.json(JSON_CONTENT); // json
+
+Logger.xml(XML_CONTENT); // xml
+
 logger.object(...); // bean/map/Collection...
+
 Logger.t("Custom Tag").w("logger with custom tag");
+
 try {
 		Class.forName("kale");
 } catch (ClassNotFoundException e) {
 		Logger.e(e, "something happened"); // exception
 }
 
-Logger.d("first\nsecond\nthird");
+Logger.d("first\nsecond\nthird"); // third line
 ```
 
 ### Settings (optional)
@@ -71,7 +114,7 @@ public class MyApplication extends Application {
     public void onCreate() {
         super.onCreate();
 				Logger.initialize(
-                Settings.getInstance()
+                new Settings()
                         .isShowMethodLink(true)
                         .isShowThreadInfo(false)
                         .setMethodOffset(0)

@@ -4,6 +4,7 @@ import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.Settings;
 
 import android.os.Bundle;
+import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.TextView;
@@ -17,11 +18,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        CrashHandler.getInstance().init();
-
-        TextView view = new TextView(this);
-//        view.setText(12345); // 如果出现了崩溃，那么就会调用崩溃处理机制
-
         Logger.initialize(
                 new Settings()
                         .isShowMethodLink(true)
@@ -34,12 +30,18 @@ public class MainActivity extends AppCompatActivity {
             // for release
             Logger.plant(new CrashlyticsTree());
         }
-        
+
         levTest();
         objTest();
         jsonTest();
         locationTest();
         largeDataTest();
+
+        Logger.getSettings().setLogPriority(Log.ASSERT); // close log
+
+        CrashHandler.getInstance().init(); // 崩溃检测处理器
+        
+//        setRes(123);  // 模拟崩溃
     }
 
     private void levTest() {
@@ -115,6 +117,30 @@ public class MainActivity extends AppCompatActivity {
 
         void show() {
             Logger.d("name:%s sex:%s", name, sex);
+        }
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // crash
+    ///////////////////////////////////////////////////////////////////////////
+
+    /**
+     * 这里模拟后端给客户端传值的情况。
+     *
+     * 这里的id来自外部输入，如果外部输入的值有问题，那么就可能崩溃。
+     * 但理论上是不会有数据异常的，为了不崩溃，这里加try-catch
+     */
+    private void setRes(@StringRes int resId) {
+        TextView view = new TextView(this);
+
+        try {
+            view.setText(resId); // 如果出现了崩溃，那么就会调用崩溃处理机制
+        } catch (Exception e) {
+            // 防御了崩溃
+            e.printStackTrace();
+            
+            // 把崩溃的异常和当前的上下文通过log系统分发
+            Logger.e(e, "res id = " + resId);
         }
     }
 }

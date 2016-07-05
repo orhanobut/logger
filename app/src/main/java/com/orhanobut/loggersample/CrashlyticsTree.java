@@ -18,7 +18,7 @@ public class CrashlyticsTree extends Timber.Tree {
         }
 
         if (t == null && message != null) {
-            //Crashlytics.logException(new Exception(message));
+//            Crashlytics.logException(new Exception(message));
         } else if (t != null && message != null) {
 //            Crashlytics.logException(new Exception(message, t));
         } else if (t != null) {
