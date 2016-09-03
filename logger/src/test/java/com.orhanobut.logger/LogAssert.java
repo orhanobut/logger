@@ -64,6 +64,14 @@ final class LogAssert {
     return this;
   }
 
+  public LogAssert messageContains(String... contained){
+    ShadowLog.LogItem item = items.get(index++);
+    for (String string : contained) {
+      assertThat(item.msg).contains(string);
+    }
+    return this;
+  }
+
   public LogAssert skip() {
     index++;
     return this;
@@ -94,6 +102,37 @@ final class LogAssert {
 
     for (String message : messages) {
       hasMessage(message);
+    }
+
+    hasBottomBorder();
+    hasNoMoreMessages();
+
+    return this;
+  }
+
+  public LogAssert hasMessageWithDefaultSettingsSerializedLogs(String... messages) {
+    hasTopBorder();
+    skip();
+    hasMiddleBorder();
+    skip();
+    skip();
+    hasMiddleBorder();
+
+    //ShadowLogs appears to handle the newlines in the serialized messages differently
+    //than the default Android Log class.
+
+    ShadowLog.LogItem item = items.get(index++);
+    assertThat(item.type).isEqualTo(priority);
+    assertThat(item.tag).isEqualTo(tag);
+
+    String[] shadowLogMsgs = item.msg.split("\\n");
+
+    assertThat(shadowLogMsgs).hasLength(messages.length);
+
+    assertThat(shadowLogMsgs[0]).isEqualTo(HORIZONTAL_DOUBLE_LINE + " " + messages[0]);
+
+    for (int i = 1; i < shadowLogMsgs.length; i++){
+      assertThat(shadowLogMsgs[i]).isEqualTo(messages[i]);
     }
 
     hasBottomBorder();

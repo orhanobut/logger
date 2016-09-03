@@ -55,8 +55,17 @@ public final class Logger {
     return printer.t(tag, methodCount);
   }
 
+  /**
+   * Intended for use by {@link com.orhanobut.logger.LoggerActivity} and
+   * {@link com.orhanobut.logger.LoggerFragment} only, otherwise the hash code
+   * cannot reliably be paired with the appropriate class in the log printout.
+   */
+  public static Printer h(int actFragHashCode) {
+    return printer.h(actFragHashCode);
+  }
+
   public static void log(int priority, String tag, String message, Throwable throwable) {
-    printer.log(priority, tag, message, throwable);
+    printer.log(priority, false, tag, message, throwable);
   }
 
   public static void d(String message, Object... args) {
@@ -109,4 +118,19 @@ public final class Logger {
     printer.xml(xml);
   }
 
+  /**
+   * Intended for use by {@link com.orhanobut.logger.LoggerActivity} and
+   * {@link com.orhanobut.logger.LoggerFragment} only, for logging lifecycle
+   * callbacks.
+   *
+   * <p>Getting the class name and the method name from the thread stack trace
+   * is unreliable for lifecycle callbacks. If a child class of
+   * {@link com.orhanobut.logger.LoggerActivity} or
+   * {@link com.orhanobut.logger.LoggerFragment} does not override the lifecycle
+   * callback, the method name in the stacktrace may be different (i.e., callActivityOnStart vs OnStart),
+   * and only the parent class name, not the child class name, will be present.</p>
+   */
+  public static void lifecycle(String className, String methodName){
+    printer.lifecycle(className, methodName);
+  }
 }

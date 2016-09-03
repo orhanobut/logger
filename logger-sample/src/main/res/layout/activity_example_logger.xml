@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/page_default_padding">
+
+    <Button
+        android:id="@+id/logger_activity_button_1"
+        style="@style/ButtonStyle"
+        android:text="this.d(Object object)" />
+
+    <Button
+        android:id="@+id/logger_activity_button_2"
+        style="@style/ButtonStyle"/>
+
+    <Button
+        android:id="@+id/logger_activity_button_3"
+        style="@style/ButtonStyle"/>
+
+    <FrameLayout
+        android:id="@+id/logger_activity_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/element_spacing_small"
+        android:background="@drawable/background_fragment_container"/>
+
+
+</LinearLayout>
