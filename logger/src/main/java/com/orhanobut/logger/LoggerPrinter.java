@@ -16,16 +16,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
+import static com.orhanobut.logger.LogLevel.*;
+
 final class LoggerPrinter implements Printer {
 
   private static final String DEFAULT_TAG = "PRETTYLOGGER";
-
-  private static final int DEBUG = 3;
-  private static final int ERROR = 6;
-  private static final int ASSERT = 7;
-  private static final int INFO = 4;
-  private static final int VERBOSE = 2;
-  private static final int WARN = 5;
 
   /**
    * Android's max limit for a log entry is ~4076 bytes,
@@ -197,8 +192,9 @@ final class LoggerPrinter implements Printer {
     }
   }
 
-  @Override public synchronized void log(int priority, String tag, String message, Throwable throwable) {
-    if (settings.getLogLevel() == LogLevel.NONE) {
+  @Override
+  public synchronized void log(int priority, String tag, String message, Throwable throwable) {
+    if (settings.getLogLevel() == LogLevel.DISABLED) {
       return;
     }
     if (throwable != null && message != null) {
@@ -213,6 +209,11 @@ final class LoggerPrinter implements Printer {
     int methodCount = getMethodCount();
     if (Helper.isEmpty(message)) {
       message = "Empty/NULL log message";
+    }
+
+    FileLogger fileLogger = settings.getFileLogger();
+    if (fileLogger != null) {
+      fileLogger.log(priority, tag, message);
     }
 
     logTopBorder(priority, tag);
@@ -248,7 +249,7 @@ final class LoggerPrinter implements Printer {
    * This method is synchronized in order to avoid messy of logs' order.
    */
   private synchronized void log(int priority, Throwable throwable, String msg, Object... args) {
-    if (settings.getLogLevel() == LogLevel.NONE) {
+    if (settings.getLogLevel() == LogLevel.DISABLED) {
       return;
     }
     String tag = getTag();
@@ -283,16 +284,16 @@ final class LoggerPrinter implements Printer {
       }
       StringBuilder builder = new StringBuilder();
       builder.append("║ ")
-          .append(level)
-          .append(getSimpleClassName(trace[stackIndex].getClassName()))
-          .append(".")
-          .append(trace[stackIndex].getMethodName())
-          .append(" ")
-          .append(" (")
-          .append(trace[stackIndex].getFileName())
-          .append(":")
-          .append(trace[stackIndex].getLineNumber())
-          .append(")");
+              .append(level)
+              .append(getSimpleClassName(trace[stackIndex].getClassName()))
+              .append(".")
+              .append(trace[stackIndex].getMethodName())
+              .append(" ")
+              .append(" (")
+              .append(trace[stackIndex].getFileName())
+              .append(":")
+              .append(trace[stackIndex].getLineNumber())
+              .append(")");
       level += "   ";
       logChunk(logType, tag, builder.toString());
     }
@@ -384,7 +385,6 @@ final class LoggerPrinter implements Printer {
    * Determines the starting index of the stack trace, after method calls made by this class.
    *
    * @param trace the stack trace
-   *
    * @return the stack offset
    */
   private int getStackOffset(StackTraceElement[] trace) {

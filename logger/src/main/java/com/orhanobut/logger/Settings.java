@@ -6,11 +6,12 @@ public final class Settings {
   private boolean showThreadInfo = true;
   private int methodOffset = 0;
   private LogAdapter logAdapter;
+  private FileLogger fileLogger;
 
   /**
    * Determines to how logs will be printed
    */
-  private LogLevel logLevel = LogLevel.FULL;
+  private int logLevel = LogLevel.VERBOSE;
 
   public Settings hideThreadInfo() {
     showThreadInfo = false;
@@ -26,6 +27,11 @@ public final class Settings {
   }
 
   public Settings logLevel(LogLevel logLevel) {
+    this.logLevel = logLevel.getValue();
+    return this;
+  }
+
+  public Settings logLevel(int logLevel) {
     this.logLevel = logLevel;
     return this;
   }
@@ -40,6 +46,11 @@ public final class Settings {
     return this;
   }
 
+  public Settings fileLogger(int level, String folder) {
+    fileLogger = new AndroidCsvFileLogger(level, folder);
+    return this;
+  }
+
   public int getMethodCount() {
     return methodCount;
   }
@@ -48,7 +59,7 @@ public final class Settings {
     return showThreadInfo;
   }
 
-  public LogLevel getLogLevel() {
+  public int getLogLevel() {
     return logLevel;
   }
 
@@ -63,10 +74,14 @@ public final class Settings {
     return logAdapter;
   }
 
+  public FileLogger getFileLogger() {
+    return fileLogger;
+  }
+
   public void reset() {
     methodCount = 2;
     methodOffset = 0;
     showThreadInfo = true;
-    logLevel = LogLevel.FULL;
+    logLevel = LogLevel.VERBOSE;
   }
 }
