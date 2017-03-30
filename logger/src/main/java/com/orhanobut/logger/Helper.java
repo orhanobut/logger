@@ -102,4 +102,8 @@ final class Helper {
     return sw.toString();
   }
 
+  static boolean shouldLog(int logLevel, int priority) {
+    return priority >= logLevel;
+  }
+
 }

@@ -7,6 +7,7 @@
   <!--module name="NewlineAtEndOfFile"/-->
   <module name="FileLength"/>
   <module name="FileTabCharacter"/>
+  <module name="SuppressWarningsFilter" />
 
   <!-- Trailing spaces -->
   <module name="RegexpSingleline">
@@ -27,6 +28,7 @@
   </module>
 
   <module name="TreeWalker">
+    <module name="SuppressWarningsHolder" />
     <!-- <property name="cacheFile" value="${checkstyle.cache.file}"/>                    -->
 
 

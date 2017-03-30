@@ -20,15 +20,15 @@ public class SettingsTest {
   }
 
   @Test public void testDefaultLogLevel() {
-    assertThat(settings.getLogLevel()).isEqualTo(LogLevel.FULL);
+    assertThat(settings.getLogLevel()).isEqualTo(LogLevel.FULL.getValue());
   }
 
   @Test public void testCustomLogLevel() {
     settings.logLevel(LogLevel.NONE);
-    assertThat(settings.getLogLevel()).isEqualTo(LogLevel.NONE);
+    assertThat(settings.getLogLevel()).isEqualTo(LogLevel.NONE.getValue());
 
     settings.logLevel(LogLevel.FULL);
-    assertThat(settings.getLogLevel()).isEqualTo(LogLevel.FULL);
+    assertThat(settings.getLogLevel()).isEqualTo(LogLevel.FULL.getValue());
   }
 
   @Test public void testMethodCount() {
@@ -70,7 +70,7 @@ public class SettingsTest {
     settings.reset();
 
     assertThat(settings.getMethodCount()).isEqualTo(2);
-    assertThat(settings.getLogLevel()).isEqualTo(LogLevel.FULL);
+    assertThat(settings.getLogLevel()).isEqualTo(LogLevel.FULL.getValue());
     assertThat(settings.getMethodOffset()).isEqualTo(0);
     assertThat(settings.isShowThreadInfo()).isTrue();
   }
