@@ -174,7 +174,7 @@ Logger.e(exception,"message");
 ### Timber Integration
 You can also use logger along with Timber. 
 ```java
-Logger.init().methodOffset(5);
+Logger.init().methodOffset(5);   //skip trace caused by Timber.
 Timber.plant(new Timber.DebugTree() {
   @Override protected void log(int priority, String tag, String message, Throwable t) {
     Logger.log(priority, tag, message, t);
