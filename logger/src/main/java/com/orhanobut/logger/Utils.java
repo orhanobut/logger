@@ -4,6 +4,13 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.UnknownHostException;
 
+import static com.orhanobut.logger.Logger.ASSERT;
+import static com.orhanobut.logger.Logger.DEBUG;
+import static com.orhanobut.logger.Logger.ERROR;
+import static com.orhanobut.logger.Logger.INFO;
+import static com.orhanobut.logger.Logger.VERBOSE;
+import static com.orhanobut.logger.Logger.WARN;
+
 /**
  * Provides convenient methods to some common operations
  */
@@ -81,9 +88,22 @@ final class Utils {
     return sw.toString();
   }
 
-  /** Return whether a log should be logged */
-  static boolean isLoggable(int logLevel, int priority) {
-    return priority >= logLevel;
+  static String logLevel(int value) {
+    switch (value) {
+      case VERBOSE:
+        return "VERBOSE";
+      case DEBUG:
+        return "DEBUG";
+      case INFO:
+        return "INFO";
+      case WARN:
+        return "WARN";
+      case ERROR:
+        return "ERROR";
+      case ASSERT:
+        return "ASSERT";
+      default:
+        return "UNKNOWN";
+    }
   }
-
 }

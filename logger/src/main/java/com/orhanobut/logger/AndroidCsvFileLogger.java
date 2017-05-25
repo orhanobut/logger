@@ -40,7 +40,7 @@ public class AndroidCsvFileLogger extends AbstractAndroidFileLogger {
 
     // level
     fileWriter.append(SEPARATOR);
-    fileWriter.append(LogLevel.toString(level));
+    fileWriter.append(Utils.logLevel(level));
 
     // tag
     fileWriter.append(SEPARATOR);

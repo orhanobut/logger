@@ -40,16 +40,4 @@ public class UtilsTest {
   @Test public void getStackTraceStringReturnEmptyStringWithUnknownHostException() {
     assertThat(Utils.getStackTraceString(new UnknownHostException())).isEqualTo("");
   }
-
-  @Test public void shouldLogReturnsTrueForHigherPriorityThanLogLevel() {
-    assertThat(Utils.isLoggable(LogLevel.DEBUG, LogLevel.WARN)).isEqualTo(true);
-  }
-
-  @Test public void shouldLogReturnsTrueForEqualPriorityAndLogLevel() {
-    assertThat(Utils.isLoggable(LogLevel.DEBUG, LogLevel.DEBUG)).isEqualTo(true);
-  }
-
-  @Test public void shouldLogReturnsFalseForHigherLogLevelThanPriority() {
-    assertThat(Utils.isLoggable(LogLevel.WARN, LogLevel.DEBUG)).isEqualTo(false);
-  }
 }

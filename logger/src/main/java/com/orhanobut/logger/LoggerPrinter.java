@@ -18,12 +18,12 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.transform.stream.StreamSource;
 
-import static com.orhanobut.logger.LogLevel.ASSERT;
-import static com.orhanobut.logger.LogLevel.DEBUG;
-import static com.orhanobut.logger.LogLevel.ERROR;
-import static com.orhanobut.logger.LogLevel.INFO;
-import static com.orhanobut.logger.LogLevel.VERBOSE;
-import static com.orhanobut.logger.LogLevel.WARN;
+import static com.orhanobut.logger.Logger.ASSERT;
+import static com.orhanobut.logger.Logger.DEBUG;
+import static com.orhanobut.logger.Logger.ERROR;
+import static com.orhanobut.logger.Logger.INFO;
+import static com.orhanobut.logger.Logger.VERBOSE;
+import static com.orhanobut.logger.Logger.WARN;
 
 final class LoggerPrinter implements Printer {
 
