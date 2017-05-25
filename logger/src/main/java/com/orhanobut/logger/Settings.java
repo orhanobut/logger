@@ -65,27 +65,27 @@ public final class Settings {
     return this;
   }
 
-  public int getFileLogLevel() {
+  int getFileLogLevel() {
     return fileLogLevel;
   }
 
-  public int getMethodCount() {
+  int getMethodCount() {
     return methodCount;
   }
 
-  public boolean isShowThreadInfo() {
+  boolean isShowThreadInfo() {
     return showThreadInfo;
   }
 
-  public int getLogLevel() {
+  int getLogLevel() {
     return logLevel;
   }
 
-  public int getMethodOffset() {
+  int getMethodOffset() {
     return methodOffset;
   }
 
-  public LogAdapter getLogAdapter() {
+  LogAdapter getLogAdapter() {
     if (logAdapter == null) {
       logAdapter = new AndroidLogAdapter();
     }
@@ -99,7 +99,7 @@ public final class Settings {
    *
    * @return file logger
    */
-  public FileLogger getFileLogger() {
+  FileLogger getFileLogger() {
     if (fileLogger == null) {
       fileLogger = new AndroidCsvFileLogger(
           Environment.getExternalStorageDirectory().getAbsolutePath() + File.separatorChar + "logger");
@@ -107,7 +107,7 @@ public final class Settings {
     return fileLogger;
   }
 
-  public void reset() {
+  void reset() {
     methodCount = 2;
     methodOffset = 0;
     showThreadInfo = true;

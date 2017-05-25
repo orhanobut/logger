@@ -52,7 +52,7 @@ public class LoggerTest {
   @Ignore
   @Test public void testLogThrowable() {
     Throwable throwable = new Throwable("throwable");
-    String stackString = "message : " + Helper.getStackTraceString(throwable);
+    String stackString = "message : " + Utils.getStackTraceString(throwable);
     String[] stackItems = stackString.split("\\n");
     Logger.log(DEBUG, null, "message", throwable);
 
@@ -88,7 +88,7 @@ public class LoggerTest {
     Throwable throwable = new Throwable("throwable");
     Logger.e(throwable, "message");
 
-    String stackString = "message : " + Helper.getStackTraceString(throwable);
+    String stackString = "message : " + Utils.getStackTraceString(throwable);
     String[] stackItems = stackString.split("\\n");
 
     assertLog(ERROR).hasMessageWithDefaultSettings(stackItems);
@@ -99,7 +99,7 @@ public class LoggerTest {
     Throwable throwable = new Throwable("throwable");
     Logger.e(throwable, null);
 
-    String stackString = Helper.getStackTraceString(throwable);
+    String stackString = Utils.getStackTraceString(throwable);
     String[] stackItems = stackString.split("\\n");
 
     assertLog(ERROR).hasMessageWithDefaultSettings(stackItems);
@@ -125,10 +125,12 @@ public class LoggerTest {
   }
 
   @Test public void logArray() {
-    double[][] doubles = {{1.2, 1.6, 1.7, 30, 33},
+    double[][] doubles = {
         {1.2, 1.6, 1.7, 30, 33},
         {1.2, 1.6, 1.7, 30, 33},
-        {1.2, 1.6, 1.7, 30, 33}};
+        {1.2, 1.6, 1.7, 30, 33},
+        {1.2, 1.6, 1.7, 30, 33}
+    };
 
     Logger.d(doubles);
 

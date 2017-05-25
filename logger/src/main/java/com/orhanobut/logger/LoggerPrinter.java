@@ -78,11 +78,6 @@ final class LoggerPrinter implements Printer {
     init(DEFAULT_TAG);
   }
 
-  /**
-   * It is used to change the tag
-   *
-   * @param tag is the given string which will be used in Logger
-   */
   @Override public Settings init(String tag) {
     if (tag == null) {
       throw new NullPointerException("tag may not be null");
@@ -144,13 +139,8 @@ final class LoggerPrinter implements Printer {
     log(ASSERT, null, message, args);
   }
 
-  /**
-   * Formats the json content and print it
-   *
-   * @param json the json content
-   */
   @Override public void json(String json) {
-    if (Helper.isEmpty(json)) {
+    if (Utils.isEmpty(json)) {
       d("Empty/Null json content");
       return;
     }
@@ -174,13 +164,8 @@ final class LoggerPrinter implements Printer {
     }
   }
 
-  /**
-   * Formats the json content and print it
-   *
-   * @param xml the xml content
-   */
   @Override public void xml(String xml) {
-    if (Helper.isEmpty(xml)) {
+    if (Utils.isEmpty(xml)) {
       d("Empty/Null xml content");
       return;
     }
@@ -197,27 +182,27 @@ final class LoggerPrinter implements Printer {
     }
   }
 
-  @Override
-  public synchronized void log(int priority, String tag, String message, Throwable throwable) {
-    boolean logAdapter = Helper.shouldLog(settings.getLogLevel(), priority);
-    boolean fileLogger = Helper.shouldLog(settings.getFileLogLevel(), priority);
+  @Override public synchronized void log(int priority, String tag, String message, Throwable throwable) {
+    boolean logAdapter = Utils.isLoggable(settings.getLogLevel(), priority);
+    boolean fileLogger = Utils.isLoggable(settings.getFileLogLevel(), priority);
     if (!logAdapter && !fileLogger) {
       return;
     }
     if (throwable != null && message != null) {
-      message += " : " + Helper.getStackTraceString(throwable);
+      message += " : " + Utils.getStackTraceString(throwable);
     }
     if (throwable != null && message == null) {
-      message = Helper.getStackTraceString(throwable);
+      message = Utils.getStackTraceString(throwable);
     }
     if (message == null) {
       message = "No message/exception is set";
     }
     int methodCount = getMethodCount();
-    if (Helper.isEmpty(message)) {
+    if (Utils.isEmpty(message)) {
       message = "Empty/NULL log message";
     }
 
+    // TODO: Access it faster
     if (fileLogger) {
       settings.getFileLogger().log(priority, tag, message);
     }
@@ -259,8 +244,8 @@ final class LoggerPrinter implements Printer {
    * This method is synchronized in order to avoid messy of logs' order.
    */
   private synchronized void log(int priority, Throwable throwable, String msg, Object... args) {
-    boolean logAdapter = Helper.shouldLog(settings.getLogLevel(), priority);
-    boolean fileLogger = Helper.shouldLog(settings.getFileLogLevel(), priority);
+    boolean logAdapter = Utils.isLoggable(settings.getLogLevel(), priority);
+    boolean fileLogger = Utils.isLoggable(settings.getFileLogLevel(), priority);
     if (!logAdapter && !fileLogger) {
       return;
     }
@@ -358,7 +343,7 @@ final class LoggerPrinter implements Printer {
   }
 
   private String formatTag(String tag) {
-    if (!Helper.isEmpty(tag) && !Helper.equals(this.tag, tag)) {
+    if (!Utils.isEmpty(tag) && !Utils.equals(this.tag, tag)) {
       return this.tag + "-" + tag;
     }
     return this.tag;

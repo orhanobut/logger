@@ -13,43 +13,43 @@ import static com.google.common.truth.Truth.assertThat;
 
 @RunWith(RobolectricGradleTestRunner.class)
 @Config(sdk = 21, constants = BuildConfig.class)
-public class HelperTest {
+public class UtilsTest {
 
   @Test public void isEmpty() {
-    assertThat(Helper.isEmpty("")).isTrue();
-    assertThat(Helper.isEmpty(null)).isTrue();
+    assertThat(Utils.isEmpty("")).isTrue();
+    assertThat(Utils.isEmpty(null)).isTrue();
   }
 
   @Test public void equals() {
-    assertThat(Helper.equals("a", "a")).isTrue();
-    assertThat(Helper.equals("as", "b")).isFalse();
-    assertThat(Helper.equals(null, "b")).isFalse();
-    assertThat(Helper.equals("a", null)).isFalse();
+    assertThat(Utils.equals("a", "a")).isTrue();
+    assertThat(Utils.equals("as", "b")).isFalse();
+    assertThat(Utils.equals(null, "b")).isFalse();
+    assertThat(Utils.equals("a", null)).isFalse();
   }
 
   @Test public void getStackTraceString() {
     Throwable throwable = new Throwable("test");
     String androidTraceString = Log.getStackTraceString(throwable);
-    assertThat(Helper.getStackTraceString(throwable)).isEqualTo(androidTraceString);
+    assertThat(Utils.getStackTraceString(throwable)).isEqualTo(androidTraceString);
   }
 
   @Test public void getStackTraceStringReturnsEmptyStringWithNull() {
-    assertThat(Helper.getStackTraceString(null)).isEqualTo("");
+    assertThat(Utils.getStackTraceString(null)).isEqualTo("");
   }
 
   @Test public void getStackTraceStringReturnEmptyStringWithUnknownHostException() {
-    assertThat(Helper.getStackTraceString(new UnknownHostException())).isEqualTo("");
+    assertThat(Utils.getStackTraceString(new UnknownHostException())).isEqualTo("");
   }
 
   @Test public void shouldLogReturnsTrueForHigherPriorityThanLogLevel() {
-    assertThat(Helper.shouldLog(LogLevel.DEBUG, LogLevel.WARN)).isEqualTo(true);
+    assertThat(Utils.isLoggable(LogLevel.DEBUG, LogLevel.WARN)).isEqualTo(true);
   }
 
   @Test public void shouldLogReturnsTrueForEqualPriorityAndLogLevel() {
-    assertThat(Helper.shouldLog(LogLevel.DEBUG, LogLevel.DEBUG)).isEqualTo(true);
+    assertThat(Utils.isLoggable(LogLevel.DEBUG, LogLevel.DEBUG)).isEqualTo(true);
   }
 
   @Test public void shouldLogReturnsFalseForHigherLogLevelThanPriority() {
-    assertThat(Helper.shouldLog(LogLevel.WARN, LogLevel.DEBUG)).isEqualTo(false);
+    assertThat(Utils.isLoggable(LogLevel.WARN, LogLevel.DEBUG)).isEqualTo(false);
   }
 }
