@@ -57,4 +57,8 @@ public class AndroidCsvFileLogger extends AbstractAndroidFileLogger {
     // new line
     fileWriter.append(NEW_LINE);
   }
+
+  @Override public boolean isLoggable(int priority, String tag) {
+    return false;
+  }
 }

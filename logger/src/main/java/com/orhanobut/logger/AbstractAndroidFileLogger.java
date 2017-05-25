@@ -15,7 +15,7 @@ import java.io.IOException;
  * to be called on a single background thread,
  * implementing classes are free to directly perform I/O operations there.
  */
-public abstract class AbstractAndroidFileLogger implements FileLogger {
+public abstract class AbstractAndroidFileLogger implements LogAdapter {
 
   /**
    * This is always called on a single background thread.
