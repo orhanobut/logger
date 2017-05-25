@@ -172,8 +172,9 @@ Logger.e(exception,"message");
 <img src='https://github.com/orhanobut/logger/blob/master/images/wrap-closed.png'/>
 
 ### Timber Integration
-You can also use logger along with Timber.
+You can also use logger along with Timber. 
 ```java
+Logger.init().methodOffset(5);   //skip trace caused by Timber.
 Timber.plant(new Timber.DebugTree() {
   @Override protected void log(int priority, String tag, String message, Throwable t) {
     Logger.log(priority, tag, message, t);
