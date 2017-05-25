@@ -40,4 +40,16 @@ public class HelperTest {
   @Test public void getStackTraceStringReturnEmptyStringWithUnknownHostException() {
     assertThat(Helper.getStackTraceString(new UnknownHostException())).isEqualTo("");
   }
+
+  @Test public void shouldLogReturnsTrueForHigherPriorityThanLogLevel() {
+    assertThat(Helper.shouldLog(LogLevel.DEBUG, LogLevel.WARN)).isEqualTo(true);
+  }
+
+  @Test public void shouldLogReturnsTrueForEqualPriorityAndLogLevel() {
+    assertThat(Helper.shouldLog(LogLevel.DEBUG, LogLevel.DEBUG)).isEqualTo(true);
+  }
+
+  @Test public void shouldLogReturnsFalseForHigherLogLevelThanPriority() {
+    assertThat(Helper.shouldLog(LogLevel.WARN, LogLevel.DEBUG)).isEqualTo(false);
+  }
 }
