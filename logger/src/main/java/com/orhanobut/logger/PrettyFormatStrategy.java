@@ -131,7 +131,6 @@ public class PrettyFormatStrategy implements FormatStrategy {
   }
 
   private void logChunk(int priority, String tag, String chunk) {
-//    String finalTag = formatTag(tag);
     logStrategy.log(priority, tag, chunk);
   }
 
@@ -202,7 +201,7 @@ public class PrettyFormatStrategy implements FormatStrategy {
 
     public PrettyFormatStrategy build() {
       if (logStrategy == null) {
-        logStrategy = new AndroidLogStrategy();
+        logStrategy = new LogcatLogStrategy();
       }
       return new PrettyFormatStrategy(this);
     }

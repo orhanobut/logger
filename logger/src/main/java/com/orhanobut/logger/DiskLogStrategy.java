@@ -11,23 +11,9 @@ import java.io.IOException;
 
 /**
  * Abstract class that takes care of background threading the file log operation on Android.
- * All calls to {@link #writeLog(FileWriter, int, String, String)} are guaranteed
- * to be called on a single background thread,
  * implementing classes are free to directly perform I/O operations there.
  */
-public abstract class AbstractAndroidFileLogger implements LogAdapter {
-
-  /**
-   * This is always called on a single background thread.
-   * Implementing classes must ONLY write to the fileWriter and nothing more.
-   * The abstract class takes care of everything else including close the stream and catching IOException
-   *
-   * @param fileWriter an instance of FileWriter already initialised to the correct file
-   * @param level      the log level
-   * @param tag        the tag logged to
-   * @param message    the log message
-   */
-  protected abstract void writeLog(FileWriter fileWriter, int level, String tag, String message) throws IOException;
+public class DiskLogStrategy implements LogStrategy {
 
   private final Handler handler;
   private final int maxFileSize;
@@ -39,7 +25,7 @@ public abstract class AbstractAndroidFileLogger implements LogAdapter {
    * @param maxFileSize max size of a file before breaking it into a new log file
    * @param folder      folder to create the log files.
    */
-  public AbstractAndroidFileLogger(int maxFileSize, String folder) {
+  public DiskLogStrategy(String folder, int maxFileSize) {
     this.maxFileSize = maxFileSize;
     this.folder = folder;
     HandlerThread ht = new HandlerThread("AndroidFileLogger." + folder);
@@ -49,10 +35,9 @@ public abstract class AbstractAndroidFileLogger implements LogAdapter {
 
   @Override public void log(int level, String tag, String message) {
     // do nothing on the calling thread, simply pass the tag/msg to the background thread
-    handler.sendMessage(handler.obtainMessage(level, new String[]{tag, message}));
+    handler.sendMessage(handler.obtainMessage(level, message));
   }
 
-  //region helper to generate file names
   private File getLogFile(String folderName, String fileName) {
 
     File folder = new File(folderName);
@@ -81,9 +66,7 @@ public abstract class AbstractAndroidFileLogger implements LogAdapter {
 
     return newFile;
   }
-  //endregion
 
-  //region handler to write to disk on background thread
   private class WriteHandler extends Handler {
 
     private WriteHandler(Looper looper) {
@@ -92,8 +75,7 @@ public abstract class AbstractAndroidFileLogger implements LogAdapter {
 
     @SuppressWarnings("checkstyle:emptyblock")
     @Override public void handleMessage(Message msg) {
-
-      String[] data = (String[]) msg.obj;
+      String content = (String) msg.obj;
 
       FileWriter fileWriter = null;
       File logFile = getLogFile(folder, "logs");
@@ -101,7 +83,7 @@ public abstract class AbstractAndroidFileLogger implements LogAdapter {
       try {
         fileWriter = new FileWriter(logFile, true);
 
-        writeLog(fileWriter, msg.what, data[0], data[1]);
+        writeLog(fileWriter, content);
 
         fileWriter.flush();
         fileWriter.close();
@@ -114,6 +96,16 @@ public abstract class AbstractAndroidFileLogger implements LogAdapter {
         }
       }
     }
+
+    /**
+     * This is always called on a single background thread.
+     * Implementing classes must ONLY write to the fileWriter and nothing more.
+     * The abstract class takes care of everything else including close the stream and catching IOException
+     *
+     * @param fileWriter an instance of FileWriter already initialised to the correct file
+     */
+    private void writeLog(FileWriter fileWriter, String content) throws IOException {
+      fileWriter.append(content);
+    }
   }
-  //endregion
 }

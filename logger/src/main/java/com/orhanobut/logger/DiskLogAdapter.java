@@ -1,14 +1,14 @@
 package com.orhanobut.logger;
 
-public class AndroidLogAdapter implements LogAdapter {
+public class DiskLogAdapter implements LogAdapter {
 
   private final FormatStrategy formatStrategy;
 
-  public AndroidLogAdapter() {
-    this.formatStrategy = PrettyFormatStrategy.newBuilder().build();
+  public DiskLogAdapter() {
+    formatStrategy = CsvFormatStrategy.newBuilder().build();
   }
 
-  public AndroidLogAdapter(FormatStrategy formatStrategy) {
+  public DiskLogAdapter(FormatStrategy formatStrategy) {
     this.formatStrategy = formatStrategy;
   }
 
@@ -19,5 +19,4 @@ public class AndroidLogAdapter implements LogAdapter {
   @Override public void log(int priority, String tag, String message) {
     formatStrategy.log(priority, tag, message);
   }
-
 }

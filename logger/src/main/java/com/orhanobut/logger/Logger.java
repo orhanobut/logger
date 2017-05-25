@@ -5,7 +5,6 @@ package com.orhanobut.logger;
  */
 public final class Logger {
 
-  public static final int DISABLED = 0;
   public static final int VERBOSE = 2;
   public static final int DEBUG = 3;
   public static final int INFO = 4;
