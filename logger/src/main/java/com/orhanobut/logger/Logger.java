@@ -14,12 +14,16 @@ public final class Logger {
     //no instance
   }
 
-  /** Provides an api to change setting */
+  /**
+   * Provides an api to change setting
+   */
   public static Settings init() {
     return init(DEFAULT_TAG);
   }
 
-  /**  Provides an api to change settings with a custom tag */
+  /**
+   * Provides an api to change settings with a custom tag
+   */
   public static Settings init(String tag) {
     printer = new LoggerPrinter();
     return printer.init(tag);
@@ -45,28 +49,12 @@ public final class Logger {
    * be used for the subsequent log calls
    */
   public static Printer t(String tag) {
-    return printer.t(tag, printer.getSettings().getMethodCount());
+    return printer.t(tag);
   }
 
   /**
-   * Given method count will be used only once for this method call regardless of the method count
-   * that's been set during initialization. After this invocation, the general method count that's been
-   * set will be used for the subsequent log calls
+   * General log function that accepts all configurations as parameter
    */
-  public static Printer t(int methodCount) {
-    return printer.t(null, methodCount);
-  }
-
-  /**
-   * Given tag and method count will be used only once for this method call regardless of the tag and method count
-   * that's been set during initialization. After this invocation, the general tag and method count that's been
-   * set will be used for the subsequent log calls
-   */
-  public static Printer t(String tag, int methodCount) {
-    return printer.t(tag, methodCount);
-  }
-
-  /** General log function that accepts all configurations as parameter */
   public static void log(int priority, String tag, String message, Throwable throwable) {
     printer.log(priority, tag, message, throwable);
   }
@@ -107,12 +95,16 @@ public final class Logger {
     printer.wtf(message, args);
   }
 
-  /** Formats the given json content and print it */
+  /**
+   * Formats the given json content and print it
+   */
   public static void json(String json) {
     printer.json(json);
   }
 
-  /** Formats the given xml content and print it */
+  /**
+   * Formats the given xml content and print it
+   */
   public static void xml(String xml) {
     printer.xml(xml);
   }

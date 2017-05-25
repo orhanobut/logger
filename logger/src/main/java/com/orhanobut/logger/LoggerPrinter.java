@@ -25,7 +25,7 @@ import static com.orhanobut.logger.LogLevel.WARN;
 
 final class LoggerPrinter implements Printer {
 
-  private static final String DEFAULT_TAG = "PRETTYLOGGER";
+  private static final String DEFAULT_TAG = "PRETTY_LOGGER";
 
   /**
    * Android's max limit for a log entry is ~4076 bytes,
@@ -64,10 +64,9 @@ final class LoggerPrinter implements Printer {
   private String tag;
 
   /**
-   * Localize single tag and method count for each thread
+   * Provides one-time used tag for the log message
    */
   private final ThreadLocal<String> localTag = new ThreadLocal<>();
-  private final ThreadLocal<Integer> localMethodCount = new ThreadLocal<>();
 
   /**
    * It is used to determine log settings such as method count, thread info visibility
@@ -93,11 +92,10 @@ final class LoggerPrinter implements Printer {
     return settings;
   }
 
-  @Override public Printer t(String tag, int methodCount) {
+  @Override public Printer t(String tag) {
     if (tag != null) {
       localTag.set(tag);
     }
-    localMethodCount.set(methodCount);
     return this;
   }
 
@@ -366,12 +364,7 @@ final class LoggerPrinter implements Printer {
   }
 
   private int getMethodCount() {
-    Integer count = localMethodCount.get();
     int result = settings.getMethodCount();
-    if (count != null) {
-      localMethodCount.remove();
-      result = count;
-    }
     if (result < 0) {
       throw new IllegalStateException("methodCount cannot be negative");
     }
