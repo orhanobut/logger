@@ -76,7 +76,7 @@ Change the settings with init. This should be called only once. Best place would
  are optional. You can just use the default settings if you don't init Logger.
 ```java
 Logger
-  .init(YOUR_TAG)                 // default PRETTYLOGGER or use just init()
+  .init(YOUR_TAG)                 // default PRETTY_LOGGER or use just init()
   .methodCount(3)                 // default 2
   .hideThreadInfo()               // default shown
   .logLevel(LogLevel.NONE)        // default LogLevel.FULL
