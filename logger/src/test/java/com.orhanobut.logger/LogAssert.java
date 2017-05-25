@@ -7,7 +7,7 @@ import java.util.List;
 import static com.google.common.truth.Truth.assertThat;
 
 final class LogAssert {
-  private static final String DEFAULT_TAG = "PRETTYLOGGER";
+  private static final String DEFAULT_TAG = "PRETTY_LOGGER";
 
   private static final char TOP_LEFT_CORNER = '╔';
   private static final char BOTTOM_LEFT_CORNER = '╚';

@@ -2,7 +2,7 @@ package com.orhanobut.logger;
 
 interface Printer {
 
-  Printer t(String tag, int methodCount);
+  Printer t(String tag);
 
   /**
    * Add custom settings with a custom tag

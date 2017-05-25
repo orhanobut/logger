@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLog;
 
@@ -23,13 +23,13 @@ import static com.orhanobut.logger.LogLevel.INFO;
 import static com.orhanobut.logger.LogLevel.VERBOSE;
 import static com.orhanobut.logger.LogLevel.WARN;
 
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(constants = BuildConfig.class, sdk = 21)
 public class LoggerTest {
 
-  private static final String DEFAULT_TAG = "PRETTYLOGGER";
+  private static final String DEFAULT_TAG = "PRETTY_LOGGER";
 
-  String threadName;
+  private String threadName;
 
   @Before public void setup() {
     threadName = Thread.currentThread().getName();
@@ -165,7 +165,7 @@ public class LoggerTest {
     assertLog(DEBUG).hasMessageWithDefaultSettings(set.toString());
   }
 
-  @Test public void jsonLObjectLog() {
+  @Test public void jsonObjectLog() {
     String[] messages = new String[]{"{", "  \"key\": 3", "}"};
 
     Logger.json("  {\"key\":3}");
@@ -299,43 +299,8 @@ public class LoggerTest {
     Logger.t("CustomTag").i("message");
     Logger.i("message");
 
-    assertLog("PRETTYLOGGER-CustomTag", INFO)
+    assertLog("PRETTY_LOGGER-CustomTag", INFO)
         .hasTopBorder()
-        .hasMessage("message")
-        .hasBottomBorder()
-        .defaultTag()
-        .hasTopBorder()
-        .hasMessage("message")
-        .hasBottomBorder()
-        .hasNoMoreMessages();
-  }
-
-  @Test public void logWithOnlyOnceMethodInfo() {
-    Logger.init().hideThreadInfo().methodCount(0);
-    Logger.t(1).i("message");
-    Logger.i("message");
-
-    assertLog(INFO)
-        .hasTopBorder()
-        .skip()
-        .hasMiddleBorder()
-        .hasMessage("message")
-        .hasBottomBorder()
-        .hasTopBorder()
-        .hasMessage("message")
-        .hasBottomBorder()
-        .hasNoMoreMessages();
-  }
-
-  @Test public void logWithOnlyOnceMethodInfoAndCustomTag() {
-    Logger.init().hideThreadInfo().methodCount(0);
-    Logger.t("CustomTag", 1).i("message");
-    Logger.i("message");
-
-    assertLog("PRETTYLOGGER-CustomTag", INFO)
-        .hasTopBorder()
-        .skip()
-        .hasMiddleBorder()
         .hasMessage("message")
         .hasBottomBorder()
         .defaultTag()
