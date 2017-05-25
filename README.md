@@ -82,8 +82,6 @@ Logger
   .logLevel(LogLevel.NONE)        // default LogLevel.FULL
   .methodOffset(2)                // default 0
   .logAdapter(new AndroidLogAdapter()); //default AndroidLogAdapter
-}
-
 ```
 Note: Use LogLevel.NONE for the release versions.
 
