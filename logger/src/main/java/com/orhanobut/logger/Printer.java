@@ -2,16 +2,9 @@ package com.orhanobut.logger;
 
 interface Printer {
 
+  void addAdapter(LogAdapter adapter);
+
   Printer t(String tag);
-
-  /**
-   * Add custom settings with a custom tag
-   *
-   * @param tag is the given string which will be used in Logger
-   */
-  Settings init(String tag);
-
-  Settings getSettings();
 
   void d(String message, Object... args);
 
@@ -29,14 +22,17 @@ interface Printer {
 
   void wtf(String message, Object... args);
 
-  /** Formats the given json content and print it */
+  /**
+   * Formats the given json content and print it
+   */
   void json(String json);
 
-  /** Formats the given xml content and print it */
+  /**
+   * Formats the given xml content and print it
+   */
   void xml(String xml);
 
   void log(int priority, String tag, String message, Throwable throwable);
 
-  void resetSettings();
-
+  void clearLogAdapters();
 }

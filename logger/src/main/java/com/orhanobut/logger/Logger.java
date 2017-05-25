@@ -1,12 +1,9 @@
 package com.orhanobut.logger;
 
 /**
- * Logger is a wrapper of {@link android.util.Log}
  * But more pretty, simple and powerful
  */
 public final class Logger {
-
-  private static final String DEFAULT_TAG = "PRETTY_LOGGER";
 
   private static Printer printer = new LoggerPrinter();
 
@@ -14,33 +11,12 @@ public final class Logger {
     //no instance
   }
 
-  /**
-   * Provides an api to change setting
-   */
-  public static Settings init() {
-    return init(DEFAULT_TAG);
+  public static void addAdapter(LogAdapter adapter) {
+    printer.addAdapter(adapter);
   }
 
-  /**
-   * Provides an api to change settings with a custom tag
-   */
-  public static Settings init(String tag) {
-    printer = new LoggerPrinter();
-    return printer.init(tag);
-  }
-
-  /**
-   * Reset all log settings to following default values:
-   * <p>
-   * Tag: PRETTY_LOGGER
-   * Method count: 2
-   * Show thread info: true
-   * Method offset: 0
-   * Log adapter: Android log adapter
-   * File logger: None
-   */
-  public static void resetSettings() {
-    printer.resetSettings();
+  public static void clearLogAdapters() {
+    printer.clearLogAdapters();
   }
 
   /**

@@ -34,11 +34,11 @@ public class LoggerTest {
   @Before public void setup() {
     threadName = Thread.currentThread().getName();
 
-    Logger.init();
+    Logger.addAdapter(new AndroidLogAdapter(PrettyFormatStrategy.newBuilder().build()));
   }
 
   @After public void tearDown() {
-    Logger.resetSettings();
+    Logger.clearLogAdapters();
   }
 
   @Test public void testLog() {
@@ -229,8 +229,15 @@ public class LoggerTest {
   }
 
   @Test public void logWithoutThread() {
-    Logger.init().hideThreadInfo();
+    Logger.clearLogAdapters();
+    Logger.addAdapter(new AndroidLogAdapter(
+        PrettyFormatStrategy.newBuilder()
+            .showThreadInfo(false)
+            .build()
+    ));
+
     Logger.i("message");
+
     assertLog(INFO)
         .hasTopBorder()
         .skip()
@@ -242,8 +249,15 @@ public class LoggerTest {
   }
 
   @Test public void logWithCustomTag() {
-    Logger.init("CustomTag");
+    Logger.clearLogAdapters();
+    Logger.addAdapter(new AndroidLogAdapter(
+        PrettyFormatStrategy.newBuilder()
+            .tag("CustomTag")
+            .build()
+    ));
+
     Logger.i("message");
+
     assertLog("CustomTag", INFO)
         .hasTopBorder()
         .hasThread(threadName)
@@ -257,8 +271,15 @@ public class LoggerTest {
   }
 
   @Test public void logWithOneMethodInfo() {
-    Logger.init().methodCount(1);
+    Logger.clearLogAdapters();
+    Logger.addAdapter(new AndroidLogAdapter(
+        PrettyFormatStrategy.newBuilder()
+            .methodCount(1)
+            .build()
+    ));
+
     Logger.i("message");
+
     assertLog(INFO)
         .hasTopBorder()
         .hasThread(threadName)
@@ -271,7 +292,13 @@ public class LoggerTest {
   }
 
   @Test public void logWithNoMethodInfo() {
-    Logger.init().methodCount(0);
+    Logger.clearLogAdapters();
+    Logger.addAdapter(new AndroidLogAdapter(
+        PrettyFormatStrategy.newBuilder()
+            .methodCount(0)
+            .build()
+    ));
+
     Logger.i("message");
 
     assertLog(INFO)
@@ -284,7 +311,14 @@ public class LoggerTest {
   }
 
   @Test public void logWithNoMethodInfoAndNoThreadInfo() {
-    Logger.init().methodCount(0).hideThreadInfo();
+    Logger.clearLogAdapters();
+    Logger.addAdapter(new AndroidLogAdapter(
+        PrettyFormatStrategy.newBuilder()
+            .showThreadInfo(false)
+            .methodCount(0)
+            .build()
+    ));
+
     Logger.i("message");
 
     assertLog(INFO)
@@ -295,7 +329,15 @@ public class LoggerTest {
   }
 
   @Test public void logWithOnlyOnceCustomTag() {
-    Logger.init().hideThreadInfo().methodCount(0);
+    Logger.clearLogAdapters();
+    Logger.addAdapter(new AndroidLogAdapter(
+        PrettyFormatStrategy.newBuilder()
+            .showThreadInfo(false)
+            .methodCount(0)
+            .build()
+    ));
+
+
     Logger.t("CustomTag").i("message");
     Logger.i("message");
 
@@ -311,7 +353,17 @@ public class LoggerTest {
   }
 
   @Test public void logNone() {
-    Logger.init().logLevel(LogLevel.NONE);
+    Logger.clearLogAdapters();
+    Logger.addAdapter(new AndroidLogAdapter(
+        PrettyFormatStrategy.newBuilder()
+            .showThreadInfo(false)
+            .build()
+    ) {
+      @Override public boolean isLoggable(int priority, String tag) {
+        return false;
+      }
+    });
+
     Logger.i("message");
 
     assertLog(INFO)
@@ -320,6 +372,7 @@ public class LoggerTest {
 
   @Test public void useDefaultSettingsIfInitNotCalled() {
     Logger.i("message");
+
     assertLog(INFO)
         .hasTopBorder()
         .hasThread(threadName)

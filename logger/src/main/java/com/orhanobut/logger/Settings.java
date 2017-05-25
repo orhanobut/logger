@@ -87,7 +87,7 @@ public final class Settings {
 
   LogAdapter getLogAdapter() {
     if (logAdapter == null) {
-      logAdapter = new AndroidLogAdapter();
+      logAdapter = new AndroidLogAdapter(PrettyFormatStrategy.newBuilder().build());
     }
     return logAdapter;
   }

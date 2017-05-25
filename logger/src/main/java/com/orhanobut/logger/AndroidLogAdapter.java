@@ -1,29 +1,19 @@
 package com.orhanobut.logger;
 
-import android.util.Log;
+public class AndroidLogAdapter implements LogAdapter {
 
-class AndroidLogAdapter implements LogAdapter {
-  @Override public void d(String tag, String message) {
-    Log.d(tag, message);
+  private final FormatStrategy formatStrategy;
+
+  public AndroidLogAdapter(FormatStrategy formatStrategy) {
+    this.formatStrategy = formatStrategy;
   }
 
-  @Override public void e(String tag, String message) {
-    Log.e(tag, message);
+  @Override public boolean isLoggable(int priority, String tag) {
+    return true;
   }
 
-  @Override public void w(String tag, String message) {
-    Log.w(tag, message);
+  @Override public void log(int priority, String tag, String message) {
+    formatStrategy.log(priority, tag, message);
   }
 
-  @Override public void i(String tag, String message) {
-    Log.i(tag, message);
-  }
-
-  @Override public void v(String tag, String message) {
-    Log.v(tag, message);
-  }
-
-  @Override public void wtf(String tag, String message) {
-    Log.wtf(tag, message);
-  }
 }

@@ -1,8 +1,6 @@
 package com.orhanobut.logger;
 
-public interface LogAdapter {
-
-  boolean isLoggable(int priority, String tag);
+public interface LogStrategy {
 
   void log(int priority, String tag, String message);
 }
