@@ -1,6 +1,6 @@
 package com.orhanobut.logger;
 
-interface Printer {
+public interface Printer {
 
   void addAdapter(LogAdapter adapter);
 
