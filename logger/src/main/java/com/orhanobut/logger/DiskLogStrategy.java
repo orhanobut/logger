@@ -1,7 +1,6 @@
 package com.orhanobut.logger;
 
 import android.os.Handler;
-import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 
@@ -16,21 +15,9 @@ import java.io.IOException;
 public class DiskLogStrategy implements LogStrategy {
 
   private final Handler handler;
-  private final int maxFileSize;
-  private final String folder;
 
-  /**
-   * Default constructor.
-   *
-   * @param maxFileSize max size of a file before breaking it into a new log file
-   * @param folder      folder to create the log files.
-   */
-  public DiskLogStrategy(String folder, int maxFileSize) {
-    this.maxFileSize = maxFileSize;
-    this.folder = folder;
-    HandlerThread ht = new HandlerThread("AndroidFileLogger." + folder);
-    ht.start();
-    handler = new WriteHandler(ht.getLooper());
+  public DiskLogStrategy(Handler handler) {
+    this.handler = handler;
   }
 
   @Override public void log(int level, String tag, String message) {
@@ -38,39 +25,15 @@ public class DiskLogStrategy implements LogStrategy {
     handler.sendMessage(handler.obtainMessage(level, message));
   }
 
-  private File getLogFile(String folderName, String fileName) {
+  static class WriteHandler extends Handler {
 
-    File folder = new File(folderName);
-    if (!folder.exists()) {
-      folder.mkdirs();
-    }
+    private final String folder;
+    private final int maxFileSize;
 
-    int newFileCount = 0;
-    File newFile;
-    File existingFile = null;
-
-    newFile = new File(folder, String.format("%s_%s.csv", fileName, newFileCount));
-    while (newFile.exists()) {
-      existingFile = newFile;
-      newFileCount++;
-      newFile = new File(folder, String.format("%s_%s.csv", fileName, newFileCount));
-    }
-
-    if (existingFile != null) {
-      if (existingFile.length() >= maxFileSize) {
-        return newFile;
-      } else {
-        return existingFile;
-      }
-    }
-
-    return newFile;
-  }
-
-  private class WriteHandler extends Handler {
-
-    private WriteHandler(Looper looper) {
+    WriteHandler(Looper looper, String folder, int maxFileSize) {
       super(looper);
+      this.folder = folder;
+      this.maxFileSize = maxFileSize;
     }
 
     @SuppressWarnings("checkstyle:emptyblock")
@@ -106,6 +69,34 @@ public class DiskLogStrategy implements LogStrategy {
      */
     private void writeLog(FileWriter fileWriter, String content) throws IOException {
       fileWriter.append(content);
+    }
+
+    private File getLogFile(String folderName, String fileName) {
+
+      File folder = new File(folderName);
+      if (!folder.exists()) {
+        folder.mkdirs();
+      }
+
+      int newFileCount = 0;
+      File newFile;
+      File existingFile = null;
+
+      newFile = new File(folder, String.format("%s_%s.csv", fileName, newFileCount));
+      while (newFile.exists()) {
+        existingFile = newFile;
+        newFileCount++;
+        newFile = new File(folder, String.format("%s_%s.csv", fileName, newFileCount));
+      }
+
+      if (existingFile != null) {
+        if (existingFile.length() >= maxFileSize) {
+          return newFile;
+        }
+        return existingFile;
+      }
+
+      return newFile;
     }
   }
 }

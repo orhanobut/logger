@@ -25,7 +25,7 @@ import static com.orhanobut.logger.Logger.INFO;
 import static com.orhanobut.logger.Logger.VERBOSE;
 import static com.orhanobut.logger.Logger.WARN;
 
-final class LoggerPrinter implements Printer {
+class LoggerPrinter implements Printer {
 
   /**
    * It is used for json pretty print
@@ -133,9 +133,6 @@ final class LoggerPrinter implements Printer {
     }
     if (throwable != null && message == null) {
       message = Utils.getStackTraceString(throwable);
-    }
-    if (message == null) {
-      message = "No message/exception is set";
     }
     if (Utils.isEmpty(message)) {
       message = "Empty/NULL log message";

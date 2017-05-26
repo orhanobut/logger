@@ -139,7 +139,6 @@ public class PrettyFormatStrategy implements FormatStrategy {
     return name.substring(lastIndex + 1);
   }
 
-
   /**
    * Determines the starting index of the stack trace, after method calls made by this class.
    *

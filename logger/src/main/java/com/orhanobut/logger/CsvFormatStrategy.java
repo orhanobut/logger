@@ -1,6 +1,8 @@
 package com.orhanobut.logger;
 
 import android.os.Environment;
+import android.os.Handler;
+import android.os.HandlerThread;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -117,10 +119,12 @@ public class CsvFormatStrategy implements FormatStrategy {
       }
       if (logStrategy == null) {
         String diskPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        logStrategy = new DiskLogStrategy(
-            diskPath + File.separatorChar + "logger",
-            MAX_BYTES
-        );
+        String folder = diskPath + File.separatorChar + "logger";
+
+        HandlerThread ht = new HandlerThread("AndroidFileLogger." + folder);
+        ht.start();
+        Handler handler = new DiskLogStrategy.WriteHandler(ht.getLooper(), folder, MAX_BYTES);
+        logStrategy = new DiskLogStrategy(handler);
       }
       return new CsvFormatStrategy(this);
     }

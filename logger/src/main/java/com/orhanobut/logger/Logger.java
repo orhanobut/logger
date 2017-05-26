@@ -18,6 +18,10 @@ public final class Logger {
     //no instance
   }
 
+  public static void printer(Printer printer) {
+    Logger.printer = printer;
+  }
+
   public static void addAdapter(LogAdapter adapter) {
     printer.addAdapter(adapter);
   }

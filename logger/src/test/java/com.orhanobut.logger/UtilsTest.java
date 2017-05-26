@@ -40,4 +40,14 @@ public class UtilsTest {
   @Test public void getStackTraceStringReturnEmptyStringWithUnknownHostException() {
     assertThat(Utils.getStackTraceString(new UnknownHostException())).isEqualTo("");
   }
+
+  @Test public void logLevels() {
+    assertThat(Utils.logLevel(Logger.DEBUG)).isEqualTo("DEBUG");
+    assertThat(Utils.logLevel(Logger.WARN)).isEqualTo("WARN");
+    assertThat(Utils.logLevel(Logger.INFO)).isEqualTo("INFO");
+    assertThat(Utils.logLevel(Logger.VERBOSE)).isEqualTo("VERBOSE");
+    assertThat(Utils.logLevel(Logger.ASSERT)).isEqualTo("ASSERT");
+    assertThat(Utils.logLevel(Logger.ERROR)).isEqualTo("ERROR");
+    assertThat(Utils.logLevel(100)).isEqualTo("UNKNOWN");
+  }
 }

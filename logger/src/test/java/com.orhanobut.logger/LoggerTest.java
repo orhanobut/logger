@@ -1,396 +1,112 @@
 package com.orhanobut.logger;
 
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.Config;
-import org.robolectric.shadows.ShadowLog;
+import org.mockito.Mock;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
-import static com.orhanobut.logger.Logger.ASSERT;
-import static com.orhanobut.logger.Logger.DEBUG;
-import static com.orhanobut.logger.Logger.ERROR;
-import static com.orhanobut.logger.Logger.INFO;
-import static com.orhanobut.logger.Logger.VERBOSE;
-import static com.orhanobut.logger.Logger.WARN;
-
-@RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21)
 public class LoggerTest {
 
-  private static final String DEFAULT_TAG = "PRETTY_LOGGER";
-
-  private String threadName;
+  @Mock Printer printer;
 
   @Before public void setup() {
-    threadName = Thread.currentThread().getName();
+    initMocks(this);
 
-    Logger.addAdapter(new AndroidLogAdapter(PrettyFormatStrategy.newBuilder().build()));
+    Logger.printer(printer);
   }
 
-  @After public void tearDown() {
-    Logger.clearLogAdapters();
-  }
+  @Test public void log() {
+    Throwable throwable = new Throwable();
+    Logger.log(Logger.VERBOSE, "tag", "message", throwable);
 
-  @Test public void testLog() {
-    Logger.log(DEBUG, null, "message", null);
-    assertLog(DEBUG).hasMessageWithDefaultSettings("message");
-
-    Logger.log(DEBUG, "tag", "message", null);
-    assertLog(DEFAULT_TAG + "-tag", DEBUG).hasMessageWithDefaultSettings("message");
-  }
-
-  @Ignore
-  @Test public void testLogThrowable() {
-    Throwable throwable = new Throwable("throwable");
-    String stackString = "message : " + Utils.getStackTraceString(throwable);
-    String[] stackItems = stackString.split("\\n");
-    Logger.log(DEBUG, null, "message", throwable);
-
-    assertLog(DEBUG).hasMessageWithDefaultSettings(stackItems);
+    verify(printer).log(Logger.VERBOSE, "tag", "message", throwable);
   }
 
   @Test public void debugLog() {
-    Logger.d("message");
+    Logger.d("message %s", "arg");
 
-    assertLog(DEBUG).hasMessageWithDefaultSettings("message");
+    verify(printer).d("message %s", "arg");
   }
 
   @Test public void verboseLog() {
-    Logger.v("message");
+    Logger.v("message %s", "arg");
 
-    assertLog(VERBOSE).hasMessageWithDefaultSettings("message");
+    verify(printer).v("message %s", "arg");
   }
 
   @Test public void warningLog() {
-    Logger.w("message");
+    Logger.w("message %s", "arg");
 
-    assertLog(WARN).hasMessageWithDefaultSettings("message");
+    verify(printer).w("message %s", "arg");
   }
 
   @Test public void errorLog() {
-    Logger.e("message");
+    Logger.e("message %s", "arg");
 
-    assertLog(ERROR).hasMessageWithDefaultSettings("message");
+    verify(printer).e((Throwable) null, "message %s", "arg");
   }
 
-  @Ignore("Through Terminal somehow not working, but on Studio it works, needs investigation")
   @Test public void errorLogWithThrowable() {
     Throwable throwable = new Throwable("throwable");
-    Logger.e(throwable, "message");
+    Logger.e(throwable, "message %s", "arg");
 
-    String stackString = "message : " + Utils.getStackTraceString(throwable);
-    String[] stackItems = stackString.split("\\n");
-
-    assertLog(ERROR).hasMessageWithDefaultSettings(stackItems);
-  }
-
-  @Ignore("Through Terminal somehow not working, but on Studio it works, needs investigation")
-  @Test public void errorLogWithThrowableWithoutMessage() {
-    Throwable throwable = new Throwable("throwable");
-    Logger.e(throwable, null);
-
-    String stackString = Utils.getStackTraceString(throwable);
-    String[] stackItems = stackString.split("\\n");
-
-    assertLog(ERROR).hasMessageWithDefaultSettings(stackItems);
-  }
-
-  @Ignore("Through Terminal somehow not working, but on Studio it works, needs investigation")
-  @Test public void errorLogNoThrowableNoMessage() {
-    Logger.e(null, null);
-
-    assertLog(ERROR).hasMessageWithDefaultSettings("No message/exception is set");
+    verify(printer).e(throwable, "message %s", "arg");
   }
 
   @Test public void infoLog() {
-    Logger.i("message");
+    Logger.i("message %s", "arg");
 
-    assertLog(INFO).hasMessageWithDefaultSettings("message");
+    verify(printer).i("message %s", "arg");
   }
 
   @Test public void wtfLog() {
-    Logger.wtf("message");
+    Logger.wtf("message %s", "arg");
 
-    assertLog(ASSERT).hasMessageWithDefaultSettings("message");
+    verify(printer).wtf("message %s", "arg");
   }
 
-  @Test public void logArray() {
-    double[][] doubles = {
-        {1.2, 1.6, 1.7, 30, 33},
-        {1.2, 1.6, 1.7, 30, 33},
-        {1.2, 1.6, 1.7, 30, 33},
-        {1.2, 1.6, 1.7, 30, 33}
-    };
+  @Test public void logObject() {
+    Object object = new Object();
+    Logger.d(object);
 
-    Logger.d(doubles);
-
-    String message = Arrays.deepToString(doubles);
-    assertLog(DEBUG).hasMessageWithDefaultSettings(message);
+    verify(printer).d(object);
   }
 
-  @Test public void logList() {
-    List<String> list = Arrays.asList("foo", "bar");
-    Logger.d(list);
+  @Test public void jsonLog() {
+    Logger.json("json");
 
-    assertLog(DEBUG).hasMessageWithDefaultSettings(list.toString());
-  }
-
-  @Test public void logMap() {
-    Map<String, String> map = new HashMap<>();
-    map.put("key", "value");
-    map.put("key2", "value2");
-
-    Logger.d(map);
-
-    assertLog(DEBUG).hasMessageWithDefaultSettings(map.toString());
-  }
-
-  @Test public void logSet() {
-    Set<String> set = new HashSet<>();
-    set.add("key");
-    set.add("key1");
-
-    Logger.d(set);
-
-    assertLog(DEBUG).hasMessageWithDefaultSettings(set.toString());
-  }
-
-  @Test public void jsonObjectLog() {
-    String[] messages = new String[]{"{", "  \"key\": 3", "}"};
-
-    Logger.json("  {\"key\":3}");
-
-    assertLog(DEBUG).hasMessageWithDefaultSettings(messages);
-  }
-
-  @Test public void jsonArrayLog() {
-    String[] messages = new String[]{
-        "[",
-        "  {",
-        "    \"key\": 3",
-        "  }",
-        "]"
-    };
-
-    Logger.json("[{\"key\":3}]");
-
-    assertLog(DEBUG).hasMessageWithDefaultSettings(messages);
-  }
-
-  @Test public void testInvalidJsonLog() {
-    Logger.json("no json");
-    assertLog(ERROR).hasMessageWithDefaultSettings("Invalid Json");
-
-    Logger.json("{ missing end");
-    assertLog(ERROR).hasMessageWithDefaultSettings("Invalid Json");
-  }
-
-  @Test public void jsonLogEmptyOrNull() {
-    Logger.json(null);
-    assertLog(DEBUG).hasMessageWithDefaultSettings("Empty/Null json content");
-
-    Logger.json("");
-    assertLog(DEBUG).hasMessageWithDefaultSettings("Empty/Null json content");
+    verify(printer).json("json");
   }
 
   @Test public void xmlLog() {
-    String[] messages = new String[]{
-        "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
-        "<xml>Test</xml>"
-    };
+    Logger.xml("xml");
 
-    Logger.xml("<xml>Test</xml>");
-
-    assertLog(DEBUG).hasMessageWithDefaultSettings(messages);
+    verify(printer).xml("xml");
   }
 
-  @Test public void invalidXmlLog() {
-    Logger.xml("xml>Test</xml>");
+  @Test public void oneTimeTag() {
+    when(printer.t("tag")).thenReturn(printer);
 
-    assertLog(ERROR).hasMessageWithDefaultSettings("Invalid xml");
+    Logger.t("tag").d("message");
+
+    verify(printer).t("tag");
+    verify(printer).d("message");
   }
 
-  @Test public void xmlLogNullOrEmpty() {
-    Logger.xml(null);
-    assertLog(DEBUG).hasMessageWithDefaultSettings("Empty/Null xml content");
+  @Test public void addAdapter() {
+    LogAdapter adapter = mock(LogAdapter.class);
+    Logger.addAdapter(adapter);
 
-    Logger.xml("");
-    assertLog(DEBUG).hasMessageWithDefaultSettings("Empty/Null xml content");
+    verify(printer).addAdapter(adapter);
   }
 
-  @Test public void logWithoutThread() {
+  @Test public void clearLogAdapters() {
     Logger.clearLogAdapters();
-    Logger.addAdapter(new AndroidLogAdapter(
-        PrettyFormatStrategy.newBuilder()
-            .showThreadInfo(false)
-            .build()
-    ));
 
-    Logger.i("message");
-
-    assertLog(INFO)
-        .hasTopBorder()
-        .skip()
-        .skip()
-        .hasMiddleBorder()
-        .hasMessage("message")
-        .hasBottomBorder()
-        .hasNoMoreMessages();
+    verify(printer).clearLogAdapters();
   }
-
-  @Test public void logWithCustomTag() {
-    Logger.clearLogAdapters();
-    Logger.addAdapter(new AndroidLogAdapter(
-        PrettyFormatStrategy.newBuilder()
-            .tag("CustomTag")
-            .build()
-    ));
-
-    Logger.i("message");
-
-    assertLog("CustomTag", INFO)
-        .hasTopBorder()
-        .hasThread(threadName)
-        .hasMiddleBorder()
-        .skip()
-        .skip()
-        .hasMiddleBorder()
-        .hasMessage("message")
-        .hasBottomBorder()
-        .hasNoMoreMessages();
-  }
-
-  @Test public void logWithOneMethodInfo() {
-    Logger.clearLogAdapters();
-    Logger.addAdapter(new AndroidLogAdapter(
-        PrettyFormatStrategy.newBuilder()
-            .methodCount(1)
-            .build()
-    ));
-
-    Logger.i("message");
-
-    assertLog(INFO)
-        .hasTopBorder()
-        .hasThread(threadName)
-        .hasMiddleBorder()
-        .skip()
-        .hasMiddleBorder()
-        .hasMessage("message")
-        .hasBottomBorder()
-        .hasNoMoreMessages();
-  }
-
-  @Test public void logWithNoMethodInfo() {
-    Logger.clearLogAdapters();
-    Logger.addAdapter(new AndroidLogAdapter(
-        PrettyFormatStrategy.newBuilder()
-            .methodCount(0)
-            .build()
-    ));
-
-    Logger.i("message");
-
-    assertLog(INFO)
-        .hasTopBorder()
-        .hasThread(threadName)
-        .hasMiddleBorder()
-        .hasMessage("message")
-        .hasBottomBorder()
-        .hasNoMoreMessages();
-  }
-
-  @Test public void logWithNoMethodInfoAndNoThreadInfo() {
-    Logger.clearLogAdapters();
-    Logger.addAdapter(new AndroidLogAdapter(
-        PrettyFormatStrategy.newBuilder()
-            .showThreadInfo(false)
-            .methodCount(0)
-            .build()
-    ));
-
-    Logger.i("message");
-
-    assertLog(INFO)
-        .hasTopBorder()
-        .hasMessage("message")
-        .hasBottomBorder()
-        .hasNoMoreMessages();
-  }
-
-  @Test public void logWithOnlyOnceCustomTag() {
-    Logger.clearLogAdapters();
-    Logger.addAdapter(new AndroidLogAdapter(
-        PrettyFormatStrategy.newBuilder()
-            .showThreadInfo(false)
-            .methodCount(0)
-            .build()
-    ));
-
-
-    Logger.t("CustomTag").i("message");
-    Logger.i("message");
-
-    assertLog("PRETTY_LOGGER-CustomTag", INFO)
-        .hasTopBorder()
-        .hasMessage("message")
-        .hasBottomBorder()
-        .defaultTag()
-        .hasTopBorder()
-        .hasMessage("message")
-        .hasBottomBorder()
-        .hasNoMoreMessages();
-  }
-
-  @Test public void logNone() {
-    Logger.clearLogAdapters();
-    Logger.addAdapter(new AndroidLogAdapter(
-        PrettyFormatStrategy.newBuilder()
-            .showThreadInfo(false)
-            .build()
-    ) {
-      @Override public boolean isLoggable(int priority, String tag) {
-        return false;
-      }
-    });
-
-    Logger.i("message");
-
-    assertLog(INFO)
-        .hasNoMoreMessages();
-  }
-
-  @Test public void useDefaultSettingsIfInitNotCalled() {
-    Logger.i("message");
-
-    assertLog(INFO)
-        .hasTopBorder()
-        .hasThread(threadName)
-        .hasMiddleBorder()
-        .skip()
-        .skip()
-        .hasMiddleBorder()
-        .hasMessage("message")
-        .hasBottomBorder()
-        .hasNoMoreMessages();
-  }
-
-  private static LogAssert assertLog(int priority) {
-    return assertLog(null, priority);
-  }
-
-  private static LogAssert assertLog(String tag, int priority) {
-    return new LogAssert(ShadowLog.getLogs(), tag, priority);
-  }
-
 }
