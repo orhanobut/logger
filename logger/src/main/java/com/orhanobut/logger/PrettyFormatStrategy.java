@@ -12,7 +12,7 @@ public class PrettyFormatStrategy implements FormatStrategy {
   /**
    * The minimum stack trace index, starts at this class after two native calls.
    */
-  private static final int MIN_STACK_OFFSET = 3;
+  private static final int MIN_STACK_OFFSET = 5;
 
   /**
    * Drawing toolbox
