@@ -22,7 +22,7 @@ public final class Logger {
     Logger.printer = printer;
   }
 
-  public static void addAdapter(LogAdapter adapter) {
+  public static void addLogAdapter(LogAdapter adapter) {
     printer.addAdapter(adapter);
   }
 

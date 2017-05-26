@@ -99,7 +99,7 @@ public class LoggerTest {
 
   @Test public void addAdapter() {
     LogAdapter adapter = mock(LogAdapter.class);
-    Logger.addAdapter(adapter);
+    Logger.addLogAdapter(adapter);
 
     verify(printer).addAdapter(adapter);
   }
