@@ -17,7 +17,7 @@ Logger provides :
 
 ### Download
 ```groovy
-compile 'com.orhanobut:logger:1.15'
+compile 'com.orhanobut:logger:2.0'
 ```
 
 ### Current Log system
@@ -174,7 +174,7 @@ Logger.e(exception,"message");
 ### Timber Integration
 You can also use logger along with Timber. 
 ```java
-Logger.init().methodOffset(5);   //skip trace caused by Timber.
+Logger.init().methodOffset(7);   //skip trace caused by Timber.
 Timber.plant(new Timber.DebugTree() {
   @Override protected void log(int priority, String tag, String message, Throwable t) {
     Logger.log(priority, tag, message, t);
