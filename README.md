@@ -1,7 +1,7 @@
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Logger-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/1658) [![](https://img.shields.io/badge/AndroidWeekly-%23147-blue.svg)](http://androidweekly.net/issues/issue-147)
 [![Join the chat at https://gitter.im/orhanobut/logger](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/orhanobut/logger?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) <a href="http://www.methodscount.com/?lib=com.orhanobut%3Alogger%3A1.15"><img src="https://img.shields.io/badge/Methods and size-165 | 12 KB-e91e63.svg"/></a> [![Build Status](https://travis-ci.org/orhanobut/logger.svg?branch=master)](https://travis-ci.org/orhanobut/logger)
 
-<img align="right" src='https://github.com/orhanobut/logger/blob/master/images/logger-logo.png' width='128' height='128'/>
+<img align="right" src='https://github.com/orhanobut/logger/blob/master/art/logger-logo.png' width='128' height='128'/>
 
 ### Logger
 Simple, pretty and powerful logger for android
@@ -22,7 +22,7 @@ Logger.d("hello");
 ```
 
 ### Output
-<img src='https://github.com/orhanobut/logger/blob/master/images/logger_output.png'/>
+<img src='https://github.com/orhanobut/logger/blob/master/art/logger_output.png'/>
 
 
 ### Options
@@ -85,17 +85,17 @@ Logger.addLogAdapter(new DiskLogAdapter());
 ```
 
 ### How it works
-<img src='https://github.com/orhanobut/logger/blob/master/images/how_it_works.png'/>
+<img src='https://github.com/orhanobut/logger/blob/master/art/how_it_works.png'/>
 
 
 ### More
 - Use the filter for a better result
 
-<img src='https://github.com/orhanobut/logger/blob/master/images/filter.png'/>
+<img src='https://github.com/orhanobut/logger/blob/master/art/filter.png'/>
 
 - Make sure that wrap option is disabled
 
-<img src='https://github.com/orhanobut/logger/blob/master/images/wrap-closed.png'/>
+<img src='https://github.com/orhanobut/logger/blob/master/art/wrap-closed.png'/>
 
 - Timber Integration
 ```java
