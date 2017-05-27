@@ -116,6 +116,10 @@ Timber.plant(new Timber.DebugTree() {
 });
 ```
 
+### Breaking changes
+- Initialization is changed. No backward compatibility support. Use `Logger.addLogAdapter`
+- LogLevel is removed. Use the new `isLoggable` approach
+
 ### License
 <pre>
 Copyright 2017 Orhan Obut
