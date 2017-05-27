@@ -12,6 +12,10 @@ android {
     textReport true
     textOutput 'stdout'
   }
+
+  testOptions {
+    unitTests.returnDefaultValues = true
+  }
 }
 
 dependencies {
@@ -19,6 +23,7 @@ dependencies {
   testCompile deps.truth
   testCompile deps.robolectric
   testCompile deps.mockito
+  testCompile deps.json
 }
 
 apply from: rootProject.file('gradle/maven_push.gradle')

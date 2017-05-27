@@ -2,11 +2,9 @@ package com.orhanobut.logger;
 
 public interface Printer {
 
-  Printer t(String tag, int methodCount);
+  void addAdapter(LogAdapter adapter);
 
-  Settings init(String tag);
-
-  Settings getSettings();
+  Printer t(String tag);
 
   void d(String message, Object... args);
 
@@ -24,12 +22,17 @@ public interface Printer {
 
   void wtf(String message, Object... args);
 
+  /**
+   * Formats the given json content and print it
+   */
   void json(String json);
 
+  /**
+   * Formats the given xml content and print it
+   */
   void xml(String xml);
 
   void log(int priority, String tag, String message, Throwable throwable);
 
-  void resetSettings();
-
+  void clearLogAdapters();
 }

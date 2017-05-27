@@ -23,10 +23,10 @@ subprojects { project ->
 
   buildscript {
     repositories {
-      mavenCentral()
+      jcenter()
     }
     dependencies {
-      classpath 'com.android.tools.build:gradle:2.1.2'
+      classpath 'com.android.tools.build:gradle:2.3.2'
     }
   }
 
@@ -39,7 +39,7 @@ ext {
   minSdkVersion = 8
   targetSdkVersion = 23
   compileSdkVersion = 23
-  buildToolsVersion = '24.0.0'
+  buildToolsVersion = '25.0.2'
   sourceCompatibilityVersion = JavaVersion.VERSION_1_7
   targetCompatibilityVersion = JavaVersion.VERSION_1_7
 }
@@ -48,6 +48,7 @@ ext.deps = [
     // Test dependencies
     junit      : 'junit:junit:4.12',
     truth      : 'com.google.truth:truth:0.28',
-    robolectric: 'org.robolectric:robolectric:3.1',
-    mockito    : "org.mockito:mockito-core:1.10.19"
+    robolectric: 'org.robolectric:robolectric:3.3',
+    mockito    : "org.mockito:mockito-core:1.10.19",
+    json       : "org.json:json:20160810"
 ]

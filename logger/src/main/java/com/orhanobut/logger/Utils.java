@@ -1,34 +1,22 @@
-/*
- * Copyright 2015 Orhan Obut
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * This software contains code derived from the following Android classes:
- * android.util.Log, android.text.TextUtils.
- */
 package com.orhanobut.logger;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.UnknownHostException;
 
-/**
- * Helper util class to be used instead of Android methods to avoid direct dependency and enable
- * unit testing on Android projects.
- */
-final class Helper {
+import static com.orhanobut.logger.Logger.ASSERT;
+import static com.orhanobut.logger.Logger.DEBUG;
+import static com.orhanobut.logger.Logger.ERROR;
+import static com.orhanobut.logger.Logger.INFO;
+import static com.orhanobut.logger.Logger.VERBOSE;
+import static com.orhanobut.logger.Logger.WARN;
 
-  private Helper() {
+/**
+ * Provides convenient methods to some common operations
+ */
+final class Utils {
+
+  private Utils() {
     // Hidden constructor.
   }
 
@@ -36,7 +24,6 @@ final class Helper {
    * Returns true if the string is null or 0-length.
    *
    * @param str the string to be examined
-   *
    * @return true if str is null or zero length
    */
   static boolean isEmpty(CharSequence str) {
@@ -50,9 +37,8 @@ final class Helper {
    *
    * @param a first CharSequence to check
    * @param b second CharSequence to check
-   *
    * @return true if a and b are equal
-   *
+   * <p>
    * NOTE: Logic slightly change due to strict policy on CI -
    * "Inner assignments should be avoided"
    */
@@ -102,8 +88,22 @@ final class Helper {
     return sw.toString();
   }
 
-  static boolean shouldLog(int logLevel, int priority) {
-    return priority >= logLevel;
+  static String logLevel(int value) {
+    switch (value) {
+      case VERBOSE:
+        return "VERBOSE";
+      case DEBUG:
+        return "DEBUG";
+      case INFO:
+        return "INFO";
+      case WARN:
+        return "WARN";
+      case ERROR:
+        return "ERROR";
+      case ASSERT:
+        return "ASSERT";
+      default:
+        return "UNKNOWN";
+    }
   }
-
 }
