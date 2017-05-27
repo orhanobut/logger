@@ -98,13 +98,11 @@ Logger.addLogAdapter(new DiskLogAdapter(formatStrategy));
 
 
 ### More
-- Use the filter for a better result
-
-<img src='https://github.com/orhanobut/logger/blob/master/art/filter.png'/>
-
+- Use the filter for a better result. PRETTY_LOGGER or your custom tag
 - Make sure that wrap option is disabled
+- You can also simplify output by changing settings.
 
-<img src='https://github.com/orhanobut/logger/blob/master/art/wrap-closed.png'/>
+<img src='https://github.com/orhanobut/logger/blob/master/art/logcat_options.png'/>
 
 - Timber Integration
 ```java
