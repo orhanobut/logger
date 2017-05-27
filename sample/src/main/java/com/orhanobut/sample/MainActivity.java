@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
 
     Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy));
 
-    Logger.addLogAdapter(new AndroidLogAdapter(){
+    Logger.addLogAdapter(new AndroidLogAdapter() {
       @Override public boolean isLoggable(int priority, String tag) {
         return BuildConfig.DEBUG;
       }
