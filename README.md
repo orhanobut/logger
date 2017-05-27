@@ -84,6 +84,15 @@ Logger.addLogAdapter(new AndroidLogAdapter(){
 Logger.addLogAdapter(new DiskLogAdapter());
 ```
 
+Add custom tag to Csv format strategy
+```java
+FormatStrategy formatStrategy = CsvFormatStrategy.newBuilder()
+  .tag("custom")
+  .build();
+  
+Logger.addLogAdapter(new DiskLogAdapter(formatStrategy));
+```
+
 ### How it works
 <img src='https://github.com/orhanobut/logger/blob/master/art/how_it_works.png'/>
 

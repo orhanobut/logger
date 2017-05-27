@@ -170,10 +170,10 @@ public class PrettyFormatStrategyTest {
   }
 
   private static class MockLogStrategy implements LogStrategy {
-    List<LogItem> logItems = new ArrayList<>();
+    List<LogAssert.LogItem> logItems = new ArrayList<>();
 
     @Override public void log(int priority, String tag, String message) {
-      logItems.add(new LogItem(priority, tag, message));
+      logItems.add(new LogAssert.LogItem(priority, tag, message));
     }
   }
 

@@ -138,14 +138,6 @@ public class LoggerPrinterTest {
   }
 
   @Test public void logJsonArray() {
-    String[] messages = new String[]{
-        "[",
-        "  {",
-        "    \"key\": 3",
-        "  }",
-        "]"
-    };
-
     printer.json("[{\"key\":3}]");
 
     verify(adapter).log(DEBUG, null, "[{\"key\": 3}]");

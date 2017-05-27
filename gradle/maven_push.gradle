@@ -28,7 +28,7 @@ afterEvaluate { project ->
         repository(url: sonatypeRepositoryUrl) {
           try {
             authentication(userName: mavenUser, password: mavenPassword)
-          } catch (Exception e) {
+          } catch (Exception ignored) {
             println "mavenUser or mavenPassword is missing"
           }
         }

@@ -9,7 +9,6 @@ build/
 # Gradle files
 .gradle/
 
-credential.properties
 /captures
 
 # Log Files

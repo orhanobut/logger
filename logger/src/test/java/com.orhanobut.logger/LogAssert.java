@@ -71,4 +71,16 @@ final class LogAssert {
     assertThat(items).hasSize(index);
     items.clear();
   }
+
+  static class LogItem {
+    final int priority;
+    final String tag;
+    final String message;
+
+    LogItem(int priority, String tag, String message) {
+      this.priority = priority;
+      this.tag = tag;
+      this.message = message;
+    }
+  }
 }
