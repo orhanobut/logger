@@ -108,7 +108,7 @@ Logger.addLogAdapter(new DiskLogAdapter(formatStrategy));
 
 - Timber Integration
 ```java
-// Set methodOffset to 7 in order to hide internal method calls
+// Set methodOffset to 5 in order to hide internal method calls
 Timber.plant(new Timber.DebugTree() {
   @Override protected void log(int priority, String tag, String message, Throwable t) {
     Logger.log(priority, tag, message, t);
