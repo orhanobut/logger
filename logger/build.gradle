@@ -23,7 +23,7 @@ dependencies {
   testCompile deps.truth
   testCompile deps.robolectric
   testCompile deps.mockito
-  testCompile 'org.json:json:20160810'
+  testCompile deps.json
 }
 
 apply from: rootProject.file('gradle/maven_push.gradle')
