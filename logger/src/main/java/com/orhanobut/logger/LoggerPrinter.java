@@ -7,7 +7,6 @@ import org.json.JSONObject;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.transform.OutputKeys;
@@ -51,13 +50,7 @@ class LoggerPrinter implements Printer {
   }
 
   @Override public void d(Object object) {
-    String message;
-    if (object.getClass().isArray()) {
-      message = Arrays.deepToString((Object[]) object);
-    } else {
-      message = object.toString();
-    }
-    log(DEBUG, null, message);
+    log(DEBUG, null, Utils.toString(object));
   }
 
   @Override public void e(String message, Object... args) {

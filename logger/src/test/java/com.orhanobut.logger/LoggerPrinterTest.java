@@ -91,17 +91,39 @@ public class LoggerPrinterTest {
     verify(adapter).log(DEBUG, "tag", "message");
   }
 
+  @Test public void logObject() {
+    Object object = "Test";
+
+    printer.d(object);
+
+    verify(adapter).log(DEBUG, null, "Test");
+  }
+
   @Test public void logArray() {
+    Object object = new int[]{1, 6, 7, 30, 33};
+
+    printer.d(object);
+
+    verify(adapter).log(DEBUG, null, "[1, 6, 7, 30, 33]");
+  }
+
+  @Test public void logStringArray() {
+    Object object = new String[]{"a", "b", "c"};
+
+    printer.d(object);
+
+    verify(adapter).log(DEBUG, null, "[a, b, c]");
+  }
+
+  @Test public void logMultiDimensionArray() {
     double[][] doubles = {
-        {1.2, 1.6, 1.7, 30, 33},
-        {1.2, 1.6, 1.7, 30, 33},
-        {1.2, 1.6, 1.7, 30, 33},
-        {1.2, 1.6, 1.7, 30, 33}
+        {1, 6},
+        {1.2, 33},
     };
 
     printer.d(doubles);
 
-    verify(adapter).log(DEBUG, null, Arrays.deepToString(doubles));
+    verify(adapter).log(DEBUG, null, "[[1.0, 6.0], [1.2, 33.0]]");
   }
 
   @Test public void logList() {
