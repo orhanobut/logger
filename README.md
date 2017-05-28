@@ -31,7 +31,7 @@ Logger.d("debug");
 Logger.e("error");
 Logger.w("warning");
 Logger.v("verbose");
-Logger.i("informatio");
+Logger.i("information");
 Logger.wtf("wtf!!!!");
 ```
 
@@ -71,7 +71,7 @@ Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy));
 Log adapters checks whether the log should be printed out or not by checking this function.
 If you want to disable/hide logs for output, override `isLoggable` method and put the condition.
 ```java
-Logger.addLogAdapter(new AndroidLogAdapter(){
+Logger.addLogAdapter(new AndroidLogAdapter() {
   @Override public boolean isLoggable(int priority, String tag) {
     return BuildConfig.DEBUG;
   }
