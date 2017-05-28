@@ -1,5 +1,5 @@
 [![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Logger-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/1658) [![](https://img.shields.io/badge/AndroidWeekly-%23147-blue.svg)](http://androidweekly.net/issues/issue-147)
-[![Join the chat at https://gitter.im/orhanobut/logger](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/orhanobut/logger?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) <a href="http://www.methodscount.com/?lib=com.orhanobut%3Alogger%3A1.15"><img src="https://img.shields.io/badge/Methods and size-165 | 12 KB-e91e63.svg"/></a> [![Build Status](https://travis-ci.org/orhanobut/logger.svg?branch=master)](https://travis-ci.org/orhanobut/logger)
+[![Join the chat at https://gitter.im/orhanobut/logger](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/orhanobut/logger?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) <a href="http://www.methodscount.com/?lib=com.orhanobut%3Alogger%3A2.0.0"><img src="https://img.shields.io/badge/Methods and size-198 | 18 KB-e91e63.svg"/></a> [![Build Status](https://travis-ci.org/orhanobut/logger.svg?branch=master)](https://travis-ci.org/orhanobut/logger)
 
 <img align="right" src='https://github.com/orhanobut/logger/blob/master/art/logger-logo.png' width='128' height='128'/>
 
@@ -9,7 +9,7 @@ Simple, pretty and powerful logger for android
 ### Setup
 Download
 ```groovy
-compile 'com.orhanobut:logger:2.0.0'
+compile 'com.orhanobut:logger:2.1.0'
 ```
 
 Initialize
@@ -61,7 +61,7 @@ FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder()
   .methodCount(0)         // (Optional) How many method line to show. Default 2
   .methodOffset(7)        // (Optional) Hides internal method calls up to offset. Default 5
   .logStrategy(customLog) // (Optional) Changes the log strategy to print out. Default LogCat
-  .tag("My custom tag")   // (Optional) Custom tag for each log. Default PRETTY_LOGGER
+  .tag("My custom tag")   // (Optional) Global tag for every log. Default PRETTY_LOGGER
   .build();
 
 Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy));
