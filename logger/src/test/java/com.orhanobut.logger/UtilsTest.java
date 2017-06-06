@@ -57,6 +57,10 @@ public class UtilsTest {
     assertThat(Utils.toString(object)).isEqualTo("Test");
   }
 
+  @Test public void toStringWithNull() {
+    assertThat(Utils.toString(null)).isEqualTo("null");
+  }
+
   @Test public void primitiveArrayToString() {
     Object booleanArray = new boolean[]{true, false, true};
     assertThat(Utils.toString(booleanArray)).isEqualTo("[true, false, true]");

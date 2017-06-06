@@ -109,6 +109,9 @@ final class Utils {
   }
 
   public static String toString(Object object) {
+    if (object == null) {
+      return "null";
+    }
     if (!object.getClass().isArray()) {
       return object.toString();
     }
