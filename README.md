@@ -9,7 +9,7 @@ Simple, pretty and powerful logger for android
 ### Setup
 Download
 ```groovy
-compile 'com.orhanobut:logger:2.1.0'
+compile 'com.orhanobut:logger:2.1.1'
 ```
 
 Initialize
