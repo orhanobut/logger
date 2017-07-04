@@ -80,6 +80,26 @@ Logger.addLogAdapter(new AndroidLogAdapter() {
 
 ### Save logs to the file
 //TODO: More information will be added later
+
+Add permission in your `AndroidManifest.xml`:
+
+```xml
+<uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:required="true" />
+<uses-permission
+    android:name="android.permission.READ_EXTERNAL_STORAGE"
+    android:required="true" />
+<uses-permission
+    android:name="android.permission.WRITE_INTERNAL_STORAGE"
+    android:required="true" />
+<uses-permission
+    android:name="android.permission.READ_INTERNAL_STORAGE"
+    android:required="true" />
+```
+
+Add `DiskLogAdapter` to your `Logger`. By default logs will be store in `.csv` in `Logger` folder.
+
 ```java
 Logger.addLogAdapter(new DiskLogAdapter());
 ```
