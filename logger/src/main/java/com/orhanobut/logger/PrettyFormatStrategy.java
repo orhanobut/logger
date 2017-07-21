@@ -159,7 +159,7 @@ public class PrettyFormatStrategy implements FormatStrategy {
 
   private String formatTag(String tag) {
     if (!Utils.isEmpty(tag) && !Utils.equals(this.tag, tag)) {
-      return this.tag + "-" + tag;
+      return this.tag + tag;
     }
     return this.tag;
   }
