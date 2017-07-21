@@ -10,4 +10,4 @@ android:
     - android-24
 
 script:
-- ./gradlew check
+- ./gradlew assemble
