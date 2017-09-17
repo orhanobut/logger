@@ -94,6 +94,19 @@ FormatStrategy formatStrategy = CsvFormatStrategy.newBuilder()
 Logger.addLogAdapter(new DiskLogAdapter(formatStrategy));
 ```
 
+Set custom logging destination
+```java
+LogStrategy logStrategy = DiskLogStrategy.newBuilder()
+  .directory("/sdcard/my/awesome/destination")
+  .build();
+
+FormatStrategy formatStrategy = CsvFormatStrategy.newBuilder()
+  .logStrategy(logStrategy)
+  .build();
+  
+Logger.addLogAdapter(new DiskLogAdapter(formatStrategy));
+```
+
 ### How it works
 <img src='https://github.com/orhanobut/logger/blob/master/art/how_it_works.png'/>
 

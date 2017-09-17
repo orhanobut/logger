@@ -1,12 +1,8 @@
 package com.orhanobut.logger;
 
-import android.os.Environment;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -88,8 +84,6 @@ public class CsvFormatStrategy implements FormatStrategy {
   }
 
   public static final class Builder {
-    private static final int MAX_BYTES = 500 * 1024; // 500K averages to a 4000 lines per file
-
     Date date;
     SimpleDateFormat dateFormat;
     LogStrategy logStrategy;
@@ -126,13 +120,7 @@ public class CsvFormatStrategy implements FormatStrategy {
         dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS", Locale.UK);
       }
       if (logStrategy == null) {
-        String diskPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        String folder = diskPath + File.separatorChar + "logger";
-
-        HandlerThread ht = new HandlerThread("AndroidFileLogger." + folder);
-        ht.start();
-        Handler handler = new DiskLogStrategy.WriteHandler(ht.getLooper(), folder, MAX_BYTES);
-        logStrategy = new DiskLogStrategy(handler);
+        logStrategy = DiskLogStrategy.newBuilder().build();
       }
       return new CsvFormatStrategy(this);
     }
