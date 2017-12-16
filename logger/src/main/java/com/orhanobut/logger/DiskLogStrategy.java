@@ -124,7 +124,7 @@ public class DiskLogStrategy implements LogStrategy {
       return this;
     }
 
-    public DiskLogStrategy build(){
+    public DiskLogStrategy build() {
       String folder = diskPath + File.separatorChar + folderName;
       HandlerThread ht = new HandlerThread("AndroidFileLogger." + folder);
       ht.start();
