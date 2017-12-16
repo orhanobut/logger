@@ -1,10 +1,5 @@
 package com.orhanobut.logger;
 
-import android.os.Environment;
-import android.os.Handler;
-import android.os.HandlerThread;
-
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -80,14 +75,15 @@ public class CsvFormatStrategy implements FormatStrategy {
   }
 
   public static final class Builder {
-    private static final int MAX_BYTES = 500 * 1024; // 500K averages to a 4000 lines per file
-
     Date date;
     SimpleDateFormat dateFormat;
     LogStrategy logStrategy;
     String tag = "PRETTY_LOGGER";
 
     private Builder() {
+      date = new Date();
+      dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS", Locale.UK);
+      logStrategy = new DiskLogStrategy.Builder().build();
     }
 
     public Builder date(Date val) {
@@ -111,21 +107,6 @@ public class CsvFormatStrategy implements FormatStrategy {
     }
 
     public CsvFormatStrategy build() {
-      if (date == null) {
-        date = new Date();
-      }
-      if (dateFormat == null) {
-        dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS", Locale.UK);
-      }
-      if (logStrategy == null) {
-        String diskPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        String folder = diskPath + File.separatorChar + "logger";
-
-        HandlerThread ht = new HandlerThread("AndroidFileLogger." + folder);
-        ht.start();
-        Handler handler = new DiskLogStrategy.WriteHandler(ht.getLooper(), folder, MAX_BYTES);
-        logStrategy = new DiskLogStrategy(handler);
-      }
       return new CsvFormatStrategy(this);
     }
   }
