@@ -1,6 +1,8 @@
 package com.orhanobut.logger;
 
+import android.os.Environment;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 
@@ -99,5 +101,36 @@ public class DiskLogStrategy implements LogStrategy {
 
       return newFile;
     }
+  }
+
+  public static final class DiskLogStrategyBuilder {
+    private static final int MAX_BYTES = 500 * 1024; // 500K averages to a 4000 lines per file
+
+    String diskPath;
+    String folderName;
+
+    public DiskLogStrategyBuilder(){
+      diskPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+      folderName = "logger";
+    }
+
+    public DiskLogStrategyBuilder setDiskPath(String diskPath){
+      this.diskPath = diskPath;
+      return this;
+    }
+
+    public DiskLogStrategyBuilder setFolderName(String folderName){
+      this.folderName = folderName;
+      return this;
+    }
+
+    public DiskLogStrategy Build(){
+      String folder = diskPath + File.separatorChar + folderName;
+      HandlerThread ht = new HandlerThread("AndroidFileLogger."+folder);
+      ht.start();
+      Handler handler = new DiskLogStrategy.WriteHandler(ht.getLooper(), folder, MAX_BYTES);
+      return new DiskLogStrategy(handler);
+    }
+
   }
 }
