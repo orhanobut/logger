@@ -103,23 +103,23 @@ public class DiskLogStrategy implements LogStrategy {
     }
   }
 
-  public static final class DiskLogStrategyBuilder {
+  public static final class Builder {
     private static final int MAX_BYTES = 500 * 1024; // 500K averages to a 4000 lines per file
 
     String diskPath;
     String folderName;
 
-    public DiskLogStrategyBuilder(){
+    public Builder(){
       diskPath = Environment.getExternalStorageDirectory().getAbsolutePath();
       folderName = "logger";
     }
 
-    public DiskLogStrategyBuilder setDiskPath(String diskPath){
+    public Builder setDiskPath(String diskPath){
       this.diskPath = diskPath;
       return this;
     }
 
-    public DiskLogStrategyBuilder setFolderName(String folderName){
+    public Builder setFolderName(String folderName){
       this.folderName = folderName;
       return this;
     }
@@ -131,6 +131,5 @@ public class DiskLogStrategy implements LogStrategy {
       Handler handler = new DiskLogStrategy.WriteHandler(ht.getLooper(), folder, MAX_BYTES);
       return new DiskLogStrategy(handler);
     }
-
   }
 }

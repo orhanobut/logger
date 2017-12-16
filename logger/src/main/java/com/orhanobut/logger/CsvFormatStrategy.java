@@ -88,7 +88,7 @@ public class CsvFormatStrategy implements FormatStrategy {
     private Builder() {
       date = new Date();
       dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS", Locale.UK);
-      logStrategy = new DiskLogStrategy.DiskLogStrategyBuilder().Build();
+      logStrategy = new DiskLogStrategy.Builder().Build();
     }
 
     public Builder date(Date val) {
