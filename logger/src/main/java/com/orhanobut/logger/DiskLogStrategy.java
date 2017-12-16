@@ -109,24 +109,24 @@ public class DiskLogStrategy implements LogStrategy {
     String diskPath;
     String folderName;
 
-    public Builder(){
+    public Builder() {
       diskPath = Environment.getExternalStorageDirectory().getAbsolutePath();
       folderName = "logger";
     }
 
-    public Builder setDiskPath(String diskPath){
+    public Builder setDiskPath(String diskPath) {
       this.diskPath = diskPath;
       return this;
     }
 
-    public Builder setFolderName(String folderName){
+    public Builder setFolderName(String folderName) {
       this.folderName = folderName;
       return this;
     }
 
-    public DiskLogStrategy Build(){
+    public DiskLogStrategy build(){
       String folder = diskPath + File.separatorChar + folderName;
-      HandlerThread ht = new HandlerThread("AndroidFileLogger."+folder);
+      HandlerThread ht = new HandlerThread("AndroidFileLogger." + folder);
       ht.start();
       Handler handler = new DiskLogStrategy.WriteHandler(ht.getLooper(), folder, MAX_BYTES);
       return new DiskLogStrategy(handler);

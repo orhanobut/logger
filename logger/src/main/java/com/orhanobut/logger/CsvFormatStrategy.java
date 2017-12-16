@@ -1,10 +1,5 @@
 package com.orhanobut.logger;
 
-import android.os.Environment;
-import android.os.Handler;
-import android.os.HandlerThread;
-
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -88,7 +83,7 @@ public class CsvFormatStrategy implements FormatStrategy {
     private Builder() {
       date = new Date();
       dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS", Locale.UK);
-      logStrategy = new DiskLogStrategy.Builder().Build();
+      logStrategy = new DiskLogStrategy.Builder().build();
     }
 
     public Builder date(Date val) {
