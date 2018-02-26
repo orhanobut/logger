@@ -3,10 +3,14 @@ package com.orhanobut.logger;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+
+import static com.orhanobut.logger.Utils.checkNotNull;
 
 /**
  * Abstract class that takes care of background threading the file log operation on Android.
@@ -14,30 +18,32 @@ import java.io.IOException;
  */
 public class DiskLogStrategy implements LogStrategy {
 
-  private final Handler handler;
+  @NonNull private final Handler handler;
 
-  public DiskLogStrategy(Handler handler) {
-    this.handler = handler;
+  public DiskLogStrategy(@NonNull Handler handler) {
+    this.handler = checkNotNull(handler);
   }
 
-  @Override public void log(int level, String tag, String message) {
+  @Override public void log(int level, @Nullable String tag, @NonNull String message) {
+    checkNotNull(message);
+
     // do nothing on the calling thread, simply pass the tag/msg to the background thread
     handler.sendMessage(handler.obtainMessage(level, message));
   }
 
   static class WriteHandler extends Handler {
 
-    private final String folder;
+    @NonNull private final String folder;
     private final int maxFileSize;
 
-    WriteHandler(Looper looper, String folder, int maxFileSize) {
-      super(looper);
-      this.folder = folder;
+    WriteHandler(@NonNull Looper looper, @NonNull String folder, int maxFileSize) {
+      super(checkNotNull(looper));
+      this.folder = checkNotNull(folder);
       this.maxFileSize = maxFileSize;
     }
 
     @SuppressWarnings("checkstyle:emptyblock")
-    @Override public void handleMessage(Message msg) {
+    @Override public void handleMessage(@NonNull Message msg) {
       String content = (String) msg.obj;
 
       FileWriter fileWriter = null;
@@ -67,11 +73,16 @@ public class DiskLogStrategy implements LogStrategy {
      *
      * @param fileWriter an instance of FileWriter already initialised to the correct file
      */
-    private void writeLog(FileWriter fileWriter, String content) throws IOException {
+    private void writeLog(@NonNull FileWriter fileWriter, @NonNull String content) throws IOException {
+      checkNotNull(fileWriter);
+      checkNotNull(content);
+
       fileWriter.append(content);
     }
 
-    private File getLogFile(String folderName, String fileName) {
+    private File getLogFile(@NonNull String folderName, @NonNull String fileName) {
+      checkNotNull(folderName);
+      checkNotNull(fileName);
 
       File folder = new File(folderName);
       if (!folder.exists()) {

@@ -1,5 +1,8 @@
 package com.orhanobut.logger;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.UnknownHostException;
@@ -143,5 +146,13 @@ final class Utils {
       return Arrays.deepToString((Object[]) object);
     }
     return "Couldn't find a correct type for the object";
+  }
+
+  @NonNull
+  static <T> T checkNotNull(@Nullable final T obj) {
+    if (obj == null) {
+      throw new NullPointerException();
+    }
+    return obj;
   }
 }

@@ -1,5 +1,10 @@
 package com.orhanobut.logger;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
+import static com.orhanobut.logger.Utils.checkNotNull;
+
 public class PrettyFormatStrategy implements FormatStrategy {
 
   /**
@@ -30,10 +35,12 @@ public class PrettyFormatStrategy implements FormatStrategy {
   private final int methodCount;
   private final int methodOffset;
   private final boolean showThreadInfo;
-  private final LogStrategy logStrategy;
-  private final String tag;
+  @NonNull private final LogStrategy logStrategy;
+  @Nullable private final String tag;
 
-  private PrettyFormatStrategy(Builder builder) {
+  private PrettyFormatStrategy(@NonNull Builder builder) {
+    checkNotNull(builder);
+
     methodCount = builder.methodCount;
     methodOffset = builder.methodOffset;
     showThreadInfo = builder.showThreadInfo;
@@ -41,11 +48,14 @@ public class PrettyFormatStrategy implements FormatStrategy {
     tag = builder.tag;
   }
 
+  @NonNull
   public static Builder newBuilder() {
     return new Builder();
   }
 
-  @Override public void log(int priority, String onceOnlyTag, String message) {
+  @Override public void log(int priority, @Nullable String onceOnlyTag, @NonNull String message) {
+    checkNotNull(message);
+
     String tag = formatTag(onceOnlyTag);
 
     logTopBorder(priority, tag);
@@ -73,12 +83,12 @@ public class PrettyFormatStrategy implements FormatStrategy {
     logBottomBorder(priority, tag);
   }
 
-  private void logTopBorder(int logType, String tag) {
+  private void logTopBorder(int logType, @Nullable String tag) {
     logChunk(logType, tag, TOP_BORDER);
   }
 
   @SuppressWarnings("StringBufferReplaceableByString")
-  private void logHeaderContent(int logType, String tag, int methodCount) {
+  private void logHeaderContent(int logType, @Nullable String tag, int methodCount) {
     StackTraceElement[] trace = Thread.currentThread().getStackTrace();
     if (showThreadInfo) {
       logChunk(logType, tag, HORIZONTAL_LINE + " Thread: " + Thread.currentThread().getName());
@@ -116,26 +126,32 @@ public class PrettyFormatStrategy implements FormatStrategy {
     }
   }
 
-  private void logBottomBorder(int logType, String tag) {
+  private void logBottomBorder(int logType, @Nullable String tag) {
     logChunk(logType, tag, BOTTOM_BORDER);
   }
 
-  private void logDivider(int logType, String tag) {
+  private void logDivider(int logType, @Nullable String tag) {
     logChunk(logType, tag, MIDDLE_BORDER);
   }
 
-  private void logContent(int logType, String tag, String chunk) {
+  private void logContent(int logType, @Nullable String tag, @NonNull String chunk) {
+    checkNotNull(chunk);
+
     String[] lines = chunk.split(System.getProperty("line.separator"));
     for (String line : lines) {
       logChunk(logType, tag, HORIZONTAL_LINE + " " + line);
     }
   }
 
-  private void logChunk(int priority, String tag, String chunk) {
+  private void logChunk(int priority, @Nullable String tag, @NonNull String chunk) {
+    checkNotNull(chunk);
+
     logStrategy.log(priority, tag, chunk);
   }
 
-  private String getSimpleClassName(String name) {
+  private String getSimpleClassName(@NonNull String name) {
+    checkNotNull(name);
+
     int lastIndex = name.lastIndexOf(".");
     return name.substring(lastIndex + 1);
   }
@@ -146,7 +162,9 @@ public class PrettyFormatStrategy implements FormatStrategy {
    * @param trace the stack trace
    * @return the stack offset
    */
-  private int getStackOffset(StackTraceElement[] trace) {
+  private int getStackOffset(@NonNull StackTraceElement[] trace) {
+    checkNotNull(trace);
+
     for (int i = MIN_STACK_OFFSET; i < trace.length; i++) {
       StackTraceElement e = trace[i];
       String name = e.getClassName();
@@ -157,7 +175,8 @@ public class PrettyFormatStrategy implements FormatStrategy {
     return -1;
   }
 
-  private String formatTag(String tag) {
+  @Nullable
+  private String formatTag(@Nullable String tag) {
     if (!Utils.isEmpty(tag) && !Utils.equals(this.tag, tag)) {
       return this.tag + "-" + tag;
     }
@@ -169,36 +188,42 @@ public class PrettyFormatStrategy implements FormatStrategy {
     int methodOffset = 0;
     boolean showThreadInfo = true;
     LogStrategy logStrategy;
-    String tag = "PRETTY_LOGGER";
+    @Nullable String tag = "PRETTY_LOGGER";
 
     private Builder() {
     }
 
+    @NonNull
     public Builder methodCount(int val) {
       methodCount = val;
       return this;
     }
 
+    @NonNull
     public Builder methodOffset(int val) {
       methodOffset = val;
       return this;
     }
 
+    @NonNull
     public Builder showThreadInfo(boolean val) {
       showThreadInfo = val;
       return this;
     }
 
-    public Builder logStrategy(LogStrategy val) {
+    @NonNull
+    public Builder logStrategy(@Nullable LogStrategy val) {
       logStrategy = val;
       return this;
     }
 
-    public Builder tag(String tag) {
+    @NonNull
+    public Builder tag(@Nullable String tag) {
       this.tag = tag;
       return this;
     }
 
+    @NonNull
     public PrettyFormatStrategy build() {
       if (logStrategy == null) {
         logStrategy = new LogcatLogStrategy();

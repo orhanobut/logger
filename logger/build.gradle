@@ -19,6 +19,7 @@ android {
 }
 
 dependencies {
+  compile deps.supportAnnotations
   testCompile deps.junit
   testCompile deps.truth
   testCompile deps.robolectric

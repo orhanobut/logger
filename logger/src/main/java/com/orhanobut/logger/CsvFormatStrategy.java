@@ -3,11 +3,15 @@ package com.orhanobut.logger;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+
+import static com.orhanobut.logger.Utils.checkNotNull;
 
 /**
  * CSV formatted file logging for Android.
@@ -20,23 +24,28 @@ public class CsvFormatStrategy implements FormatStrategy {
   private static final String NEW_LINE_REPLACEMENT = " <br> ";
   private static final String SEPARATOR = ",";
 
-  private final Date date;
-  private final SimpleDateFormat dateFormat;
-  private final LogStrategy logStrategy;
-  private final String tag;
+  @NonNull private final Date date;
+  @NonNull private final SimpleDateFormat dateFormat;
+  @NonNull private final LogStrategy logStrategy;
+  @Nullable private final String tag;
 
-  private CsvFormatStrategy(Builder builder) {
+  private CsvFormatStrategy(@NonNull Builder builder) {
+    checkNotNull(builder);
+
     date = builder.date;
     dateFormat = builder.dateFormat;
     logStrategy = builder.logStrategy;
     tag = builder.tag;
   }
 
+  @NonNull
   public static Builder newBuilder() {
     return new Builder();
   }
 
-  @Override public void log(int priority, String onceOnlyTag, String message) {
+  @Override public void log(int priority, @Nullable String onceOnlyTag, @NonNull String message) {
+    checkNotNull(message);
+
     String tag = formatTag(onceOnlyTag);
 
     date.setTime(System.currentTimeMillis());
@@ -72,7 +81,8 @@ public class CsvFormatStrategy implements FormatStrategy {
     logStrategy.log(priority, tag, builder.toString());
   }
 
-  private String formatTag(String tag) {
+  @Nullable
+  private String formatTag(@Nullable String tag) {
     if (!Utils.isEmpty(tag) && !Utils.equals(this.tag, tag)) {
       return this.tag + "-" + tag;
     }
@@ -90,26 +100,31 @@ public class CsvFormatStrategy implements FormatStrategy {
     private Builder() {
     }
 
-    public Builder date(Date val) {
+    @NonNull
+    public Builder date(@Nullable Date val) {
       date = val;
       return this;
     }
 
-    public Builder dateFormat(SimpleDateFormat val) {
+    @NonNull
+    public Builder dateFormat(@Nullable SimpleDateFormat val) {
       dateFormat = val;
       return this;
     }
 
-    public Builder logStrategy(LogStrategy val) {
+    @NonNull
+    public Builder logStrategy(@Nullable LogStrategy val) {
       logStrategy = val;
       return this;
     }
 
-    public Builder tag(String tag) {
+    @NonNull
+    public Builder tag(@Nullable String tag) {
       this.tag = tag;
       return this;
     }
 
+    @NonNull
     public CsvFormatStrategy build() {
       if (date == null) {
         date = new Date();
