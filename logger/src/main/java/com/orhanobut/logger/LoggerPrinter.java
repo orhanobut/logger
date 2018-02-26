@@ -124,7 +124,10 @@ class LoggerPrinter implements Printer {
     }
   }
 
-  @Override public synchronized void log(int priority, @Nullable String tag, @Nullable String message, @Nullable Throwable throwable) {
+  @Override public synchronized void log(int priority,
+                                         @Nullable String tag,
+                                         @Nullable String message,
+                                         @Nullable Throwable throwable) {
     if (throwable != null && message != null) {
       message += " : " + Utils.getStackTraceString(throwable);
     }
@@ -153,7 +156,10 @@ class LoggerPrinter implements Printer {
   /**
    * This method is synchronized in order to avoid messy of logs' order.
    */
-  private synchronized void log(int priority, @Nullable Throwable throwable, @NonNull String msg, @Nullable Object... args) {
+  private synchronized void log(int priority,
+                                @Nullable Throwable throwable,
+                                @NonNull String msg,
+                                @Nullable Object... args) {
     checkNotNull(msg);
 
     String tag = getTag();
