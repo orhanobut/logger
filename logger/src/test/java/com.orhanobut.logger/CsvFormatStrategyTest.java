@@ -1,5 +1,8 @@
 package com.orhanobut.logger;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import org.junit.Test;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -9,7 +12,7 @@ public class CsvFormatStrategyTest {
   @Test public void log() {
     FormatStrategy formatStrategy = CsvFormatStrategy.newBuilder()
         .logStrategy(new LogStrategy() {
-          @Override public void log(int priority, String tag, String message) {
+          @Override public void log(int priority, String tag, @NonNull String message) {
             assertThat(tag).isEqualTo("PRETTY_LOGGER-tag");
             assertThat(priority).isEqualTo(Logger.VERBOSE);
             assertThat(message).contains("VERBOSE,PRETTY_LOGGER-tag,message");
@@ -23,7 +26,7 @@ public class CsvFormatStrategyTest {
   @Test public void defaultTag() {
     FormatStrategy formatStrategy = CsvFormatStrategy.newBuilder()
         .logStrategy(new LogStrategy() {
-          @Override public void log(int priority, String tag, String message) {
+          @Override public void log(int priority, @Nullable String tag, @NonNull String message) {
             assertThat(tag).isEqualTo("PRETTY_LOGGER");
           }
         })
@@ -36,7 +39,7 @@ public class CsvFormatStrategyTest {
     FormatStrategy formatStrategy = CsvFormatStrategy.newBuilder()
         .tag("custom")
         .logStrategy(new LogStrategy() {
-          @Override public void log(int priority, String tag, String message) {
+          @Override public void log(int priority, String tag, @NonNull String message) {
             assertThat(tag).isEqualTo("custom");
           }
         })

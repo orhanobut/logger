@@ -1,5 +1,7 @@
 package com.orhanobut.logger;
 
+import android.support.annotation.Nullable;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -24,7 +26,7 @@ public class DiskLogAdapterTest {
 
   @Test public void isLoggableFalse() throws Exception {
     LogAdapter logAdapter = new DiskLogAdapter(formatStrategy) {
-      @Override public boolean isLoggable(int priority, String tag) {
+      @Override public boolean isLoggable(int priority, @Nullable String tag) {
         return false;
       }
     };

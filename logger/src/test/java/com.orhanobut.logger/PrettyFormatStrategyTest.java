@@ -1,5 +1,8 @@
 package com.orhanobut.logger;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -172,7 +175,7 @@ public class PrettyFormatStrategyTest {
   private static class MockLogStrategy implements LogStrategy {
     List<LogAssert.LogItem> logItems = new ArrayList<>();
 
-    @Override public void log(int priority, String tag, String message) {
+    @Override public void log(int priority, @Nullable String tag, @NonNull String message) {
       logItems.add(new LogAssert.LogItem(priority, tag, message));
     }
   }

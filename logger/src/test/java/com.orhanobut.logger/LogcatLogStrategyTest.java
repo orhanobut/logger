@@ -26,4 +26,13 @@ public class LogcatLogStrategyTest {
     assertThat(logItems.get(0).tag).isEqualTo("tag");
   }
 
+  @Test public void logWithNullTag() {
+    LogStrategy logStrategy = new LogcatLogStrategy();
+
+    logStrategy.log(DEBUG, null, "message");
+
+    List<ShadowLog.LogItem> logItems = ShadowLog.getLogs();
+    assertThat(logItems.get(0).tag).isEqualTo(LogcatLogStrategy.DEFAULT_TAG);
+  }
+
 }

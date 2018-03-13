@@ -19,11 +19,12 @@ android {
 }
 
 dependencies {
-  testCompile deps.junit
-  testCompile deps.truth
-  testCompile deps.robolectric
-  testCompile deps.mockito
-  testCompile deps.json
+  implementation deps.supportAnnotations
+  testImplementation deps.junit
+  testImplementation deps.truth
+  testImplementation deps.robolectric
+  testImplementation deps.mockito
+  testImplementation deps.json
 }
 
 apply from: rootProject.file('gradle/maven_push.gradle')
