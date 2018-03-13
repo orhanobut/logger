@@ -170,8 +170,7 @@ class LoggerPrinter implements Printer {
   /**
    * @return the appropriate tag based on local or global
    */
-  @Nullable
-  private String getTag() {
+  @Nullable private String getTag() {
     String tag = localTag.get();
     if (tag != null) {
       localTag.remove();
@@ -180,8 +179,7 @@ class LoggerPrinter implements Printer {
     return null;
   }
 
-  @NonNull
-  private String createMessage(@NonNull String message, @Nullable Object... args) {
+  @NonNull private String createMessage(@NonNull String message, @Nullable Object... args) {
     return args == null || args.length == 0 ? message : String.format(message, args);
   }
 }

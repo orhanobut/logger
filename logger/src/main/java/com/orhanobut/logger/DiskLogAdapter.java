@@ -21,7 +21,7 @@ public class DiskLogAdapter implements LogAdapter {
     return true;
   }
 
-  @Override public void log(int priority, String tag, @NonNull String message) {
+  @Override public void log(int priority, @Nullable String tag, @NonNull String message) {
     formatStrategy.log(priority, tag, message);
   }
 }

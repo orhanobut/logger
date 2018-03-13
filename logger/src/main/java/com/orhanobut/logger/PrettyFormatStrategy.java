@@ -48,8 +48,7 @@ public class PrettyFormatStrategy implements FormatStrategy {
     tag = builder.tag;
   }
 
-  @NonNull
-  public static Builder newBuilder() {
+  @NonNull public static Builder newBuilder() {
     return new Builder();
   }
 
@@ -175,8 +174,7 @@ public class PrettyFormatStrategy implements FormatStrategy {
     return -1;
   }
 
-  @Nullable
-  private String formatTag(@Nullable String tag) {
+  @Nullable private String formatTag(@Nullable String tag) {
     if (!Utils.isEmpty(tag) && !Utils.equals(this.tag, tag)) {
       return this.tag + "-" + tag;
     }
@@ -187,44 +185,38 @@ public class PrettyFormatStrategy implements FormatStrategy {
     int methodCount = 2;
     int methodOffset = 0;
     boolean showThreadInfo = true;
-    LogStrategy logStrategy;
+    @Nullable LogStrategy logStrategy;
     @Nullable String tag = "PRETTY_LOGGER";
 
     private Builder() {
     }
 
-    @NonNull
-    public Builder methodCount(int val) {
+    @NonNull public Builder methodCount(int val) {
       methodCount = val;
       return this;
     }
 
-    @NonNull
-    public Builder methodOffset(int val) {
+    @NonNull public Builder methodOffset(int val) {
       methodOffset = val;
       return this;
     }
 
-    @NonNull
-    public Builder showThreadInfo(boolean val) {
+    @NonNull public Builder showThreadInfo(boolean val) {
       showThreadInfo = val;
       return this;
     }
 
-    @NonNull
-    public Builder logStrategy(@Nullable LogStrategy val) {
+    @NonNull public Builder logStrategy(@Nullable LogStrategy val) {
       logStrategy = val;
       return this;
     }
 
-    @NonNull
-    public Builder tag(@Nullable String tag) {
+    @NonNull public Builder tag(@Nullable String tag) {
       this.tag = tag;
       return this;
     }
 
-    @NonNull
-    public PrettyFormatStrategy build() {
+    @NonNull public PrettyFormatStrategy build() {
       if (logStrategy == null) {
         logStrategy = new LogcatLogStrategy();
       }

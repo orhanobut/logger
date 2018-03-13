@@ -148,8 +148,7 @@ final class Utils {
     return "Couldn't find a correct type for the object";
   }
 
-  @NonNull
-  static <T> T checkNotNull(@Nullable final T obj) {
+  @NonNull static <T> T checkNotNull(@Nullable final T obj) {
     if (obj == null) {
       throw new NullPointerException();
     }

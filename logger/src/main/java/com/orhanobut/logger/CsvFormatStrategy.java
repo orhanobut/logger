@@ -38,8 +38,7 @@ public class CsvFormatStrategy implements FormatStrategy {
     tag = builder.tag;
   }
 
-  @NonNull
-  public static Builder newBuilder() {
+  @NonNull public static Builder newBuilder() {
     return new Builder();
   }
 
@@ -81,8 +80,7 @@ public class CsvFormatStrategy implements FormatStrategy {
     logStrategy.log(priority, tag, builder.toString());
   }
 
-  @Nullable
-  private String formatTag(@Nullable String tag) {
+  @Nullable private String formatTag(@Nullable String tag) {
     if (!Utils.isEmpty(tag) && !Utils.equals(this.tag, tag)) {
       return this.tag + "-" + tag;
     }
@@ -100,32 +98,27 @@ public class CsvFormatStrategy implements FormatStrategy {
     private Builder() {
     }
 
-    @NonNull
-    public Builder date(@Nullable Date val) {
+    @NonNull public Builder date(@Nullable Date val) {
       date = val;
       return this;
     }
 
-    @NonNull
-    public Builder dateFormat(@Nullable SimpleDateFormat val) {
+    @NonNull public Builder dateFormat(@Nullable SimpleDateFormat val) {
       dateFormat = val;
       return this;
     }
 
-    @NonNull
-    public Builder logStrategy(@Nullable LogStrategy val) {
+    @NonNull public Builder logStrategy(@Nullable LogStrategy val) {
       logStrategy = val;
       return this;
     }
 
-    @NonNull
-    public Builder tag(@Nullable String tag) {
+    @NonNull public Builder tag(@Nullable String tag) {
       this.tag = tag;
       return this;
     }
 
-    @NonNull
-    public CsvFormatStrategy build() {
+    @NonNull public CsvFormatStrategy build() {
       if (date == null) {
         date = new Date();
       }
