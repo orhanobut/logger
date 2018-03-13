@@ -53,5 +53,5 @@ ext.deps = [
     robolectric       : 'org.robolectric:robolectric:3.3',
     mockito           : "org.mockito:mockito-core:1.10.19",
     json              : "org.json:json:20160810",
-    supportAnnotations: "com.android.support:support-annotations:23.4.0"
+    supportAnnotations: "com.android.support:support-annotations:27.1.0"
 ]
