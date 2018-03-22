@@ -6,7 +6,9 @@ import android.support.annotation.Nullable;
 import static com.orhanobut.logger.Utils.checkNotNull;
 
 /**
- * But more pretty, simple and powerful
+ * Logger, but more pretty, simple and powerful
+ *
+ *
  */
 public final class Logger {
 

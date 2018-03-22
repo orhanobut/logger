@@ -5,6 +5,24 @@ import android.support.annotation.Nullable;
 
 import static com.orhanobut.logger.Utils.checkNotNull;
 
+/**
+ * Draws borders around the given log message along with additional information such as :
+ *
+ * <ul>
+ *   <li>Thread information</li>
+ *   <li>Method stack trace</li>
+ * </ul>
+ *
+ * <pre>
+ *  ┌──────────────────────────
+ *  │ Method stack history
+ *  ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+ *  │ Thread information
+ *  ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+ *  │ Log message
+ *  └──────────────────────────
+ * </pre>
+ */
 public class PrettyFormatStrategy implements FormatStrategy {
 
   /**
