@@ -5,6 +5,19 @@ import android.support.annotation.Nullable;
 
 import static com.orhanobut.logger.Utils.checkNotNull;
 
+/**
+ * Android terminal log output implementation for {@link LogAdapter}.
+ *
+ * Prints output to LogCat with pretty borders.
+ *
+ * <pre>
+ *  ┌──────────────────────────
+ *  │ Method stack history
+ *  ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+ *  │ Log message
+ *  └──────────────────────────
+ * </pre>
+ */
 public class AndroidLogAdapter implements LogAdapter {
 
   @NonNull private final FormatStrategy formatStrategy;

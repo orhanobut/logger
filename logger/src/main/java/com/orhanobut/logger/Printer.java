@@ -3,6 +3,10 @@ package com.orhanobut.logger;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+/**
+ * A proxy interface to enable additional operations.
+ * Contains all possible Log message usages.
+ */
 public interface Printer {
 
   void addAdapter(@NonNull LogAdapter adapter);

@@ -9,7 +9,7 @@ Simple, pretty and powerful logger for android
 ### Setup
 Download
 ```groovy
-compile 'com.orhanobut:logger:2.1.1'
+implementation 'com.orhanobut:logger:2.2.0'
 ```
 
 Initialize
@@ -32,7 +32,7 @@ Logger.e("error");
 Logger.w("warning");
 Logger.v("verbose");
 Logger.i("information");
-Logger.wtf("wtf!!!!");
+Logger.wtf("What a Terrible Failure");
 ```
 
 String format arguments are supported
@@ -40,7 +40,7 @@ String format arguments are supported
 Logger.d("hello %s", "world");
 ```
 
-Collections support (only available for debug logs)
+Collections are supported (only available for debug logs)
 ```java
 Logger.d(MAP);
 Logger.d(SET);
@@ -68,8 +68,9 @@ Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy));
 ```
 
 ### Loggable
-Log adapters checks whether the log should be printed out or not by checking this function.
-If you want to disable/hide logs for output, override `isLoggable` method and put the condition.
+Log adapter checks whether the log should be printed or not by checking this function.
+If you want to disable/hide logs for output, override `isLoggable` method. 
+`true` will print the log message, `false` will ignore it.
 ```java
 Logger.addLogAdapter(new AndroidLogAdapter() {
   @Override public boolean isLoggable(int priority, String tag) {
@@ -98,7 +99,7 @@ Logger.addLogAdapter(new DiskLogAdapter(formatStrategy));
 
 
 ### More
-- Use the filter for a better result. PRETTY_LOGGER or your custom tag
+- Use filter for a better result. PRETTY_LOGGER or your custom tag
 - Make sure that wrap option is disabled
 - You can also simplify output by changing settings.
 
@@ -114,13 +115,9 @@ Timber.plant(new Timber.DebugTree() {
 });
 ```
 
-### Breaking changes
-- Initialization is changed. No backward compatibility support. Use `Logger.addLogAdapter`
-- LogLevel is removed. Use the new `isLoggable` approach
-
 ### License
 <pre>
-Copyright 2017 Orhan Obut
+Copyright 2018 Orhan Obut
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
