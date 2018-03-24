@@ -6,9 +6,63 @@ import android.support.annotation.Nullable;
 import static com.orhanobut.logger.Utils.checkNotNull;
 
 /**
- * Logger, but more pretty, simple and powerful
+ * <pre>
+ *  ┌────────────────────────────────────────────
+ *  │ LOGGER
+ *  ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+ *  │ Standard logging mechanism
+ *  ├┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄
+ *  │ But more pretty, simple and powerful
+ *  └────────────────────────────────────────────
+ * </pre>
  *
+ * <h3>How to use it</h3>
+ * Initialize it first
+ * <pre><code>
+ *   Logger.addLogAdapter(new AndroidLogAdapter());
+ * </code></pre>
  *
+ * And use the appropriate static Logger methods.
+ *
+ * <pre><code>
+ *   Logger.d("debug");
+ *   Logger.e("error");
+ *   Logger.w("warning");
+ *   Logger.v("verbose");
+ *   Logger.i("information");
+ *   Logger.wtf("What a Terrible Failure");
+ * </code></pre>
+ *
+ * <h3>String format arguments are supported</h3>
+ * <pre><code>
+ *   Logger.d("hello %s", "world");
+ * </code></pre>
+ *
+ * <h3>Collections are support ed(only available for debug logs)</h3>
+ * <pre><code>
+ *   Logger.d(MAP);
+ *   Logger.d(SET);
+ *   Logger.d(LIST);
+ *   Logger.d(ARRAY);
+ * </code></pre>
+ *
+ * <h3>Json and Xml support (output will be in debug level)</h3>
+ * <pre><code>
+ *   Logger.json(JSON_CONTENT);
+ *   Logger.xml(XML_CONTENT);
+ * </code></pre>
+ *
+ * <h3>Customize Logger</h3>
+ * Based on your needs, you can change the following settings:
+ * <ul>
+ *   <li>Different {@link LogAdapter}</li>
+ *   <li>Different {@link FormatStrategy}</li>
+ *   <li>Different {@link LogStrategy}</li>
+ * </ul>
+ *
+ * @see LogAdapter
+ * @see FormatStrategy
+ * @see LogStrategy
  */
 public final class Logger {
 

@@ -13,6 +13,7 @@ public interface LogAdapter {
 
   /**
    * Used to determine whether log should be printed out or not.
+   *
    * @param priority is the log level e.g. DEBUG, WARNING
    * @param tag is the given tag for the log message
    *

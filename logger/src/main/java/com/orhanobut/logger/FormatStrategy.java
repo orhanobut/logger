@@ -5,6 +5,9 @@ import android.support.annotation.Nullable;
 
 /**
  * Used to determine how messages should be printed or saved.
+ *
+ * @see PrettyFormatStrategy
+ * @see CsvFormatStrategy
  */
 public interface FormatStrategy {
 

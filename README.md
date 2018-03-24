@@ -40,7 +40,7 @@ String format arguments are supported
 Logger.d("hello %s", "world");
 ```
 
-Collections support (only available for debug logs)
+Collections are supported (only available for debug logs)
 ```java
 Logger.d(MAP);
 Logger.d(SET);
@@ -68,8 +68,9 @@ Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy));
 ```
 
 ### Loggable
-Log adapters checks whether the log should be printed out or not by checking this function.
-If you want to disable/hide logs for output, override `isLoggable` method and put the condition.
+Log adapter checks whether the log should be printed or not by checking this function.
+If you want to disable/hide logs for output, override `isLoggable` method. 
+`true` will print the log message, `false` will ignore it.
 ```java
 Logger.addLogAdapter(new AndroidLogAdapter() {
   @Override public boolean isLoggable(int priority, String tag) {
