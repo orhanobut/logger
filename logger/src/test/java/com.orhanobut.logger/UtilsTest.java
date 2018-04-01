@@ -12,7 +12,6 @@ import java.net.UnknownHostException;
 import static com.google.common.truth.Truth.assertThat;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = 21, constants = BuildConfig.class)
 public class UtilsTest {
 
   @Test public void isEmpty() {

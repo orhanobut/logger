@@ -12,7 +12,6 @@ import static com.google.common.truth.Truth.assertThat;
 import static com.orhanobut.logger.Logger.DEBUG;
 
 @RunWith(RobolectricTestRunner.class)
-@Config(constants = BuildConfig.class, sdk = 21)
 public class LogcatLogStrategyTest {
 
   @Test public void log() {
