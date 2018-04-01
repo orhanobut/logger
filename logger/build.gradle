@@ -20,6 +20,7 @@ android {
 
 dependencies {
   implementation deps.supportAnnotations
+
   testImplementation deps.junit
   testImplementation deps.truth
   testImplementation deps.robolectric
