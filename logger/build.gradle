@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
   compileSdkVersion rootProject.ext.compileSdkVersion
@@ -20,11 +21,13 @@ android {
 
 dependencies {
   implementation deps.supportAnnotations
+
   testImplementation deps.junit
   testImplementation deps.truth
   testImplementation deps.robolectric
   testImplementation deps.mockito
   testImplementation deps.json
+  testImplementation deps.kotlin
 }
 
 apply from: rootProject.file('gradle/maven_push.gradle')
