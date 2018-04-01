@@ -1,4 +1,22 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+  ext.kotlinVersion = '1.2.31'
+  repositories {
+    google()
+    jcenter()
+  }
+  dependencies {
+    classpath 'com.android.tools.build:gradle:3.1.0'
+    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+  }
+}
+
+allprojects {
+  repositories {
+    google()
+    jcenter()
+  }
+}
+
 subprojects { project ->
   group = GROUP
   version = VERSION_NAME
@@ -20,21 +38,10 @@ subprojects { project ->
       check.dependsOn('checkstyle')
     }
   }
+}
 
-  buildscript {
-    repositories {
-      google()
-      jcenter()
-    }
-    dependencies {
-      classpath 'com.android.tools.build:gradle:3.1.0'
-    }
-  }
-
-  repositories {
-    google()
-    jcenter()
-  }
+task clean(type: Delete) {
+  delete rootProject.buildDir
 }
 
 ext {
@@ -42,16 +49,14 @@ ext {
   targetSdkVersion = 27
   compileSdkVersion = 27
   buildToolsVersion = '27.0.3'
-  sourceCompatibilityVersion = JavaVersion.VERSION_1_7
-  targetCompatibilityVersion = JavaVersion.VERSION_1_7
 }
 
 ext.deps = [
-    // Test dependencies
     junit             : 'junit:junit:4.12',
     truth             : 'com.google.truth:truth:0.28',
     robolectric       : 'org.robolectric:robolectric:3.3',
     mockito           : "org.mockito:mockito-core:1.10.19",
     json              : "org.json:json:20160810",
-    supportAnnotations: "com.android.support:support-annotations:27.1.0"
+    supportAnnotations: "com.android.support:support-annotations:27.1.0",
+    kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 ]
