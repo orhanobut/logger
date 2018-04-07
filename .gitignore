@@ -29,7 +29,7 @@ build/
 **/.idea/libraries
 **/.idea/dictionaries
 **/.idea/runConfigurations.xml
-**/.idea/caches
+.idea/caches
 
 # layout inspector view captures
 captures
