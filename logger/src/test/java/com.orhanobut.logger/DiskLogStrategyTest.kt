@@ -12,7 +12,8 @@ class DiskLogStrategyTest {
 
   @Test fun log() {
     val handler = mock(Handler::class.java)
-    val logStrategy = DiskLogStrategy(handler)
+
+    val logStrategy = DiskLogStrategy.newBuilder().handler(handler).build()
 
     logStrategy.log(DEBUG, "tag", "message")
 

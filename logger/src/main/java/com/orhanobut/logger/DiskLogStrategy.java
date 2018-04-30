@@ -1,6 +1,8 @@
 package com.orhanobut.logger;
 
+import android.os.Environment;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.NonNull;
@@ -21,6 +23,11 @@ import static com.orhanobut.logger.Utils.checkNotNull;
 public class DiskLogStrategy implements LogStrategy {
 
   @NonNull private final Handler handler;
+
+  @NonNull
+  public static Builder newBuilder() {
+    return new Builder();
+  }
 
   public DiskLogStrategy(@NonNull Handler handler) {
     this.handler = checkNotNull(handler);
@@ -111,6 +118,62 @@ public class DiskLogStrategy implements LogStrategy {
       }
 
       return newFile;
+    }
+  }
+
+  public static final class Builder {
+    private static final int MAX_BYTES = 500 * 1024; // 500K averages to a 4000 lines per file
+
+    String directory;
+    HandlerThread ht;
+    Handler handler;
+
+    private Builder() {
+    }
+
+    /**
+     * Set the log destination directory
+     * The default destination will be used if not supplied
+     */
+    @NonNull public Builder directory(@NonNull String directory) {
+      this.directory = directory;
+      return this;
+    }
+
+    /**
+     * Set the {@link HandlerThread} which handles this strategy
+     * A default {@link HandlerThread} will be created if not supplied
+     */
+    @NonNull public Builder handlerThread(@NonNull HandlerThread ht) {
+      this.ht = ht;
+      return this;
+    }
+
+    /**
+     * Set the {@link Handler}
+     * A default {@link Handler} will be created if not supplied
+     */
+    @NonNull public Builder handler(@NonNull Handler handler) {
+      this.handler = handler;
+      return this;
+    }
+
+    /**
+     * Create the {@link DiskLogStrategy} given the configuration
+     */
+    @NonNull public DiskLogStrategy build() {
+      if (directory == null) {
+        String diskPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+        directory = diskPath + File.separatorChar + "logger";
+      }
+      if (ht == null) {
+        ht = new HandlerThread("AndroidFileLogger." + directory);
+        ht.start();
+      }
+      if (handler == null) {
+        handler = new DiskLogStrategy.WriteHandler(ht.getLooper(), directory, MAX_BYTES);
+      }
+      return new DiskLogStrategy(handler);
     }
   }
 }
