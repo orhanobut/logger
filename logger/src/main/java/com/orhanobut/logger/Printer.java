@@ -21,6 +21,8 @@ public interface Printer {
 
   void e(@Nullable Throwable throwable, @NonNull String message, @Nullable Object... args);
 
+  void e(@Nullable Throwable throwable, @Nullable Object... args);
+
   void w(@NonNull String message, @Nullable Object... args);
 
   void i(@NonNull String message, @Nullable Object... args);

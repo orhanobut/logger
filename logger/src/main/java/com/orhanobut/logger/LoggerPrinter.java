@@ -65,6 +65,10 @@ class LoggerPrinter implements Printer {
     log(ERROR, throwable, message, args);
   }
 
+  @Override public void e(@Nullable Throwable throwable, @Nullable Object... args) {
+    e(null, "", args);
+  }
+
   @Override public void w(@NonNull String message, @Nullable Object... args) {
     log(WARN, null, message, args);
   }
