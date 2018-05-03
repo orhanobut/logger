@@ -66,7 +66,7 @@ class LoggerPrinter implements Printer {
   }
 
   @Override public void e(@Nullable Throwable throwable, @Nullable Object... args) {
-    e(null, "", args);
+    e(throwable, "", args);
   }
 
   @Override public void w(@NonNull String message, @Nullable Object... args) {
