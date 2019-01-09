@@ -1,11 +1,11 @@
 buildscript {
-  ext.kotlinVersion = '1.2.31'
+  ext.kotlinVersion = '1.2.51'
   repositories {
     google()
     jcenter()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.1.0'
+    classpath 'com.android.tools.build:gradle:3.2.1'
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
   }
 }
