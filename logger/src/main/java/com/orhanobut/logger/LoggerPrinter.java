@@ -11,6 +11,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Source;
@@ -40,7 +41,7 @@ class LoggerPrinter implements Printer {
    */
   private final ThreadLocal<String> localTag = new ThreadLocal<>();
 
-  private final List<LogAdapter> logAdapters = new ArrayList<>();
+  private final List<LogAdapter> logAdapters = new CopyOnWriteArrayList<>();
 
   @Override public Printer t(String tag) {
     if (tag != null) {
