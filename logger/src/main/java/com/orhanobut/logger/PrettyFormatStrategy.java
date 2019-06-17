@@ -86,7 +86,9 @@ public class PrettyFormatStrategy implements FormatStrategy {
 
     String tag = formatTag(onceOnlyTag);
 
-    logTopBorder(priority, tag);
+    if(needTopBottomBorder()) {
+      logTopBorder(priority, tag);
+    }
     logHeaderContent(priority, tag, methodCount);
 
     //get bytes of message with system's default charset (which is UTF-8 for Android)
@@ -97,7 +99,9 @@ public class PrettyFormatStrategy implements FormatStrategy {
         logDivider(priority, tag);
       }
       logContent(priority, tag, message);
-      logBottomBorder(priority, tag);
+      if(needTopBottomBorder()) {
+        logBottomBorder(priority, tag);
+      }
       return;
     }
     if (methodCount > 0) {
@@ -108,11 +112,17 @@ public class PrettyFormatStrategy implements FormatStrategy {
       //create a new String with system's default charset (which is UTF-8 for Android)
       logContent(priority, tag, new String(bytes, i, count));
     }
-    logBottomBorder(priority, tag);
+    if(needTopBottomBorder()) {
+      logBottomBorder(priority, tag);
+    }
   }
 
   private void logTopBorder(int logType, @Nullable String tag) {
     logChunk(logType, tag, TOP_BORDER);
+  }
+
+  private boolean needTopBottomBorder() {
+    return showThreadInfo && methodCount > 0;
   }
 
   @SuppressWarnings("StringBufferReplaceableByString")
