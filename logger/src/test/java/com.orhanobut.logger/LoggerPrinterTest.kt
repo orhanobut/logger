@@ -3,10 +3,7 @@ package com.orhanobut.logger
 import com.orhanobut.logger.Logger.*
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Matchers.any
-import org.mockito.Matchers.contains
-import org.mockito.Matchers.eq
-import org.mockito.Matchers.isNull
+import org.mockito.Matchers.*
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
@@ -25,7 +22,7 @@ class LoggerPrinterTest {
 
   @Before fun setup() {
     initMocks(this)
-    `when`(adapter!!.isLoggable(any(Int::class.java), any(String::class.java))).thenReturn(true)
+    `when`(adapter!!.isLoggable(any(Int::class.java), nullable(String::class.java))).thenReturn(true)
     printer.addAdapter(adapter!!)
   }
 
