@@ -86,7 +86,7 @@ public class PrettyFormatStrategy implements FormatStrategy {
 
     String tag = formatTag(onceOnlyTag);
 
-    if(needTopBottomBorder()) {
+    if(needBorder()) {
       logTopBorder(priority, tag);
     }
     logHeaderContent(priority, tag, methodCount);
@@ -99,7 +99,7 @@ public class PrettyFormatStrategy implements FormatStrategy {
         logDivider(priority, tag);
       }
       logContent(priority, tag, message);
-      if(needTopBottomBorder()) {
+      if(needBorder()) {
         logBottomBorder(priority, tag);
       }
       return;
@@ -112,7 +112,7 @@ public class PrettyFormatStrategy implements FormatStrategy {
       //create a new String with system's default charset (which is UTF-8 for Android)
       logContent(priority, tag, new String(bytes, i, count));
     }
-    if(needTopBottomBorder()) {
+    if(needBorder()) {
       logBottomBorder(priority, tag);
     }
   }
@@ -121,7 +121,7 @@ public class PrettyFormatStrategy implements FormatStrategy {
     logChunk(logType, tag, TOP_BORDER);
   }
 
-  private boolean needTopBottomBorder() {
+  private boolean needBorder() {
     return showThreadInfo && methodCount > 0;
   }
 
@@ -177,7 +177,7 @@ public class PrettyFormatStrategy implements FormatStrategy {
 
     String[] lines = chunk.split(System.getProperty("line.separator"));
     for (String line : lines) {
-      logChunk(logType, tag, HORIZONTAL_LINE + " " + line);
+      logChunk(logType, tag, needBorder() ? (HORIZONTAL_LINE + " " + line) : line);
     }
   }
 
