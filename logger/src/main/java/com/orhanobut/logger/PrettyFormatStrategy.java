@@ -64,6 +64,7 @@ public class PrettyFormatStrategy implements FormatStrategy {
   private final int methodCount;
   private final int methodOffset;
   private final boolean showThreadInfo;
+  private final boolean singleLineMethodInfo;
   @NonNull private final LogStrategy logStrategy;
   @Nullable private final String tag;
 
@@ -74,6 +75,7 @@ public class PrettyFormatStrategy implements FormatStrategy {
     methodOffset = builder.methodOffset;
     showThreadInfo = builder.showThreadInfo;
     logStrategy = builder.logStrategy;
+    singleLineMethodInfo = builder.singleLineMethodInfo;
     tag = builder.tag;
   }
 
@@ -175,9 +177,21 @@ public class PrettyFormatStrategy implements FormatStrategy {
   private void logContent(int logType, @Nullable String tag, @NonNull String chunk) {
     checkNotNull(chunk);
 
+    StringBuilder builder = null;
+    if(singleLineMethodInfo) {
+      builder = new StringBuilder();
+      StackTraceElement[] trace = Thread.currentThread().getStackTrace();
+      int stackIndex = getStackOffset(trace) + 1;
+      builder.append("[")
+              .append(getSimpleClassName(trace[stackIndex].getClassName()))
+              .append(".")
+              .append(trace[stackIndex].getMethodName())
+              .append("]\t");
+    }
     String[] lines = chunk.split(System.getProperty("line.separator"));
     for (String line : lines) {
-      logChunk(logType, tag, needBorder() ? (HORIZONTAL_LINE + " " + line) : line);
+      String lineMsg = singleLineMethodInfo ? builder.toString() + line : line;
+      logChunk(logType, tag, needBorder() ? (HORIZONTAL_LINE + " " + lineMsg) : lineMsg);
     }
   }
 
@@ -224,6 +238,7 @@ public class PrettyFormatStrategy implements FormatStrategy {
     int methodCount = 2;
     int methodOffset = 0;
     boolean showThreadInfo = true;
+    boolean singleLineMethodInfo = false;
     @Nullable LogStrategy logStrategy;
     @Nullable String tag = "PRETTY_LOGGER";
 
@@ -252,6 +267,11 @@ public class PrettyFormatStrategy implements FormatStrategy {
 
     @NonNull public Builder tag(@Nullable String tag) {
       this.tag = tag;
+      return this;
+    }
+
+    @NonNull public Builder singleLineMethodInfo(boolean val) {
+      this.singleLineMethodInfo = val;
       return this;
     }
 
