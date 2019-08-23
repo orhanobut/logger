@@ -181,12 +181,12 @@ public class PrettyFormatStrategy implements FormatStrategy {
     if(singleLineMethodInfo) {
       builder = new StringBuilder();
       StackTraceElement[] trace = Thread.currentThread().getStackTrace();
-      int stackIndex = getStackOffset(trace) + 1;
+      int stackIndex = getStackOffset(trace) + methodOffset + 1;
       builder.append("[")
               .append(getSimpleClassName(trace[stackIndex].getClassName()))
               .append(".")
               .append(trace[stackIndex].getMethodName())
-              .append("]\t");
+              .append("]  ");
     }
     String[] lines = chunk.split(System.getProperty("line.separator"));
     for (String line : lines) {

@@ -83,25 +83,33 @@ public class MainActivity extends Activity {
     PrettyFormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder()
         .showThreadInfo(false)
         .methodCount(0)
-         .methodOffset(0)
+         .methodOffset(1)
             .singleLineMethodInfo(true)
+            .tag("DAMON")
         .build();
     Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy));
 
-    Logger.w("my log message with my tag");
-    Logger.json("{ \"key\": 3, \"value\": something}");
+    VLog.w("damon","my log message with my tag");
+    VLog.json("{ \"key\": 3, \"value\": something}");
 
         Map<String, String> map = new HashMap<>();
     map.put("key", "value");
     map.put("key1", "value2");
 
-    Logger.d(map);
+    VLog.d("damon", map.toString());
+
+    new Thread(
+    "myThread"){
+      public void run() {
+        VLog.d("damon", "Runnable.run thread runnable called");
+      }
+    }.start();
 
   }
 
   @Override
   protected void onResume() {
     super.onResume();
-    Logger.json("{ \"key\": 3, \"value\": something}");
+    VLog.json("{ \"key\": 3, \"value\": something}");
   }
 }
