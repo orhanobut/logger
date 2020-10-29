@@ -3,14 +3,16 @@ package com.orhanobut.logger;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 import static com.orhanobut.logger.Utils.checkNotNull;
+
 
 /**
  * Abstract class that takes care of background threading the file log operation on Android.
