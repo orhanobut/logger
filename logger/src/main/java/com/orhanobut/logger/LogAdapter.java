@@ -1,7 +1,7 @@
 package com.orhanobut.logger;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Provides a common interface to emits logs through. This is a required contract for Logger.

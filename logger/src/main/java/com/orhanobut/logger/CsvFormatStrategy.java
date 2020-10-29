@@ -3,8 +3,8 @@ package com.orhanobut.logger;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -52,7 +52,7 @@ public class CsvFormatStrategy implements FormatStrategy {
     StringBuilder builder = new StringBuilder();
 
     // machine-readable date/time
-    builder.append(Long.toString(date.getTime()));
+    builder.append(date.getTime());
 
     // human-readable date/time
     builder.append(SEPARATOR);

@@ -1,11 +1,11 @@
 buildscript {
-  ext.kotlinVersion = '1.2.31'
+  ext.kotlinVersion = '1.4.10'
   repositories {
     google()
     jcenter()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.1.0'
+    classpath 'com.android.tools.build:gradle:4.1.0'
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
   }
 }
@@ -46,17 +46,17 @@ task clean(type: Delete) {
 
 ext {
   minSdkVersion = 8
-  targetSdkVersion = 27
-  compileSdkVersion = 27
-  buildToolsVersion = '27.0.3'
+  targetSdkVersion = 29
+  compileSdkVersion = 29
+  buildToolsVersion = '30.0.2'
 }
 
 ext.deps = [
     junit             : 'junit:junit:4.12',
-    truth             : 'com.google.truth:truth:0.28',
-    robolectric       : 'org.robolectric:robolectric:3.3',
-    mockito           : "org.mockito:mockito-core:2.8.9",
-    json              : "org.json:json:20160810",
-    supportAnnotations: "com.android.support:support-annotations:27.1.0",
+    truth             : 'com.google.truth:truth:1.1',
+    robolectric       : 'org.robolectric:robolectric:3.8',
+    mockito           : "org.mockito:mockito-core:2.28.2",
+    json              : "org.json:json:20200518",
+    supportAnnotations: "androidx.annotation:annotation:1.1.0",
     kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
 ]

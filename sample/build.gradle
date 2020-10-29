@@ -7,7 +7,7 @@ android {
   defaultConfig {
     applicationId "com.orhanobut.sample"
     minSdkVersion 23
-    targetSdkVersion 27
+    targetSdkVersion rootProject.ext.compileSdkVersion
     versionCode 1
     versionName "1.0"
 
