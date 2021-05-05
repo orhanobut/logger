@@ -180,7 +180,7 @@ public class PrettyFormatStrategy implements FormatStrategy {
   private String getSimpleClassName(@NonNull String name) {
     checkNotNull(name);
 
-    int lastIndex = name.lastIndexOf(".");
+    int lastIndex = name.lastIndexOf('.');
     return name.substring(lastIndex + 1);
   }
 
