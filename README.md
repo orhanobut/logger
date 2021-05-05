@@ -27,11 +27,12 @@ Logger.d("hello");
 
 ### Options
 ```java
-Logger.d("debug");
-Logger.e("error");
-Logger.w("warning");
 Logger.v("verbose");
+Logger.d("debug");
 Logger.i("information");
+Logger.w("warning");
+Logger.e("error");
+Logger.e(exception, "error");
 Logger.wtf("What a Terrible Failure");
 ```
 
