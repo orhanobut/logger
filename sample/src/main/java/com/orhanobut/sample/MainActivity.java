@@ -82,5 +82,6 @@ public class MainActivity extends Activity {
     Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy));
 
     Logger.w("my log message with my tag");
+    Logger.e(new Throwable("Only throwable"));
   }
 }
