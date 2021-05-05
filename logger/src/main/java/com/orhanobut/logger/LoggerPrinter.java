@@ -180,6 +180,7 @@ class LoggerPrinter implements Printer {
   }
 
   @NonNull private String createMessage(@NonNull String message, @Nullable Object... args) {
-    return args == null || args.length == 0 ? message : String.format(message, args);
+    return args == null || args.length == 0 ? message :
+        String.format(message == null ? "format == null! please check message is null" : message, args);
   }
 }
