@@ -24,10 +24,14 @@ public class CsvFormatStrategy implements FormatStrategy {
   private static final String NEW_LINE_REPLACEMENT = " <br> ";
   private static final String SEPARATOR = ",";
 
-  @NonNull private final Date date;
-  @NonNull private final SimpleDateFormat dateFormat;
-  @NonNull private final LogStrategy logStrategy;
-  @Nullable private final String tag;
+  @NonNull
+  private final Date date;
+  @NonNull
+  private final SimpleDateFormat dateFormat;
+  @NonNull
+  private final LogStrategy logStrategy;
+  @Nullable
+  private final String tag;
 
   private CsvFormatStrategy(@NonNull Builder builder) {
     checkNotNull(builder);
@@ -38,11 +42,13 @@ public class CsvFormatStrategy implements FormatStrategy {
     tag = builder.tag;
   }
 
-  @NonNull public static Builder newBuilder() {
+  @NonNull
+  public static Builder newBuilder() {
     return new Builder();
   }
 
-  @Override public void log(int priority, @Nullable String onceOnlyTag, @NonNull String message) {
+  @Override
+  public void log(int priority, @Nullable String onceOnlyTag, @NonNull String message) {
     checkNotNull(message);
 
     String tag = formatTag(onceOnlyTag);
@@ -80,7 +86,8 @@ public class CsvFormatStrategy implements FormatStrategy {
     logStrategy.log(priority, tag, builder.toString());
   }
 
-  @Nullable private String formatTag(@Nullable String tag) {
+  @Nullable
+  private String formatTag(@Nullable String tag) {
     if (!Utils.isEmpty(tag) && !Utils.equals(this.tag, tag)) {
       return this.tag + "-" + tag;
     }
@@ -94,31 +101,43 @@ public class CsvFormatStrategy implements FormatStrategy {
     SimpleDateFormat dateFormat;
     LogStrategy logStrategy;
     String tag = "PRETTY_LOGGER";
+    File customfolder;
 
     private Builder() {
     }
 
-    @NonNull public Builder date(@Nullable Date val) {
+    @NonNull
+    public Builder date(@Nullable Date val) {
       date = val;
       return this;
     }
 
-    @NonNull public Builder dateFormat(@Nullable SimpleDateFormat val) {
+    @NonNull
+    public Builder dateFormat(@Nullable SimpleDateFormat val) {
       dateFormat = val;
       return this;
     }
 
-    @NonNull public Builder logStrategy(@Nullable LogStrategy val) {
+    @NonNull
+    public Builder logStrategy(@Nullable LogStrategy val) {
       logStrategy = val;
       return this;
     }
 
-    @NonNull public Builder tag(@Nullable String tag) {
+    @NonNull
+    public Builder tag(@Nullable String tag) {
       this.tag = tag;
       return this;
     }
 
-    @NonNull public CsvFormatStrategy build() {
+    @NonNull
+    public Builder folder(@Nullable File folder) {
+      this.customfolder = folder;
+      return this;
+    }
+
+    @NonNull
+    public CsvFormatStrategy build() {
       if (date == null) {
         date = new Date();
       }
@@ -126,8 +145,14 @@ public class CsvFormatStrategy implements FormatStrategy {
         dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss.SSS", Locale.UK);
       }
       if (logStrategy == null) {
-        String diskPath = Environment.getExternalStorageDirectory().getAbsolutePath();
-        String folder = diskPath + File.separatorChar + "logger";
+        String folder;
+        if (customfolder != null) {
+          folder = customfolder.toString();
+        } else {
+          String diskPath = Environment.getExternalStorageDirectory().getAbsolutePath();
+          folder = diskPath + File.separatorChar + "logger";
+        }
+
 
         HandlerThread ht = new HandlerThread("AndroidFileLogger." + folder);
         ht.start();
