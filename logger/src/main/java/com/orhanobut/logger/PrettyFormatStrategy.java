@@ -89,25 +89,10 @@ public class PrettyFormatStrategy implements FormatStrategy {
     logTopBorder(priority, tag);
     logHeaderContent(priority, tag, methodCount);
 
-    //get bytes of message with system's default charset (which is UTF-8 for Android)
-    byte[] bytes = message.getBytes();
-    int length = bytes.length;
-    if (length <= CHUNK_SIZE) {
-      if (methodCount > 0) {
-        logDivider(priority, tag);
-      }
-      logContent(priority, tag, message);
-      logBottomBorder(priority, tag);
-      return;
-    }
     if (methodCount > 0) {
       logDivider(priority, tag);
     }
-    for (int i = 0; i < length; i += CHUNK_SIZE) {
-      int count = Math.min(length - i, CHUNK_SIZE);
-      //create a new String with system's default charset (which is UTF-8 for Android)
-      logContent(priority, tag, new String(bytes, i, count));
-    }
+    logContent(priority, tag, message);
     logBottomBorder(priority, tag);
   }
 
@@ -167,7 +152,18 @@ public class PrettyFormatStrategy implements FormatStrategy {
 
     String[] lines = chunk.split(System.getProperty("line.separator"));
     for (String line : lines) {
-      logChunk(logType, tag, HORIZONTAL_LINE + " " + line);
+      //get bytes of message with system's default charset (which is UTF-8 for Android)
+      byte[] bytes = line.getBytes();
+      int length = bytes.length;
+      if (length > CHUNK_SIZE) {
+        for (int i = 0; i < length; i += CHUNK_SIZE) {
+          int count = Math.min(length - i, CHUNK_SIZE);
+          //create a new String with system's default charset (which is UTF-8 for Android)
+          logChunk(logType, tag, HORIZONTAL_LINE + " " + new String(bytes, i, count));
+        }
+      } else {
+        logChunk(logType, tag, HORIZONTAL_LINE + " " + line);
+      }
     }
   }
 
