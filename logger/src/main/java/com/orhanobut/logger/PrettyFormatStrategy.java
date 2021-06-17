@@ -89,25 +89,10 @@ public class PrettyFormatStrategy implements FormatStrategy {
     logTopBorder(priority, tag);
     logHeaderContent(priority, tag, methodCount);
 
-    //get bytes of message with system's default charset (which is UTF-8 for Android)
-    byte[] bytes = message.getBytes();
-    int length = bytes.length;
-    if (length <= CHUNK_SIZE) {
-      if (methodCount > 0) {
-        logDivider(priority, tag);
-      }
-      logContent(priority, tag, message);
-      logBottomBorder(priority, tag);
-      return;
-    }
     if (methodCount > 0) {
       logDivider(priority, tag);
     }
-    for (int i = 0; i < length; i += CHUNK_SIZE) {
-      int count = Math.min(length - i, CHUNK_SIZE);
-      //create a new String with system's default charset (which is UTF-8 for Android)
-      logContent(priority, tag, new String(bytes, i, count));
-    }
+    logContent(priority, tag, message);
     logBottomBorder(priority, tag);
   }
 
@@ -167,7 +152,31 @@ public class PrettyFormatStrategy implements FormatStrategy {
 
     String[] lines = chunk.split(System.getProperty("line.separator"));
     for (String line : lines) {
-      logChunk(logType, tag, HORIZONTAL_LINE + " " + line);
+      //get bytes of message with system's default charset (which is UTF-8 for Android)
+      byte[] bytes = line.getBytes();
+      int length = bytes.length;
+      int offset;
+      String check;
+      if (length > CHUNK_SIZE) {
+        for (int i = 0; i < length; i += CHUNK_SIZE) {
+          int count = Math.min(length - i, CHUNK_SIZE);
+          //create a new String with system's default charset (which is UTF-8 for Android)
+          check = new String(bytes, i, count);
+          if (check.getBytes().length == count) {
+            logChunk(logType, tag, HORIZONTAL_LINE + " " + check);
+          } else {
+            /*
+             If length of new string not equals count, it's means the string not completed, so calc a offset for it.
+             Offset always between 0 and 3, CHUNK_SIZE is 4000 and Android's max limit is 4076, offset won't exceed the limit;
+             */
+            offset = check.getBytes().length - count;
+            logChunk(logType, tag, HORIZONTAL_LINE + " " + new String(bytes, i, count + offset));
+            i += offset;
+          }
+        }
+      } else {
+        logChunk(logType, tag, HORIZONTAL_LINE + " " + line);
+      }
     }
   }
 
