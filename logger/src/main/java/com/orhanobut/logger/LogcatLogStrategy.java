@@ -1,8 +1,9 @@
 package com.orhanobut.logger;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import android.util.Log;
 
 import static com.orhanobut.logger.Utils.checkNotNull;
 

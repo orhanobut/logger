@@ -52,7 +52,7 @@ public class CsvFormatStrategy implements FormatStrategy {
     StringBuilder builder = new StringBuilder();
 
     // machine-readable date/time
-    builder.append(Long.toString(date.getTime()));
+    builder.append(date.getTime());
 
     // human-readable date/time
     builder.append(SEPARATOR);
