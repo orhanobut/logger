@@ -1,11 +1,13 @@
 buildscript {
   ext.kotlinVersion = '1.4.10'
+
   repositories {
     google()
     jcenter()
   }
   dependencies {
     classpath 'com.android.tools.build:gradle:4.1.0'
+
     classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
   }
 }
@@ -49,6 +51,7 @@ ext {
   targetSdkVersion = 29
   compileSdkVersion = 29
   buildToolsVersion = '30.0.2'
+
 }
 
 ext.deps = [
