@@ -1,21 +1,31 @@
-apply plugin: 'com.android.application'
+plugins {
+  id 'com.android.application'
+}
 
 android {
-  compileSdkVersion rootProject.ext.compileSdkVersion
-  buildToolsVersion rootProject.ext.buildToolsVersion
+  namespace = 'com.orhanobut.sample'
+  compileSdk = rootProject.ext.compileSdkVersion
+  buildToolsVersion = rootProject.ext.buildToolsVersion
+  enableKotlin = false
 
   defaultConfig {
-    applicationId "com.orhanobut.sample"
-    minSdkVersion 23
-    targetSdkVersion 27
-    versionCode 1
-    versionName "1.0"
+    applicationId = 'com.orhanobut.sample'
+    minSdk = 23
+    targetSdk = rootProject.ext.targetSdkVersion
+    versionCode = 1
+    versionName = '1.0'
+  }
 
-    testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+  buildFeatures {
+    buildConfig = true
+  }
 
+  compileOptions {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
   }
 }
 
 dependencies {
-  implementation project(":logger")
+  implementation project(':logger')
 }

@@ -1,18 +1,25 @@
 package com.orhanobut.logger
 
 import com.google.common.truth.Truth.assertThat
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito.verify
-import org.mockito.MockitoAnnotations.initMocks
+import org.mockito.MockitoAnnotations.openMocks
 
 class DiskLogAdapterTest {
 
   @Mock private lateinit var formatStrategy: FormatStrategy
 
+  private lateinit var mocks: AutoCloseable
+
+  @After fun teardown() {
+    mocks.close()
+  }
+
   @Before fun setup() {
-    initMocks(this)
+    mocks = openMocks(this)
   }
 
   @Test fun isLoggableTrue() {

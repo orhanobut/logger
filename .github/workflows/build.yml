@@ -1,0 +1,24 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-java@v6.0.1
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v4.0.4
+      - uses: gradle/actions/setup-gradle@v6.4.0
+      - name: Install Android SDK
+        run: sdkmanager 'platforms;android-37.0' 'build-tools;37.0.0'
+      - name: Check and assemble
+        run: ./gradlew check :logger:assembleRelease :sample:assembleDebug :logger:generatePomFileForMavenPublication :logger:javaDocReleaseJar

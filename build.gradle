@@ -1,62 +1,60 @@
 buildscript {
-  ext.kotlinVersion = '1.2.51'
   repositories {
     google()
-    jcenter()
+    mavenCentral()
   }
   dependencies {
-    classpath 'com.android.tools.build:gradle:3.2.0'
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
+    // Upgrade the compiler used by AGP's built-in Kotlin support.
+    classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.20'
   }
 }
 
-allprojects {
-  repositories {
-    google()
-    jcenter()
-  }
+plugins {
+  id 'com.android.library' version '9.4.1' apply false
+  id 'com.android.application' version '9.4.1' apply false
+  id 'com.vanniktech.maven.publish' version '0.37.0' apply false
 }
 
-subprojects { project ->
+subprojects {
   group = GROUP
   version = VERSION_NAME
 
   apply plugin: 'checkstyle'
+  checkstyle {
+    toolVersion = '14.3.0'
+  }
 
-  task checkstyle(type: Checkstyle) {
-    configFile rootProject.file('checkstyle.xml')
+  def styleCheck = tasks.register('checkstyle', Checkstyle) {
+    configFile = rootProject.file('checkstyle.xml')
     source 'src/main/java'
-    ignoreFailures false
-    showViolations true
+    ignoreFailures = false
+    showViolations = true
     include '**/*.java'
-
     classpath = files()
   }
 
-  afterEvaluate {
-    if (project.tasks.findByName('check')) {
-      check.dependsOn('checkstyle')
-    }
+  tasks.matching { it.name == 'check' }.configureEach {
+    dependsOn styleCheck
   }
 }
 
-task clean(type: Delete) {
-  delete rootProject.buildDir
+tasks.register('clean', Delete) {
+  delete layout.buildDirectory
 }
 
 ext {
   minSdkVersion = 8
-  targetSdkVersion = 28
-  compileSdkVersion = 28
-  buildToolsVersion = '28.0.2'
+  targetSdkVersion = 37
+  compileSdkVersion = 37
+  buildToolsVersion = '37.0.0'
 }
 
 ext.deps = [
-    junit             : 'junit:junit:4.12',
-    truth             : 'com.google.truth:truth:0.28',
-    robolectric       : 'org.robolectric:robolectric:3.3',
-    mockito           : "org.mockito:mockito-core:2.8.9",
-    json              : "org.json:json:20160810",
-    supportAnnotations: 'androidx.annotation:annotation:1.0.0',
-    kotlin            : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    junit      : 'junit:junit:4.13.2',
+    truth      : 'com.google.truth:truth:1.4.5',
+    robolectric: 'org.robolectric:robolectric:4.17',
+    mockito    : 'org.mockito:mockito-core:5.24.0',
+    json       : 'org.json:json:20260814',
+    annotations: 'androidx.annotation:annotation:1.11.0',
+    kotlin     : 'org.jetbrains.kotlin:kotlin-stdlib:2.4.20'
 ]

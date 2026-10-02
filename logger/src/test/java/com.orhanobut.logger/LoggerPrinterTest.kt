@@ -1,20 +1,22 @@
 package com.orhanobut.logger
 
 import com.orhanobut.logger.Logger.*
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
-import org.mockito.Matchers.any
-import org.mockito.Matchers.contains
-import org.mockito.Matchers.eq
-import org.mockito.Matchers.isNull
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.nullable
+import org.mockito.ArgumentMatchers.contains
+import org.mockito.ArgumentMatchers.eq
+import org.mockito.ArgumentMatchers.isNull
 import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.never
 import org.mockito.Mockito.times
 import org.mockito.Mockito.verify
-import org.mockito.Mockito.verifyZeroInteractions
-import org.mockito.MockitoAnnotations.initMocks
+import org.mockito.Mockito.verifyNoInteractions
+import org.mockito.MockitoAnnotations.openMocks
 import java.util.*
 
 class LoggerPrinterTest {
@@ -23,10 +25,16 @@ class LoggerPrinterTest {
 
   @Mock private lateinit var adapter: LogAdapter
 
+  private lateinit var mocks: AutoCloseable
+
+  @After fun teardown() {
+    mocks.close()
+  }
+
   @Before fun setup() {
-    initMocks(this)
-    `when`(adapter!!.isLoggable(any(Int::class.java), any(String::class.java))).thenReturn(true)
-    printer.addAdapter(adapter!!)
+    mocks = openMocks(this)
+    `when`(adapter.isLoggable(anyInt(), nullable(String::class.java))).thenReturn(true)
+    printer.addAdapter(adapter)
   }
 
   @Test fun logDebug() {
@@ -190,7 +198,7 @@ class LoggerPrinterTest {
 
     printer.d("")
 
-    verifyZeroInteractions(adapter)
+    verifyNoInteractions(adapter)
   }
 
   @Test fun addAdapter() {
