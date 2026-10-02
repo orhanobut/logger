@@ -1,14 +1,14 @@
-<img align="right" src='https://github.com/orhanobut/logger/blob/master/art/logger-logo.png' width='128' height='128'/>
-
 # Logger
 
-Simple, pretty and powerful logging for Android.
+<img align="right" src="art/logger-logo.png" width="128" height="128" alt="Logger logo"/>
+
+Simple, pretty logging for Android, written entirely in Kotlin.
 
 ## Setup
 
 Add Google Maven and Maven Central to your dependency repositories:
 
-```groovy
+```kotlin
 dependencyResolutionManagement {
   repositories {
     google()
@@ -17,134 +17,125 @@ dependencyResolutionManagement {
 }
 ```
 
-The last published release is 2.2.0. The updated source builds as
-`2.3.0-SNAPSHOT`; it has not been released to Maven Central.
+The last published release is 2.2.0. This Kotlin migration builds as
+`2.3.0-SNAPSHOT` and has not been released to Maven Central.
 
-```groovy
-implementation 'com.orhanobut:logger:2.2.0'
+```kotlin
+dependencies {
+  implementation("com.orhanobut:logger:2.2.0")
+}
 ```
 
-Initialize
-```java
-Logger.addLogAdapter(new AndroidLogAdapter());
-```
-And use
-```java
-Logger.d("hello");
+Initialize once in your application, then log:
+
+```kotlin
+Logger.addLogAdapter(AndroidLogAdapter())
+Logger.d("hello %s", "world")
 ```
 
 ## Output
-<img src='https://github.com/orhanobut/logger/blob/master/art/logger_output.png'/>
 
+![Example Logcat output](art/logger_output.png)
 
-## Options
-```java
-Logger.d("debug");
-Logger.e("error");
-Logger.w("warning");
-Logger.v("verbose");
-Logger.i("information");
-Logger.wtf("What a Terrible Failure");
+## Messages
+
+```kotlin
+Logger.d("debug")
+Logger.e("error")
+Logger.w("warning")
+Logger.v("verbose")
+Logger.i("information")
+Logger.wtf("What a Terrible Failure")
+
+Logger.d("hello %s", "world")
+Logger.d(listOf("foo", "bar"))
+Logger.d(mapOf("key" to "value"))
+Logger.d(intArrayOf(1, 2, 3))
+Logger.d(null as Any?)
+
+Logger.json("""{"items":[1,2,3]}""")
+Logger.xml("<root><item>value</item></root>")
 ```
 
-String format arguments are supported
-```java
-Logger.d("hello %s", "world");
+Collection and structured output use debug priority. Use `Logger.e(throwable,
+"message")` to include an exception and its cause. `Logger.t("tag")` sets a tag
+for exactly one message on the calling thread.
+
+## Formatting and filtering
+
+```kotlin
+val format = PrettyFormatStrategy.newBuilder()
+  .showThreadInfo(false) // Default: true
+  .methodCount(0)        // Default: 2 caller frames
+  .methodOffset(0)       // Default: 0 additional frames skipped
+  .tag("MyApp")          // Default: PRETTY_LOGGER
+  .build()
+
+Logger.addLogAdapter(object : AndroidLogAdapter(format) {
+  override fun isLoggable(priority: Int, tag: String?): Boolean = BuildConfig.DEBUG
+})
+
+Logger.t("Screen").d("A message tagged MyApp-Screen")
 ```
 
-Collections are supported (only available for debug logs)
-```java
-Logger.d(MAP);
-Logger.d(SET);
-Logger.d(LIST);
-Logger.d(ARRAY);
-```
+`FormatStrategy` and `LogStrategy` are Kotlin functional interfaces, so custom
+formatters and destinations can be supplied with lambdas. Override
+`LogAdapter.isLoggable` to filter messages by priority or tag. Use
+`Logger.clearLogAdapters()` before replacing the configured adapters.
 
-Json and Xml support (output will be in debug level)
-```java
-Logger.json(JSON_CONTENT);
-Logger.xml(XML_CONTENT);
-```
+## File logging
 
-## Advanced
-```java
-FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder()
-  .showThreadInfo(false)  // (Optional) Whether to show thread info or not. Default true
-  .methodCount(0)         // (Optional) How many method line to show. Default 2
-  .methodOffset(0)        // (Optional) Skips extra caller frames. Default 0
-  .logStrategy(customLog) // (Optional) Changes the log strategy to print out. Default LogCat
-  .tag("My custom tag")   // (Optional) Global tag for every log. Default PRETTY_LOGGER
-  .build();
+Use `CsvFormatStrategy` with `DiskLogStrategy` and an Android `Handler` that writes
+to app-private storage. The [Kotlin sample](sample/src/main/kotlin/com/orhanobut/sample/MainActivity.kt)
+shows the complete setup using `filesDir`, a background `HandlerThread`, and
+shutdown in `onDestroy`. App-private storage requires no storage permission.
 
-Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy));
-```
-
-## Loggable
-Log adapter checks whether the log should be printed or not by checking this function.
-If you want to disable/hide logs for output, override `isLoggable` method.
-`true` will print the log message, `false` will ignore it.
-```java
-Logger.addLogAdapter(new AndroidLogAdapter() {
-  @Override public boolean isLoggable(int priority, String tag) {
-    return BuildConfig.DEBUG;
-  }
-});
-```
-
-## Save logs to the file
-The default `DiskLogAdapter` writes to a `logger` directory under shared external
-storage. That legacy location is restricted by scoped storage on modern Android.
-For current apps, supply a `DiskLogStrategy` using an app-owned directory such as
-`context.getFilesDir()`, wrapped in a `CsvFormatStrategy`.
-```java
-Logger.addLogAdapter(new DiskLogAdapter());
-```
-
-Add custom tag to Csv format strategy
-```java
-FormatStrategy formatStrategy = CsvFormatStrategy.newBuilder()
-  .tag("custom")
-  .build();
-
-Logger.addLogAdapter(new DiskLogAdapter(formatStrategy));
-```
+The default `DiskLogAdapter()` still uses the legacy shared external-storage
+location. Modern Android restricts that location through scoped storage; use the
+sample's custom strategy for current applications.
 
 ## How it works
-<img src='https://github.com/orhanobut/logger/blob/master/art/how_it_works.png'/>
 
+![Logging pipeline](art/how_it_works.png)
 
-## More
-- Use filter for a better result. PRETTY_LOGGER or your custom tag
-- Make sure that wrap option is disabled
-- You can also simplify output by changing settings.
+For Logcat filtering, use `PRETTY_LOGGER` or your configured tag.
 
-<img src='https://github.com/orhanobut/logger/blob/master/art/logcat_options.png'/>
+Timber integration:
 
-- Timber Integration
-```java
-// Set methodOffset to 5 in order to hide internal method calls
-Timber.plant(new Timber.DebugTree() {
-  @Override protected void log(int priority, String tag, String message, Throwable t) {
-    Logger.log(priority, tag, message, t);
+```kotlin
+Timber.plant(object : Timber.DebugTree() {
+  override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
+    Logger.log(priority, tag, message, t)
   }
-});
+})
 ```
 
 ## Building from source
 
-Use JDK 21 (required by the current Checkstyle tooling), Android SDK Platform 37,
-and Android SDK Build Tools 37.0.0. Set `ANDROID_HOME` or put your SDK path in an
-untracked `local.properties` file:
+Use JDK 17 or newer, Android SDK Platform 37.0, and Android SDK Build Tools 37.0.0.
+Set `ANDROID_HOME` or put your SDK path in an untracked `local.properties` file:
 
 ```properties
 sdk.dir=/path/to/android/sdk
 ```
 
-The Gradle wrapper downloads Gradle 9.8.0. The build uses Android Gradle Plugin
-9.4.1 and built-in Kotlin support with Kotlin 2.4.20 for the tests. The library
-retains its declared minimum SDK of 8 and Java 8 bytecode; the sample requires
-API 23 and targets API 37. Robolectric tests run on APIs 23 and 36; this does not
-verify runtime behavior on older devices.
+The build uses Gradle 9.8.0, Android Gradle Plugin 9.4.1, and built-in Kotlin support
+with Kotlin 2.4.20. Sources, tests, the sample, and Gradle build scripts use Kotlin.
+Dependency versions live in `gradle/libs.versions.toml`. The library retains its
+declared minimum SDK of 8 and JVM 8 bytecode; the sample requires API 23 and
+targets API 37. Device compatibility is not verified by the JVM tests.
+
+Unit tests use JUnit 4 and a test-only JSON implementation. They cover log levels,
+adapter filtering, tag isolation, exceptions, JSON/XML handling, UTF-8 message
+chunking, and pretty/CSV formatting. They use recording adapters without
+Robolectric, Truth, or Mockito. Android Logcat, Handler/Looper behavior, and device
+storage are outside this unit-test suite.
+
+Nullability is expressed with Kotlin types, with no AndroidX annotation dependency.
+Kotlin's standard library is the only direct runtime dependency. Android supplies
+the platform APIs and JSON implementation. Existing static JVM logger entry
+points and builder methods are retained; non-null parameters (including vararg
+arrays) reject null at the JVM boundary.
 
 ```sh
 ./gradlew check :logger:assembleRelease :sample:assembleDebug
@@ -154,14 +145,14 @@ verify runtime behavior on older devices.
 ## Publishing
 
 Android libraries are distributed as AARs with dependency metadata in Maven
-repositories. Maven Central remains the recommended destination for public
-releases; consumers can use Gradle to install them. This project uses the
+repositories. Maven Central is the recommended destination for public releases.
+This project uses the
 [Vanniktech Maven Publish plugin](https://vanniktech.github.io/gradle-maven-publish-plugin/central/)
-with Sonatype's Central Portal, replacing the retired OSSRH upload workflow.
+with Sonatype's Central Portal.
 
-Publishing requires a verified namespace, a Central Portal user token, and a
-GPG signing key. The existing `com.orhanobut` group requires publishing rights
-to that namespace; forks should configure a namespace they control.
+Publishing requires a verified namespace, a Central Portal user token, and a GPG
+signing key. Publishing under `com.orhanobut` requires rights to that namespace;
+forks should configure a namespace they control.
 
 Keep credentials outside the repository, for example as CI environment variables:
 
@@ -173,7 +164,7 @@ ORG_GRADLE_PROJECT_signingInMemoryKeyPassword
 ```
 
 Set `VERSION_NAME` in `gradle.properties` to a new, unused release version before
-publishing. To upload a release for validation and then approve it in the
+publishing. To upload for validation, then approve the release in the
 [Central Portal](https://central.sonatype.com/publishing/deployments):
 
 ```sh
