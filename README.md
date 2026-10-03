@@ -1,133 +1,116 @@
-[![Android Arsenal](https://img.shields.io/badge/Android%20Arsenal-Logger-brightgreen.svg?style=flat)](http://android-arsenal.com/details/1/1658) [![](https://img.shields.io/badge/AndroidWeekly-%23147-blue.svg)](http://androidweekly.net/issues/issue-147)
-[![Join the chat at https://gitter.im/orhanobut/logger](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/orhanobut/logger?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) <a href="http://www.methodscount.com/?lib=com.orhanobut%3Alogger%3A2.0.0"><img src="https://img.shields.io/badge/Methods and size-198 | 18 KB-e91e63.svg"/></a> [![Build Status](https://travis-ci.org/orhanobut/logger.svg?branch=master)](https://travis-ci.org/orhanobut/logger)
+# Logger
 
-<img align="right" src='https://github.com/orhanobut/logger/blob/master/art/logger-logo.png' width='128' height='128'/>
+<img align="right" src="art/logger-logo.png" width="128" height="128" alt="Logger logo"/>
 
-### Logger
-Simple, pretty and powerful logger for android
+Readable, structured logs for Android. Turn messages, collections, JSON, and XML
+into output that's easy to scan in Logcat.
 
-### Setup
-Download
-```groovy
-implementation 'com.orhanobut:logger:2.2.0'
-```
+- Pretty output with optional thread and caller information
+- JSON and XML formatting
+- Readable lists, maps, and arrays
+- Custom tags and log filtering
+- Exception stack traces
+- Flexible destinations, including Logcat and files
 
-Initialize
-```java
-Logger.addLogAdapter(new AndroidLogAdapter());
-```
-And use
-```java
-Logger.d("hello");
-```
+![Example Logcat output](art/logger_output.png)
 
-### Output
-<img src='https://github.com/orhanobut/logger/blob/master/art/logger_output.png'/>
+## Setup
 
+Add Google Maven and Maven Central to your dependency repositories:
 
-### Options
-```java
-Logger.d("debug");
-Logger.e("error");
-Logger.w("warning");
-Logger.v("verbose");
-Logger.i("information");
-Logger.wtf("What a Terrible Failure");
-```
-
-String format arguments are supported
-```java
-Logger.d("hello %s", "world");
-```
-
-Collections are supported (only available for debug logs)
-```java
-Logger.d(MAP);
-Logger.d(SET);
-Logger.d(LIST);
-Logger.d(ARRAY);
-```
-
-Json and Xml support (output will be in debug level)
-```java
-Logger.json(JSON_CONTENT);
-Logger.xml(XML_CONTENT);
-```
-
-### Advanced
-```java
-FormatStrategy formatStrategy = PrettyFormatStrategy.newBuilder()
-  .showThreadInfo(false)  // (Optional) Whether to show thread info or not. Default true
-  .methodCount(0)         // (Optional) How many method line to show. Default 2
-  .methodOffset(7)        // (Optional) Hides internal method calls up to offset. Default 5
-  .logStrategy(customLog) // (Optional) Changes the log strategy to print out. Default LogCat
-  .tag("My custom tag")   // (Optional) Global tag for every log. Default PRETTY_LOGGER
-  .build();
-
-Logger.addLogAdapter(new AndroidLogAdapter(formatStrategy));
-```
-
-### Loggable
-Log adapter checks whether the log should be printed or not by checking this function.
-If you want to disable/hide logs for output, override `isLoggable` method. 
-`true` will print the log message, `false` will ignore it.
-```java
-Logger.addLogAdapter(new AndroidLogAdapter() {
-  @Override public boolean isLoggable(int priority, String tag) {
-    return BuildConfig.DEBUG;
+```kotlin
+dependencyResolutionManagement {
+  repositories {
+    google()
+    mavenCentral()
   }
-});
+}
 ```
 
-### Save logs to the file
-//TODO: More information will be added later
-```java
-Logger.addLogAdapter(new DiskLogAdapter());
+```kotlin
+dependencies {
+  implementation("com.orhanobut:logger:2.2.0")
+}
 ```
 
-Add custom tag to Csv format strategy
-```java
-FormatStrategy formatStrategy = CsvFormatStrategy.newBuilder()
-  .tag("custom")
-  .build();
-  
-Logger.addLogAdapter(new DiskLogAdapter(formatStrategy));
+Initialize once in your application, then log:
+
+```kotlin
+Logger.addLogAdapter(AndroidLogAdapter())
+Logger.d("hello %s", "world")
 ```
 
-### How it works
-<img src='https://github.com/orhanobut/logger/blob/master/art/how_it_works.png'/>
+## Messages
 
+```kotlin
+Logger.d("debug")
+Logger.e("error")
+Logger.w("warning")
+Logger.v("verbose")
+Logger.i("information")
+Logger.wtf("What a Terrible Failure")
 
-### More
-- Use filter for a better result. PRETTY_LOGGER or your custom tag
-- Make sure that wrap option is disabled
-- You can also simplify output by changing settings.
+Logger.d("hello %s", "world")
+Logger.d(listOf("foo", "bar"))
+Logger.d(mapOf("key" to "value"))
+Logger.d(intArrayOf(1, 2, 3))
+Logger.json("""{"items":[1,2,3]}""")
+Logger.xml("<root><item>value</item></root>")
+```
 
-<img src='https://github.com/orhanobut/logger/blob/master/art/logcat_options.png'/>
+Collection and structured output use debug priority. Include an exception and its
+cause with `Logger.e(throwable, "message")`.
 
-- Timber Integration
-```java
-// Set methodOffset to 5 in order to hide internal method calls
-Timber.plant(new Timber.DebugTree() {
-  @Override protected void log(int priority, String tag, String message, Throwable t) {
-    Logger.log(priority, tag, message, t);
+Set a tag for exactly one message on the calling thread:
+
+```kotlin
+Logger.t("Checkout").d("Order submitted")
+```
+
+## Formatting and filtering
+
+```kotlin
+val format = PrettyFormatStrategy.newBuilder()
+  .showThreadInfo(false) // Default: true
+  .methodCount(0)        // Default: 2 caller frames
+  .methodOffset(0)       // Default: 0 additional frames skipped
+  .tag("MyApp")          // Default: PRETTY_LOGGER
+  .build()
+
+Logger.addLogAdapter(object : AndroidLogAdapter(format) {
+  override fun isLoggable(priority: Int, tag: String?): Boolean = BuildConfig.DEBUG
+})
+
+Logger.t("Screen").d("A message tagged MyApp-Screen")
+```
+
+Override `LogAdapter.isLoggable` to filter messages by priority or tag. The example
+above enables logging only in debug builds. Use `Logger.clearLogAdapters()` before
+replacing the configured adapters.
+
+For Logcat filtering, use `PRETTY_LOGGER` or your configured tag.
+
+## File logging
+
+Save formatted logs to app-private storage with `CsvFormatStrategy` and a custom
+`DiskLogStrategy`. The [sample](sample/src/main/kotlin/com/orhanobut/sample/MainActivity.kt)
+shows the complete setup, including background writes and cleanup. App-private
+storage requires no storage permission.
+
+The default `DiskLogAdapter()` still uses the legacy shared external-storage
+location. Modern Android restricts that location through scoped storage; use the
+sample's custom strategy for current applications.
+
+## Timber integration
+
+```kotlin
+Timber.plant(object : Timber.DebugTree() {
+  override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
+    Logger.log(priority, tag, message, t)
   }
-});
+})
 ```
 
-### License
-<pre>
-Copyright 2018 Orhan Obut
+## License
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-   http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-</pre>
+[Apache License 2.0](LICENSE)
